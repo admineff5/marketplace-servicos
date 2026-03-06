@@ -1,0 +1,1 @@
+ssh -i C:\Antigravity\manutencao\ssh-key-2026-03-05.key -N -L <localPort>:10.0.0.87:5432 -p 22 ocid1.bastionsession.oc1.sa-saopaulo-1.amaaaaaat4j3seaasqsfhxp3j5gk67ikdejowrkrsuyllxvxlz4eu5afjneq@host.bastion.sa-saopaulo-1.oci.oraclecloud.com

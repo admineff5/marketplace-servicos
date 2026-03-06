@@ -1,0 +1,144 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String        @id @default(uuid())
+  name         String
+  email        String        @unique
+  phone        String?
+  role         Role          @default(CLIENT)
+  password     String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  company      Company?      @relation("CompanyOwner")
+  leads        Lead[]        @relation("UserLeads")
+  appointments Appointment[] @relation("UserAppointments")
+}
+
+enum Role {
+  CLIENT
+  BUSINESS
+}
+
+model Company {
+  id        String     @id @default(uuid())
+  ownerId   String     @unique
+  owner     User       @relation("CompanyOwner", fields: [ownerId], references: [id])
+  name      String
+  niche     String
+  email     String?
+  whatsapp  String?
+  instagram String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  locations Location[] // Support for multiple franchises
+  employees Employee[]
+  services  Service[]
+  products  Product[]
+  leads     Lead[]
+}
+
+model Location {
+  id           String        @id @default(uuid())
+  companyId    String
+  company      Company       @relation(fields: [companyId], references: [id])
+  name         String        // e.g., "Matriz - Centro", "Filial - Shopping"
+  cep          String?
+  address      String?
+  number       String?
+  neighborhood String?
+  city         String?
+  state        String?
+  mapsLink     String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  employees    Employee[]
+  services     Service[]
+  appointments Appointment[]
+}
+
+model Employee {
+  id           String        @id @default(uuid())
+  companyId    String
+  company      Company       @relation(fields: [companyId], references: [id])
+  locationId   String?       // Optional: An employee might belong to a specific branch
+  location     Location?     @relation(fields: [locationId], references: [id])
+  name         String
+  appointments Appointment[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Service {
+  id         String    @id @default(uuid())
+  companyId  String
+  company    Company   @relation(fields: [companyId], references: [id])
+  locationId String?   // Optional: Services only offered at specific branches
+  location   Location? @relation(fields: [locationId], references: [id])
+  name       String
+  price      Float
+  duration   Int
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id])
+  name        String
+  description String?
+  price       Float
+  delivery    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Lead {
+  id        String   @id @default(uuid())
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id])
+  userId    String?
+  user      User?    @relation("UserLeads", fields: [userId], references: [id])
+  name      String
+  phone     String
+  email     String?
+  address   String?
+  interest  String
+  converted Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Appointment {
+  id         String            @id @default(uuid())
+  employeeId String
+  employee   Employee          @relation(fields: [employeeId], references: [id])
+  userId     String
+  user       User              @relation("UserAppointments", fields: [userId], references: [id])
+  locationId String?           // Track which branch this appointment is for
+  location   Location?         @relation(fields: [locationId], references: [id])
+  date       DateTime
+  status     AppointmentStatus @default(PENDING)
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
