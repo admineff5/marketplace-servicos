@@ -5,12 +5,12 @@ import { Search, Plus, Package, Edit2, Trash2, X, Check, Upload, AlertTriangle, 
 
 // Mock Data para Simular Produtos
 const MOCK_PRODUTOS = [
-    { id: 1, name: "Minoxidil Kirkland 5% (Loção)", price: 89.90, stock: 2, image: "https://images.unsplash.com/photo-1611078513926-538466b0dcda?w=300&auto=format&fit=crop&q=80" },
-    { id: 2, name: "Pomada Modeladora Efeito Matte", price: 45.00, stock: 15, image: "https://images.unsplash.com/photo-1599305090598-fe179d501227?w=300&auto=format&fit=crop&q=80" },
-    { id: 3, name: "Navalha Clássica Master de Aço", price: 119.90, stock: 8, image: "https://images.unsplash.com/photo-1593510987185-1ec2256148a3?w=300&auto=format&fit=crop&q=80" },
+    { id: 1, name: "Minoxidil Kirkland 5% (Loção)", price: 89.90, stock: 2, image: "https://images.unsplash.com/photo-1534620808146-d33bb39128b2?w=300&auto=format&fit=crop&q=80" },
+    { id: 2, name: "Pomada Modeladora Efeito Matte", price: 45.00, stock: 15, image: "https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?w=300&auto=format&fit=crop&q=80" },
+    { id: 3, name: "Navalha Clássica Master de Aço", price: 119.90, stock: 8, image: "https://images.unsplash.com/photo-1581404094186-09511516e118?w=300&auto=format&fit=crop&q=80" },
     { id: 4, name: "Óleo Hidratante Premium para Barba", price: 35.00, stock: 4, image: "https://images.unsplash.com/photo-1621607512214-68297480165e?w=300&auto=format&fit=crop&q=80" },
-    { id: 5, name: "Shampoo Anticaspa Force", price: 29.90, stock: 12, image: "https://images.unsplash.com/photo-1585232351009-aa87416fca90?w=300&auto=format&fit=crop&q=80" },
-    { id: 6, name: "Gel Pós Barba Refrescante", price: 42.00, stock: 0, image: "https://images.unsplash.com/photo-1626285861696-9f0bf5a49ceb?w=300&auto=format&fit=crop&q=80" },
+    { id: 5, name: "Shampoo Anticaspa Force", price: 29.90, stock: 12, image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=300&auto=format&fit=crop&q=80" },
+    { id: 6, name: "Gel Pós Barba Refrescante", price: 42.00, stock: 0, image: "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=300&auto=format&fit=crop&q=80" },
 ];
 
 export default function GestaoProdutosPage() {
