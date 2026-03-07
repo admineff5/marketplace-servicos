@@ -1,124 +1,362 @@
 "use client";
 
 import { useState } from "react";
-import { Scissors, Plus, Search, X } from "lucide-react";
+import { Plus, Search, Edit2, Trash2, X, Scissors, Info, LayoutList, ChevronDown, Check } from "lucide-react";
 
-const MOCK_SERVICES = [
-    { id: 1, name: "Corte Clássico", duration: "45 min", price: "R$ 45,00", category: "Cabelo", status: "Ativo" },
-    { id: 2, name: "Corte Degradê", duration: "45 min", price: "R$ 55,00", category: "Cabelo", status: "Ativo" },
-    { id: 3, name: "Barba Terapia", duration: "30 min", price: "R$ 35,00", category: "Barba", status: "Ativo" },
-    { id: 4, name: "Coloração", duration: "1h 30m", price: "R$ 120,00", category: "Química", status: "Inativo" },
-    { id: 5, name: "Corte + Barba", duration: "1h 10m", price: "R$ 80,00", category: "Combo", status: "Ativo" },
+// MOCKS PRE-DEFINIDOS DO PARCEIRO
+const SUGGESTED_SERVICES = [
+    { category: "Barba e Bigode", name: "Barba", description: "Serviço de barba." },
+    { category: "Barba e Bigode", name: "Barba com máquina", description: "Barbear os pelos da face com máquina elétrica." },
+    { category: "Barba e Bigode", name: "Barba Modelada", description: "Assepsia do rosto com sabonete antisséptico, aplicação de creme de barbear e corte da barba com navalha, com design personalizado e pós-barba." },
+    { category: "Barba e Bigode", name: "Barba Tradicional", description: "Assepsia do rosto com sabonete antisséptico, aplicação de creme de barbear e corte da barba com navalha, finalizando com pós-barba." },
+    { category: "Barba e Bigode", name: "Bigode com Máquina", description: "Remoção ou aparo do bigode com máquina elétrica." },
+    { category: "Barba e Bigode", name: "Bigode Modelado", description: "Cortar, aparar e modelar o bigode." },
+    { category: "Barba e Bigode", name: "Bigode Tradicional", description: "Remoção ou aparo do bigode com navalha." },
+    { category: "Barba e Bigode", name: "Contorno de Barba", description: "Assepsia do rosto, creme de barbear e contorno da barba com navalha, finalizando com loção." },
+    { category: "Barba e Bigode", name: "Ecobarba", description: "Assepsia da pele, esfoliação, barbear e hidratação com produtos orgânicos e sem álcool." },
+    { category: "Cabelo", name: "Camuflagem de cabelos brancos", description: "Técnica rápida para disfarçar fios brancos sem cobertura total. Áreas específicas ou em todo o cabelo." },
+    { category: "Cabelo", name: "Coloração / Tonalização", description: "Tintura ou tonalização dos cabelos utilizando produtos profissionais de salão." },
+    { category: "Cabelo", name: "Corte à Máquina", description: "Corte de cabelo realizado com máquina elétrica." },
+    { category: "Cabelo", name: "Corte Masculino", description: "Corte de cabelo masculino com finalização e secagem." },
+    { category: "Cabelo", name: "Hidratação", description: "Tratamento de hidratação para recuperar brilho e saúde dos cabelos." },
+    { category: "Cabelo", name: "Hidratação com Ampolas", description: "Tratamento capilar intensivo utilizando ampolas profissionais." },
+    { category: "Cabelo", name: "Higienização", description: "Lavagem dos cabelos com shampoo profissional." },
+    { category: "Cabelo", name: "Higienização + Secagem", description: "Lavagem e secagem dos cabelos." },
+    { category: "Depilação Masculina", name: "Depilação Masculina - Cavanhaque", description: "Remoção dos pelos da região do cavanhaque." },
+    { category: "Estética Corporal", name: "Massagem Desportiva", description: "Técnica para prevenir lesões e auxiliar na recuperação muscular por meio de alongamentos." },
+    { category: "Estética Corporal", name: "Tatuagem", description: "Arte de gravar desenhos ou símbolos na pele por meio de pigmentos." },
+    { category: "Mãos e Pés", name: "Manicure e Pedicure Masculina", description: "Corte das unhas das mãos e dos pés, lixamento, hidratação e cuidado das cutículas." },
+    { category: "Mãos e Pés", name: "Manicure Masculina", description: "Corte das unhas das mãos, lixamento, hidratação e cuidado das cutículas." },
+    { category: "Mãos e Pés", name: "Pedicure Masculina", description: "Corte das unhas dos pés, lixamento, hidratação e cuidado das cutículas." },
 ];
 
-export default function ServicesPage() {
-    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+const INITIAL_MOCK_DATA = [
+    { id: 1, name: "Corte Degradê", description: "Corte moderno com fade perfeito.", price: "45.00", promoPrice: "35.00", duration: "45" },
+    { id: 2, name: "Barba Terapia", description: "Barba com toalha quente e ozônio.", price: "40.00", promoPrice: "", duration: "30" },
+    { id: 3, name: "Combo: Corte + Barba", description: "Os dois serviços em uma sessão reduzida.", price: "80.00", promoPrice: "70.00", duration: "70" },
+];
+
+export default function GestaoServicosPage() {
+    const [services, setServices] = useState(INITIAL_MOCK_DATA);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+
+    // Form State
+    const [formName, setFormName] = useState("");
+    const [formDescription, setFormDescription] = useState("");
+    const [formPrice, setFormPrice] = useState("");
+    const [formPromoPrice, setFormPromoPrice] = useState("");
+    const [formDuration, setFormDuration] = useState("");
+
+    const filteredServices = services.filter(s =>
+        s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        s.description.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const applySuggestion = (suggestion: typeof SUGGESTED_SERVICES[0]) => {
+        setFormName(suggestion.name);
+        setFormDescription(suggestion.description);
+        setShowSuggestions(false);
+    };
+
+    const handleSave = () => {
+        if (!formName || !formPrice || !formDuration) return;
+
+        setServices([...services, {
+            id: Date.now(),
+            name: formName,
+            description: formDescription,
+            price: parseFloat(formPrice).toFixed(2),
+            promoPrice: formPromoPrice ? parseFloat(formPromoPrice).toFixed(2) : "",
+            duration: formDuration
+        }]);
+
+        setIsModalOpen(false);
+        resetForm();
+    };
+
+    const resetForm = () => {
+        setFormName("");
+        setFormDescription("");
+        setFormPrice("");
+        setFormPromoPrice("");
+        setFormDuration("");
+        setShowSuggestions(false);
+    };
+
+    const openNewModal = () => {
+        resetForm();
+        setIsModalOpen(true);
+    };
 
     return (
-        <div className="space-y-6 max-w-7xl mx-auto">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Catálogo de Serviços</h2>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Configure os serviços que ficarão visíveis no aplicativo para seus clientes.</p>
-                </div>
-                <button onClick={() => setIsAddModalOpen(true)} className="flex items-center gap-2 bg-primary text-black font-semibold px-4 py-2 rounded-lg hover:bg-cyan-400 transition-colors shadow-sm text-sm">
-                    <Plus className="w-4 h-4" /> Novo Serviço
-                </button>
-            </div>
+        <div className="min-h-[calc(100vh-4rem)] p-4 sm:p-8 bg-gray-50/50 dark:bg-[#0a0a0a]">
+            <div className="max-w-7xl mx-auto space-y-6">
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-between bg-white dark:bg-[#111] p-4 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm">
-                <div className="relative w-full sm:max-w-md">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <input
-                        type="text"
-                        placeholder="Buscar serviço..."
-                        className="w-full pl-9 pr-4 py-2 bg-gray-50 dark:bg-[#0a0a0a] border border-gray-200 dark:border-gray-800 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors text-gray-900 dark:text-white placeholder-gray-400"
-                    />
-                </div>
-                <select className="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-[#0a0a0a] focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors">
-                    <option>Todas as Categorias</option>
-                    <option>Cabelo</option>
-                    <option>Barba</option>
-                    <option>Combo</option>
-                </select>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {MOCK_SERVICES.map((service) => (
-                    <div key={service.id} className="bg-white dark:bg-[#111] p-5 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col hover:border-primary/50 transition-colors group">
-                        <div className="flex justify-between items-start mb-4">
-                            <div className="p-3 bg-gray-100 dark:bg-gray-800 group-hover:bg-primary/10 transition-colors rounded-xl">
-                                <Scissors className="w-6 h-6 text-gray-600 dark:text-gray-400 group-hover:text-primary transition-colors" />
-                            </div>
-                            <span className={`px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md ${service.status === 'Ativo' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400' : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'}`}>
-                                {service.status}
-                            </span>
-                        </div>
-                        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1 group-hover:text-primary transition-colors">{service.name}</h3>
-                        <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-4">{service.category}</p>
-
-                        <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100 dark:border-gray-800">
-                            <div className="flex flex-col">
-                                <span className="text-xs text-gray-500">Duração</span>
-                                <span className="text-sm font-semibold text-gray-900 dark:text-white">{service.duration}</span>
-                            </div>
-                            <div className="flex flex-col text-right">
-                                <span className="text-xs text-gray-500">Valor</span>
-                                <span className="text-base font-bold text-gray-900 dark:text-white">{service.price}</span>
-                            </div>
-                        </div>
+                {/* Header Section */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-2">
+                            <Scissors className="w-6 h-6 text-primary" />
+                            Gestão de Serviços
+                        </h1>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                            Catálogo de serviços e combos oferecidos no seu estabelecimento.
+                        </p>
                     </div>
-                ))}
+
+                    <button
+                        onClick={openNewModal}
+                        className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-bold text-black shadow-lg shadow-cyan-500/20 hover:bg-cyan-400 transition-all hover:scale-105"
+                    >
+                        <Plus className="w-4 h-4" />
+                        Novo Serviço
+                    </button>
+                </div>
+
+                {/* Filter Bar */}
+                <div className="bg-white dark:bg-[#111112] rounded-2xl border border-gray-200 dark:border-[#222] p-4 flex flex-col sm:flex-row gap-4">
+                    <div className="relative flex-1">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                        <input
+                            type="text"
+                            placeholder="Buscar por nome ou descrição..."
+                            value={searchTerm}
+                            onChange={e => setSearchTerm(e.target.value)}
+                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all"
+                        />
+                    </div>
+                </div>
+
+                {/* Table Section */}
+                <div className="bg-white dark:bg-[#111112] border border-gray-200 dark:border-[#222] rounded-2xl overflow-hidden shadow-sm">
+                    <div className="overflow-x-auto custom-scrollbar">
+                        <table className="w-full text-left border-collapse min-w-[800px]">
+                            <thead>
+                                <tr className="border-b border-gray-200 dark:border-[#2a2a2c] bg-gray-50/50 dark:bg-[#151516]/50">
+                                    <th className="px-6 py-4 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Serviço</th>
+                                    <th className="px-6 py-4 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Descrição</th>
+                                    <th className="px-6 py-4 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Preço Padrão</th>
+                                    <th className="px-6 py-4 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Preço Promo</th>
+                                    <th className="px-6 py-4 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Duração</th>
+                                    <th className="px-6 py-4 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-right">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-100 dark:divide-[#2a2a2c]">
+                                {filteredServices.length > 0 ? filteredServices.map((srv) => (
+                                    <tr key={srv.id} className="hover:bg-gray-50 dark:hover:bg-[#1a1a1c] transition-colors group">
+                                        <td className="px-6 py-4">
+                                            <div className="font-semibold text-gray-900 dark:text-white whitespace-nowrap">{srv.name}</div>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-1 max-w-[200px]" title={srv.description}>
+                                                {srv.description || "-"}
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <div className="font-medium text-gray-900 dark:text-white">R$ {srv.price}</div>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            {srv.promoPrice ? (
+                                                <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400 font-semibold text-xs border border-green-200 dark:border-green-500/20">
+                                                    R$ {srv.promoPrice}
+                                                </div>
+                                            ) : (
+                                                <span className="text-gray-400">-</span>
+                                            )}
+                                        </td>
+                                        <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                                            {srv.duration} min
+                                        </td>
+                                        <td className="px-6 py-4 text-right">
+                                            <div className="flex items-center justify-end gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <button className="p-2 text-gray-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors" title="Editar Serviço">
+                                                    <Edit2 className="w-4 h-4" />
+                                                </button>
+                                                <button className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors" title="Excluir Serviço">
+                                                    <Trash2 className="w-4 h-4" />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )) : (
+                                    <tr>
+                                        <td colSpan={6} className="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
+                                            <div className="flex flex-col items-center justify-center gap-3">
+                                                <Scissors className="w-8 h-8 opacity-20" />
+                                                <p>Nenhum serviço encontrado.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
 
-            {/* Modal Novo Serviço */}
-            {isAddModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setIsAddModalOpen(false)}>
-                    <div className="bg-white dark:bg-[#111] rounded-2xl w-full max-w-md p-6 overflow-hidden border border-gray-100 dark:border-gray-800 shadow-2xl animate-in fade-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
-                        <div className="flex justify-between items-center mb-6">
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white">Adicionar Serviço</h3>
-                            <button onClick={() => setIsAddModalOpen(false)} className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+            {/* CREATE MODAL */}
+            {isModalOpen && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm sm:items-center items-end" onClick={() => setIsModalOpen(false)}>
+                    <div
+                        className="w-full max-w-2xl bg-white dark:bg-[#111112] rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] border border-gray-200 dark:border-[#222]"
+                        onClick={e => e.stopPropagation()}
+                    >
+                        {/* Modal Header */}
+                        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#161618]">
+                            <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                <Plus className="w-5 h-5 text-primary" />
+                                Novo Serviço
+                            </h2>
+                            <button onClick={() => setIsModalOpen(false)} className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                                 <X className="w-5 h-5" />
                             </button>
                         </div>
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nome do Serviço</label>
-                                <input type="text" className="w-full bg-gray-50 dark:bg-[#0a0a0a] border border-gray-200 dark:border-gray-800 rounded-lg px-4 py-2 text-sm focus:ring-1 focus:ring-primary outline-none text-gray-900 dark:text-white" placeholder="Ex: Corte Degradê" />
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Duração Estimada</label>
-                                    <select className="w-full bg-gray-50 dark:bg-[#0a0a0a] border border-gray-200 dark:border-gray-800 rounded-lg px-4 py-2 text-sm focus:ring-1 focus:ring-primary outline-none text-gray-900 dark:text-white">
-                                        <option>30 min</option>
-                                        <option>45 min</option>
-                                        <option>1h</option>
-                                        <option>1h 30m</option>
-                                        <option>2h</option>
-                                    </select>
+
+                        {/* Modal Body */}
+                        <div className="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-6">
+
+                            {/* Suggestion Box */}
+                            <div className="relative">
+                                <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5 uppercase tracking-wider">
+                                    Nome do Serviço / Sugestões Rápidas
+                                </label>
+                                <div className="flex flex-col sm:flex-row gap-2 relative">
+                                    <div className="relative flex-1">
+                                        <input
+                                            type="text"
+                                            placeholder="Ex: Corte Degrade, Banho Premium..."
+                                            value={formName}
+                                            onChange={e => setFormName(e.target.value)}
+                                            onFocus={() => setShowSuggestions(true)}
+                                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all"
+                                        />
+                                    </div>
+                                    <button
+                                        onClick={() => setShowSuggestions(!showSuggestions)}
+                                        className="shrink-0 flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-100 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-[#252528] transition-colors"
+                                    >
+                                        <LayoutList className="w-4 h-4" />
+                                        Catálogo
+                                        <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showSuggestions ? 'rotate-180' : ''}`} />
+                                    </button>
                                 </div>
+
+                                {/* Dropdown de Sugestões absolutas */}
+                                {showSuggestions && (
+                                    <>
+                                        {/* Backdrop invisivel para fechar clicando fora */}
+                                        <div className="fixed inset-0 z-40" onClick={() => setShowSuggestions(false)}></div>
+                                        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#151516] border border-gray-200 dark:border-[#2a2a2c] rounded-xl shadow-2xl z-50 max-h-60 overflow-y-auto custom-scrollbar">
+                                            <div className="p-2 sticky top-0 bg-white dark:bg-[#151516] border-b border-gray-100 dark:border-[#2a2a2c] flex items-center gap-2 text-xs text-primary font-bold px-4 py-3">
+                                                <Info className="w-4 h-4" /> Escolha no catálogo base do sistema para preencher automaticamente:
+                                            </div>
+                                            {SUGGESTED_SERVICES.map((cat, idx) => (
+                                                <div
+                                                    key={idx}
+                                                    onClick={() => applySuggestion(cat)}
+                                                    className="p-3 border-b border-gray-50 dark:border-[#1a1a1c]/50 hover:bg-gray-50 dark:hover:bg-[#1a1a1c] cursor-pointer transition-colors group"
+                                                >
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <span className="text-[10px] uppercase font-bold text-gray-400 bg-gray-100 dark:bg-[#222] px-1.5 py-0.5 rounded">{cat.category}</span>
+                                                        <span className="font-semibold text-sm text-gray-900 dark:text-white group-hover:text-primary transition-colors">{cat.name}</span>
+                                                    </div>
+                                                    <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">{cat.description}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+
+                            <div>
+                                <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5 uppercase tracking-wider flex items-center justify-between">
+                                    Descrição (Opcional)
+                                    <span className="text-[10px] text-gray-400 font-normal normal-case">Visível para os clientes</span>
+                                </label>
+                                <textarea
+                                    rows={3}
+                                    value={formDescription}
+                                    onChange={e => setFormDescription(e.target.value)}
+                                    placeholder="Descreva o que este serviço inclui..."
+                                    className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all resize-none custom-scrollbar"
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Preço (R$)</label>
-                                    <input type="text" className="w-full bg-gray-50 dark:bg-[#0a0a0a] border border-gray-200 dark:border-gray-800 rounded-lg px-4 py-2 text-sm focus:ring-1 focus:ring-primary outline-none text-gray-900 dark:text-white" placeholder="0,00" />
+                                    <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5 uppercase tracking-wider">
+                                        Preço Padrão *
+                                    </label>
+                                    <div className="relative">
+                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm font-medium">R$</span>
+                                        <input
+                                            type="number" step="0.01" min="0"
+                                            value={formPrice} onChange={e => setFormPrice(e.target.value)}
+                                            placeholder="0.00"
+                                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg pl-9 pr-3 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5 uppercase tracking-wider flex items-center justify-between">
+                                        Preço Promo.
+                                        <span className="text-[10px] text-green-500 font-bold normal-case bg-green-500/10 px-1 py-0.5 rounded">Opcional</span>
+                                    </label>
+                                    <div className="relative">
+                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm font-medium">R$</span>
+                                        <input
+                                            type="number" step="0.01" min="0"
+                                            value={formPromoPrice} onChange={e => setFormPromoPrice(e.target.value)}
+                                            placeholder="0.00"
+                                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-green-200 dark:border-green-500/30 rounded-lg pl-9 pr-3 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5 uppercase tracking-wider">
+                                        Duração *
+                                    </label>
+                                    <div className="relative">
+                                        <input
+                                            type="number" min="5" step="5"
+                                            value={formDuration} onChange={e => setFormDuration(e.target.value)}
+                                            placeholder="Ex: 45"
+                                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg pl-3 pr-10 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all"
+                                        />
+                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm font-medium">min</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Categoria</label>
-                                <select className="w-full bg-gray-50 dark:bg-[#0a0a0a] border border-gray-200 dark:border-gray-800 rounded-lg px-4 py-2 text-sm focus:ring-1 focus:ring-primary outline-none text-gray-900 dark:text-white">
-                                    <option>Cabelo</option>
-                                    <option>Barba</option>
-                                    <option>Combo</option>
-                                    <option>Estética</option>
-                                </select>
-                            </div>
+
                         </div>
-                        <div className="flex justify-end gap-3 mt-8">
-                            <button onClick={() => setIsAddModalOpen(false)} className="px-5 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors border border-gray-200 dark:border-gray-700">Cancelar</button>
-                            <button onClick={() => setIsAddModalOpen(false)} className="px-5 py-2 text-sm font-bold bg-primary text-black rounded-lg hover:bg-cyan-400 transition-colors shadow-sm">Salvar Serviço</button>
+
+                        {/* Modal Footer */}
+                        <div className="p-4 sm:p-6 border-t border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#161618] flex items-center justify-end gap-3 z-0 relative">
+                            <button
+                                onClick={() => setIsModalOpen(false)}
+                                className="px-5 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#222] rounded-xl transition-colors"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={handleSave}
+                                disabled={!formName || !formPrice || !formDuration}
+                                className="flex items-center gap-2 px-6 py-2.5 bg-primary text-black text-sm font-bold rounded-xl shadow-lg shadow-cyan-500/20 hover:bg-cyan-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                <Check className="w-4 h-4" />
+                                Salvar Serviço
+                            </button>
                         </div>
+
                     </div>
                 </div>
             )}
+
         </div>
     );
 }

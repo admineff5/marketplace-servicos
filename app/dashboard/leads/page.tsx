@@ -1,125 +1,189 @@
 "use client";
 
 import { useState } from "react";
-import { UserSquare2, Filter, Search, Plus, X } from "lucide-react";
+import { Target, Search, Plus, Filter, MessageCircle, MoreVertical, Calendar } from "lucide-react";
 
-const MOCK_LEADS = [
-    { id: 1, name: "Marcelo Souza", service: "Corte + Barba", date: "Há 2 horas", status: "Agendou", statusColor: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400" },
-    { id: 2, name: "Ana Beatriz", service: "Luzes", date: "Há 4 horas", status: "Em Contato", statusColor: "bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400" },
-    { id: 3, name: "Lucas Fernandes", service: "Corte Degradê", date: "Há 1 dia", status: "Perdido", statusColor: "bg-gray-100 text-gray-700 dark:bg-gray-700/50 dark:text-gray-400" },
-    { id: 4, name: "Roberto Silva", service: "Barba", date: "Há 1 dia", status: "Agendou", statusColor: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400" },
+// Kanban Columns (Stages)
+const STAGES = ["Novos Contatos", "Em Negociação", "Agendamento Confirmado", "Perdido"];
+
+// Fake Leads Data
+const INITIAL_LEADS = [
+    { id: 1, name: "Fernanda Lima", origin: "Instagram", service: "Micro de Sobrancelha", stage: "Novos Contatos", phone: "11999999999", date: "Há 2 horas" },
+    { id: 2, name: "Pedro Henrique", origin: "WhatsApp", service: "Corte + Barba", stage: "Em Negociação", phone: "11988888888", date: "Ontem" },
+    { id: 3, name: "Maria Cláudia", origin: "Indicação", service: "Limpeza de Pele", stage: "Em Negociação", phone: "11977777777", date: "Pela Manhã" },
+    { id: 4, name: "José Roberto", origin: "Google Ads", service: "Consulta Pet", stage: "Agendamento Confirmado", phone: "11966666666", date: "Segunda-feira" },
+    { id: 5, name: "Camila Borges", origin: "Instagram", service: "Camuflagem", stage: "Perdido", phone: "11955555555", date: "Semana passada" },
 ];
 
-export default function LeadsPage() {
-    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+export default function GestaoLeadsPage() {
+    const [leads, setLeads] = useState(INITIAL_LEADS);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    // Filter based on search term
+    const filteredLeads = leads.filter(l =>
+        l.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        l.service.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    // Group by Stages
+    const getLeadsByStage = (stageName: string) => {
+        return filteredLeads.filter(l => l.stage === stageName);
+    };
+
+    // Move Stage Logic (Click handler instead of Drag & Drop for MVP Simplicity on Mobile)
+    const moveLead = (leadId: number, direction: 'next' | 'prev') => {
+        setLeads(prev => prev.map(lead => {
+            if (lead.id === leadId) {
+                const currentIndex = STAGES.indexOf(lead.stage);
+                let newIndex = currentIndex;
+
+                if (direction === 'next' && currentIndex < STAGES.length - 1) newIndex++;
+                if (direction === 'prev' && currentIndex > 0) newIndex--;
+
+                return { ...lead, stage: STAGES[newIndex] };
+            }
+            return lead;
+        }));
+    };
 
     return (
-        <div className="space-y-6 max-w-7xl mx-auto">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Gerenciamento de Leads</h2>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Pessoas que demonstraram interesse ou iniciaram contato.</p>
-                </div>
-                <div className="flex gap-2 mt-4 sm:mt-0">
-                    <button onClick={() => setIsAddModalOpen(true)} className="flex items-center gap-2 bg-primary text-black font-semibold px-4 py-2 rounded-lg hover:bg-cyan-400 transition-colors shadow-sm text-sm">
-                        <Plus className="w-4 h-4" /> Novo Lead
+        <div className="min-h-[calc(100vh-4rem)] p-4 sm:p-8 bg-gray-50/50 dark:bg-[#0a0a0a]">
+            <div className="flex flex-col h-full space-y-6">
+
+                {/* Header Section */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-2">
+                            <Target className="w-6 h-6 text-primary" />
+                            Gestão de Leads (CRM)
+                        </h1>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                            Guie contatos frios até o momento do agendamento de forma visual.
+                        </p>
+                    </div>
+
+                    <button
+                        onClick={() => setIsModalOpen(true)}
+                        className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-bold text-black shadow-lg shadow-cyan-500/20 hover:bg-cyan-400 transition-all hover:scale-105"
+                    >
+                        <Plus className="w-4 h-4" />
+                        Adicionar Lead
                     </button>
                 </div>
-            </div>
 
-            {/* Toolbar */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-between bg-white dark:bg-[#111] p-4 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm">
-                <div className="relative w-full sm:max-w-xs">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <input
-                        type="text"
-                        placeholder="Buscar lead pelo nome..."
-                        className="w-full pl-9 pr-4 py-2 bg-gray-50 dark:bg-[#0a0a0a] border border-gray-200 dark:border-gray-800 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors text-gray-900 dark:text-white placeholder-gray-400"
-                    />
+                {/* Toolbar */}
+                <div className="bg-white dark:bg-[#111112] rounded-2xl border border-gray-200 dark:border-[#222] p-4 flex flex-col sm:flex-row gap-4 justify-between items-center">
+                    <div className="relative w-full sm:w-96">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                        <input
+                            type="text"
+                            placeholder="Buscar interessado ou serviço..."
+                            value={searchTerm}
+                            onChange={e => setSearchTerm(e.target.value)}
+                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all"
+                        />
+                    </div>
+
+                    <button className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl hover:bg-gray-100 dark:hover:bg-[#222] transition-colors w-full sm:w-auto">
+                        <Filter className="w-4 h-4" /> Origens
+                    </button>
                 </div>
-                <button className="flex items-center gap-2 px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                    <Filter className="w-4 h-4" /> Filtrar Status
-                </button>
-            </div>
 
-            {/* List Area */}
-            <div className="bg-white dark:bg-[#111] rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left text-sm text-gray-600 dark:text-gray-400 border-collapse">
-                        <thead className="text-xs uppercase bg-gray-50 dark:bg-gray-800/50 text-gray-700 dark:text-gray-300">
-                            <tr>
-                                <th className="px-6 py-4 font-semibold">Nome do Lead</th>
-                                <th className="px-6 py-4 font-semibold">Interesse</th>
-                                <th className="px-6 py-4 font-semibold">Quando</th>
-                                <th className="px-6 py-4 font-semibold">Status</th>
-                                <th className="px-6 py-4 font-semibold text-right">Ação</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {MOCK_LEADS.map((lead) => (
-                                <tr key={lead.id} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/20 transition-colors">
-                                    <td className="px-6 py-4">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
-                                                {lead.name.charAt(0)}
-                                            </div>
-                                            <span className="font-bold text-gray-900 dark:text-white">{lead.name}</span>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 font-medium">{lead.service}</td>
-                                    <td className="px-6 py-4">{lead.date}</td>
-                                    <td className="px-6 py-4">
-                                        <span className={`px-2.5 py-1 text-xs font-bold rounded-full ${lead.statusColor}`}>
-                                            {lead.status}
+                {/* Kanban Board Container -> Scrollable overflow in Mobile */}
+                <div className="flex-1 overflow-x-auto custom-scrollbar pb-6 pl-1 pr-4">
+                    <div className="flex gap-6 min-w-max h-full">
+
+                        {STAGES.map((stage, idx) => {
+                            const columnLeads = getLeadsByStage(stage);
+
+                            return (
+                                <div key={stage} className="w-[320px] flex flex-col shrink-0 bg-gray-100/50 dark:bg-[#111112]/50 rounded-2xl border border-gray-200/50 dark:border-[#222]/50">
+
+                                    {/* Column Header */}
+                                    <div className="p-4 border-b border-gray-200 dark:border-[#222] flex items-center justify-between bg-white/50 dark:bg-[#161618]/50 rounded-t-2xl">
+                                        <h3 className="font-bold text-gray-800 dark:text-gray-200 uppercase text-xs tracking-wider">
+                                            {stage}
+                                        </h3>
+                                        <span className="w-6 h-6 rounded-full bg-gray-200 dark:bg-[#222] text-xs font-bold text-gray-700 dark:text-gray-400 flex items-center justify-center">
+                                            {columnLeads.length}
                                         </span>
-                                    </td>
-                                    <td className="px-6 py-4 text-right">
-                                        <button className="text-gray-500 hover:text-gray-900 dark:hover:text-primary transition-colors hover:underline font-semibold text-xs uppercase tracking-wide">
-                                            Ver Ficha
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                                    </div>
+
+                                    {/* Column Body / Cards */}
+                                    <div className="p-4 flex-1 flex flex-col gap-4 overflow-y-auto">
+                                        {columnLeads.length > 0 ? columnLeads.map(lead => (
+                                            <div key={lead.id} className="bg-white dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] p-4 rounded-xl shadow-sm hover:shadow-md hover:border-primary/30 transition-all group relative">
+
+                                                {/* Meta */}
+                                                <div className="flex justify-between items-start mb-2">
+                                                    <span className={`text-[10px] font-bold uppercase tracking-wide px-2 py-1 rounded-md ${lead.origin === 'Instagram' ? 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400' :
+                                                            lead.origin === 'WhatsApp' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+                                                                'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                                                        }`}>
+                                                        {lead.origin}
+                                                    </span>
+                                                    <button className="text-gray-400 hover:text-gray-900 dark:hover:text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <MoreVertical className="w-4 h-4" />
+                                                    </button>
+                                                </div>
+
+                                                {/* Title & Info */}
+                                                <h4 className="font-bold text-gray-900 dark:text-white text-sm leading-snug">{lead.name}</h4>
+                                                <p className="text-xs text-primary font-medium mt-1">{lead.service}</p>
+
+                                                <div className="mt-4 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 pt-3 border-t border-gray-100 dark:border-[#222]">
+                                                    <div className="flex items-center gap-1">
+                                                        <Calendar className="w-3.5 h-3.5 text-gray-400" />
+                                                        {lead.date}
+                                                    </div>
+
+                                                    <a href={`https://wa.me/${lead.phone}`} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-md bg-gray-100 dark:bg-[#222] hover:bg-green-100 dark:hover:bg-green-900/40 text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-colors" title="Chamar no Whats">
+                                                        <MessageCircle className="w-3.5 h-3.5" />
+                                                    </a>
+                                                </div>
+
+                                                {/* Arrows for moving Lead MVP style */}
+                                                <div className="absolute top-1/2 -translate-y-1/2 -left-2 -right-2 flex justify-between opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                                                    {idx > 0 && (
+                                                        <button onClick={() => moveLead(lead.id, 'prev')} className="w-6 h-6 rounded-full bg-white dark:bg-black border border-gray-200 dark:border-gray-800 shadow-md flex items-center justify-center text-gray-500 hover:text-primary pointer-events-auto transform -translate-x-1/2">
+                                                            {"<"}
+                                                        </button>
+                                                    )}
+                                                    {idx < STAGES.length - 1 && (
+                                                        <button onClick={() => moveLead(lead.id, 'next')} className="w-6 h-6 ml-auto rounded-full bg-white dark:bg-black border border-gray-200 dark:border-gray-800 shadow-md flex items-center justify-center text-gray-500 hover:text-primary pointer-events-auto transform translate-x-1/2">
+                                                            {">"}
+                                                        </button>
+                                                    )}
+                                                </div>
+
+                                            </div>
+                                        )) : (
+                                            <div className="h-full flex flex-col items-center justify-center text-center p-4 border-2 border-dashed border-gray-200 dark:border-[#222] rounded-xl bg-transparent">
+                                                <Target className="w-8 h-8 text-gray-300 dark:text-gray-700 mb-2" />
+                                                <p className="text-xs text-gray-500 dark:text-gray-500">Nenhum lead nesta fase</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
                 </div>
             </div>
 
-            {/* Modal Novo Lead */}
-            {isAddModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setIsAddModalOpen(false)}>
-                    <div className="bg-white dark:bg-[#111] rounded-2xl w-full max-w-md p-6 overflow-hidden border border-gray-100 dark:border-gray-800 shadow-2xl animate-in fade-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
-                        <div className="flex justify-between items-center mb-6">
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white">Registrar Novo Lead</h3>
-                            <button onClick={() => setIsAddModalOpen(false)} className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
-                                <X className="w-5 h-5" />
-                            </button>
-                        </div>
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nome do Lead</label>
-                                <input type="text" className="w-full bg-gray-50 dark:bg-[#0a0a0a] border border-gray-200 dark:border-gray-800 rounded-lg px-4 py-2 text-sm focus:ring-1 focus:ring-primary outline-none text-gray-900 dark:text-white" placeholder="Nome do potencial cliente" />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Contato (WhatsApp/Telefone)</label>
-                                <input type="text" className="w-full bg-gray-50 dark:bg-[#0a0a0a] border border-gray-200 dark:border-gray-800 rounded-lg px-4 py-2 text-sm focus:ring-1 focus:ring-primary outline-none text-gray-900 dark:text-white" placeholder="(00) 00000-0000" />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Serviço de Interesse</label>
-                                <select className="w-full bg-gray-50 dark:bg-[#0a0a0a] border border-gray-200 dark:border-gray-800 rounded-lg px-4 py-2 text-sm focus:ring-1 focus:ring-primary outline-none text-gray-900 dark:text-white">
-                                    <option>Corte de Cabelo</option>
-                                    <option>Barba</option>
-                                    <option>Outro</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div className="flex justify-end gap-3 mt-8">
-                            <button onClick={() => setIsAddModalOpen(false)} className="px-5 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors border border-gray-200 dark:border-gray-700">Cancelar</button>
-                            <button onClick={() => setIsAddModalOpen(false)} className="px-5 py-2 text-sm font-bold bg-primary text-black rounded-lg hover:bg-cyan-400 transition-colors shadow-sm">Salvar Lead</button>
-                        </div>
+            {/* CREATE MODAL -> Will be implemented fully later, stubbing structure */}
+            {isModalOpen && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}>
+                    <div className="bg-white dark:bg-[#111112] p-8 rounded-3xl max-w-sm w-full text-center" onClick={e => e.stopPropagation()}>
+                        <Target className="w-12 h-12 text-primary mx-auto mb-4" />
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Novo Lead Manual</h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Em breve: a integração via API das mensagens do Instagram cairão aqui sozinhas!</p>
+                        <button onClick={() => setIsModalOpen(false)} className="w-full bg-gray-100 dark:bg-[#222] text-gray-900 dark:text-white font-bold py-3 rounded-xl hover:bg-gray-200 dark:hover:bg-[#333] transition-colors">Voltar</button>
                     </div>
                 </div>
             )}
+
         </div>
     );
 }

@@ -6,11 +6,11 @@ import { Plus, ChevronLeft, ChevronRight, X, User, Edit2, Trash2, Mail, MoreVert
 // Mock Data
 const MOCK_APPOINTMENTS = [
     { id: 1, date: 2, month: 1, year: 2026, title: "corte de cabelo - Rodrigo", start: "9am", end: "10am", color: "text-blue-500 dark:text-gray-300", dot: "bg-blue-500", prof: "Rodrigo", client: "Thiago", phone: "https://wa.me/5527992661278", desc: "reagendado pela IA." },
-    { id: 2, date: 2, month: 1, year: 2026, title: "Corte de cabelo - Rodrigo", start: "10am", end: "11am", color: "text-blue-500 dark:text-gray-300", dot: "bg-blue-500", prof: "Rodrigo" },
+    { id: 2, date: 2, month: 1, year: 2026, title: "Corte de cabelo - Rodrigo", start: "10am", end: "11am", color: "text-blue-500 dark:text-gray-300", dot: "bg-blue-500", prof: "Rodrigo", client: "Lucas Almeida", phone: "https://wa.me/5511999999999", clientNote: "Oi João! Consigo pedir pra você focar um pouco mais nas laterais hoje? Está crescendo muito rápido. Abraços!" },
     { id: 3, date: 2, month: 1, year: 2026, title: "corte de cabelo - Rodrigo", start: "2pm", end: "3pm", color: "text-purple-500 dark:text-gray-300", dot: "bg-purple-500", prof: "Rodrigo" },
     { id: 4, date: 2, month: 1, year: 2026, title: "Corte de cabelo - Rodrigo", start: "2pm", end: "3pm", color: "text-pink-500 dark:text-gray-300", dot: "bg-pink-500", prof: "Rodrigo" },
     { id: 5, date: 3, month: 1, year: 2026, title: "Corte de cabelo - Rodrigo", start: "10am", end: "11am", color: "text-green-500 dark:text-gray-300", dot: "bg-green-500", prof: "Rodrigo" },
-    { id: 6, date: 4, month: 1, year: 2026, title: "corte de barba - Thiago", start: "9:40am", end: "10:10am", color: "text-purple-500 dark:text-gray-300", dot: "bg-purple-500", prof: "Thiago" },
+    { id: 6, date: 4, month: 1, year: 2026, title: "corte de barba - Thiago", start: "9:40am", end: "10:10am", color: "text-purple-500 dark:text-gray-300", dot: "bg-purple-500", prof: "Thiago", client: "Marcos Oliveira", phone: "https://wa.me/5511988888888", clientNote: "Alergia leve a lâminas muito afiadas na bochecha, pode usar máquina mais suave?" },
     { id: 7, date: 4, month: 1, year: 2026, title: "Corte de barba - Rodrigo", start: "1:05pm", end: "1:40pm", color: "text-blue-500 dark:text-gray-300", dot: "bg-blue-500", prof: "Rodrigo" },
     { id: 8, date: 9, month: 1, year: 2026, title: "Corte de cabelo - Thiago", start: "10am", end: "11am", color: "text-green-500 dark:text-gray-300", dot: "bg-green-500", prof: "Thiago", client: "Rodrigo", phone: "https://wa.me/5527992661278", desc: "reagendado pela IA." },
     { id: 9, date: 9, month: 1, year: 2026, title: "corte de cabelo - Rodrigo", start: "4pm", end: "5pm", color: "text-purple-500 dark:text-gray-300", dot: "bg-purple-500", prof: "Rodrigo" },
@@ -464,18 +464,31 @@ export default function AgendaPage() {
 
                                 <div className="flex gap-4 mt-6">
                                     <Menu className="w-5 h-5 text-gray-500 shrink-0 mt-0.5" />
-                                    <div className="text-sm text-gray-800 dark:text-gray-200 leading-relaxed font-sans">
-                                        {selectedAppointment?.client && <p>Cliente: {selectedAppointment.client}</p>}
-                                        {selectedAppointment?.prof && <p>Agendamento para o profissional: {selectedAppointment.prof}</p>}
-                                        {selectedAppointment?.phone && (
-                                            <p>
-                                                Telefone do cliente: <a href={selectedAppointment.phone} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">{selectedAppointment.phone}</a>
-                                            </p>
-                                        )}
-                                        <p>Procedimento a ser realizado: {selectedAppointment?.title?.split('-')[0]?.trim() || ''}</p>
+                                    <div className="flex-1 text-sm text-gray-800 dark:text-gray-200 leading-relaxed font-sans">
+                                        <div className="space-y-1">
+                                            {selectedAppointment?.client && <p><span className="font-semibold">Cliente:</span> {selectedAppointment.client}</p>}
+                                            {selectedAppointment?.prof && <p><span className="font-semibold">Profissional:</span> {selectedAppointment.prof}</p>}
+                                            <p><span className="font-semibold">Procedimento:</span> {selectedAppointment?.title?.split('-')[0]?.trim() || ''}</p>
+                                        </div>
 
                                         {selectedAppointment?.desc && (
-                                            <p className="mt-4">{selectedAppointment.desc}</p>
+                                            <p className="mt-3 text-gray-500">{selectedAppointment.desc}</p>
+                                        )}
+
+                                        {selectedAppointment?.clientNote && (
+                                            <div className="mt-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg p-3 border border-gray-200 dark:border-gray-700 relative">
+                                                <div className="absolute -left-2 top-4 w-4 h-4 bg-gray-50 dark:bg-gray-800/50 border-t border-l border-gray-200 dark:border-gray-700 transform -rotate-45"></div>
+                                                <p className="text-sm italic text-gray-700 dark:text-gray-300 relative z-10">"{selectedAppointment.clientNote}"</p>
+                                            </div>
+                                        )}
+
+                                        {selectedAppointment?.phone && (
+                                            <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
+                                                <p className="text-xs text-gray-500 mb-2">Entre em contato direto pelo WhatsApp para responder ou confirmar detalhes:</p>
+                                                <a href={selectedAppointment.phone} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-[#25D366] text-white hover:bg-[#20bd5a] transition-colors rounded-lg font-medium text-sm shadow-sm">
+                                                    Conversar no WhatsApp
+                                                </a>
+                                            </div>
                                         )}
                                     </div>
                                 </div>

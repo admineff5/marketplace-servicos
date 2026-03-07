@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "../components/ThemeToggle";
+import { Footer } from "../components/Footer";
 import {
     BarChart3,
     Calendar,
@@ -18,14 +19,20 @@ import {
     ChevronLeft,
     ChevronRight,
     Menu,
-    X
+    X,
+    SearchCheck,
+    CalendarOff,
+    Target
 } from "lucide-react";
 
 const SIDEBAR_LINKS = [
     { name: "Visão Geral", href: "/dashboard", icon: BarChart3 },
     { name: "Agenda", href: "/dashboard/agenda", icon: Calendar },
-    { name: "Leads", href: "/dashboard/leads", icon: UserSquare2 },
+    { name: "Consulta Agendamentos", href: "/dashboard/consulta", icon: SearchCheck },
+    { name: "Feriados / Ausências", href: "/dashboard/bloqueios", icon: CalendarOff },
+    { name: "Leads", href: "/dashboard/leads", icon: Target },
     { name: "Clientes", href: "/dashboard/clientes", icon: Users },
+    { name: "Profissionais", href: "/dashboard/profissionais", icon: UserSquare2 },
     { name: "Serviços", href: "/dashboard/servicos", icon: Scissors },
     { name: "Produtos", href: "/dashboard/produtos", icon: Package },
     { name: "Configurações", href: "/dashboard/config", icon: Settings },
@@ -33,7 +40,7 @@ const SIDEBAR_LINKS = [
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
-    const [isCollapsed, setIsCollapsed] = useState(false);
+    const [isCollapsed, setIsCollapsed] = useState(true);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     return (
@@ -145,8 +152,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </header>
 
                 {/* Page Content */}
-                <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#0a0a0a] p-4 sm:p-6 lg:p-8">
-                    {children}
+                <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-[#0a0a0a] flex flex-col">
+                    <div className="flex-1 p-4 sm:p-6 lg:p-8">
+                        {children}
+                    </div>
+                    <Footer />
                 </main>
             </div>
         </div>

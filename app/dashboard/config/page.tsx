@@ -41,7 +41,7 @@ export default function ConfigPage() {
                         Gerencie as preferências e opções da sua conta empresarial.
                     </p>
                 </div>
-                <button className="bg-primary hover:bg-primary/90 text-gray-900 dark:text-gray-900 px-4 py-2 rounded-lg font-medium transition-colors">
+                <button className="bg-primary hover:bg-cyan-400 text-black font-bold px-4 py-2 rounded-lg transition-colors">
                     Salvar Alterações
                 </button>
             </div>
