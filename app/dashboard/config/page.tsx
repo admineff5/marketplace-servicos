@@ -6,7 +6,6 @@ import { Settings, User, Building, CreditCard, Bell, Shield, Palette, MapPin, X 
 const TABS = [
     { id: "profile", label: "Perfil da Empresa", icon: Building },
     { id: "locations", label: "Lojas / Franquias", icon: MapPin },
-    { id: "professionals", label: "Profissionais", icon: User },
     { id: "appearance", label: "Aparência", icon: Palette },
     { id: "payments", label: "Pagamentos", icon: CreditCard },
     { id: "notifications", label: "Notificações", icon: Bell },
@@ -15,13 +14,6 @@ const TABS = [
 
 export default function ConfigPage() {
     const [activeTab, setActiveTab] = useState("profile");
-    const [isAddProfModalOpen, setIsAddProfModalOpen] = useState(false);
-
-    // Mock Professionals Data
-    const [professionals, setProfessionals] = useState([
-        { id: 1, name: "João Silva", role: "Barbeiro", email: "joao@exemplo.com", phone: "(11) 90000-0000", status: "Ativo" },
-        { id: 2, name: "Ana Beatriz", role: "Esteticista", email: "ana@exemplo.com", phone: "(11) 91111-1111", status: "Ativo" },
-    ]);
 
     // Mock Locations Data
     const [locations, setLocations] = useState([
@@ -187,69 +179,7 @@ export default function ConfigPage() {
                         </div>
                     )}
 
-                    {activeTab === "professionals" && (
-                        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                            <div className="flex items-center justify-between mb-4">
-                                <div>
-                                    <h2 className="text-lg font-bold text-gray-900 dark:text-white">Profissionais da Equipe</h2>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Gerencie os colaboradores que prestam serviços na sua empresa.</p>
-                                </div>
-                                <button onClick={() => setIsAddProfModalOpen(true)} className="flex items-center gap-2 bg-primary text-black px-4 py-2 rounded-lg text-sm font-semibold hover:bg-cyan-400 transition-colors shadow-sm">
-                                    <User className="w-4 h-4" />
-                                    <span>Adicionar Profissional</span>
-                                </button>
-                            </div>
-
-                            <div className="bg-white dark:bg-[#111] rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden mt-4">
-                                <div className="overflow-x-auto">
-                                    <table className="w-full text-left text-sm text-gray-600 dark:text-gray-400 border-collapse">
-                                        <thead className="text-xs uppercase bg-gray-50 dark:bg-gray-800/50 text-gray-700 dark:text-gray-300">
-                                            <tr>
-                                                <th className="px-6 py-4 font-semibold">Profissional</th>
-                                                <th className="px-6 py-4 font-semibold">Especialidade</th>
-                                                <th className="px-6 py-4 font-semibold">Contato</th>
-                                                <th className="px-6 py-4 font-semibold">Status</th>
-                                                <th className="px-6 py-4 font-semibold text-right">Ação</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {professionals.map((prof) => (
-                                                <tr key={prof.id} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/20 transition-colors">
-                                                    <td className="px-6 py-4">
-                                                        <div className="flex items-center gap-3">
-                                                            <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-cyan-700 dark:text-primary font-bold">
-                                                                {prof.name.charAt(0)}
-                                                            </div>
-                                                            <span className="font-bold text-gray-900 dark:text-white">{prof.name}</span>
-                                                        </div>
-                                                    </td>
-                                                    <td className="px-6 py-4 font-medium">{prof.role}</td>
-                                                    <td className="px-6 py-4">
-                                                        <div className="flex flex-col">
-                                                            <span className="text-gray-900 dark:text-white">{prof.phone}</span>
-                                                            <span className="text-xs text-gray-500">{prof.email}</span>
-                                                        </div>
-                                                    </td>
-                                                    <td className="px-6 py-4">
-                                                        <span className="px-2.5 py-1 text-xs font-bold rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400">
-                                                            {prof.status}
-                                                        </span>
-                                                    </td>
-                                                    <td className="px-6 py-4 text-right">
-                                                        <button className="text-gray-500 hover:text-gray-900 dark:hover:text-cyan-700 dark:hover:text-primary transition-colors hover:underline font-semibold text-xs uppercase tracking-wide">
-                                                            Editar
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {activeTab !== "profile" && activeTab !== "locations" && activeTab !== "appearance" && activeTab !== "professionals" && (
+                    {activeTab !== "profile" && activeTab !== "locations" && activeTab !== "appearance" && (
                         <div className="flex flex-col items-center justify-center py-16 text-center animate-in fade-in zoom-in-95 duration-300">
                             <div className="w-16 h-16 bg-gray-50 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
                                 <Settings className="w-8 h-8 text-gray-400" />
@@ -262,44 +192,6 @@ export default function ConfigPage() {
                     )}
                 </div>
             </div>
-
-            {/* Modal Novo Profissional */}
-            {isAddProfModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setIsAddProfModalOpen(false)}>
-                    <div className="bg-white dark:bg-[#111] rounded-2xl w-full max-w-md p-6 overflow-hidden border border-gray-100 dark:border-gray-800 shadow-2xl animate-in fade-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
-                        <div className="flex justify-between items-center mb-6">
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white">Adicionar Profissional</h3>
-                            <button onClick={() => setIsAddProfModalOpen(false)} className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
-                                <X className="w-5 h-5" />
-                            </button>
-                        </div>
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nome Completo</label>
-                                <input type="text" className="w-full bg-gray-50 dark:bg-[#0a0a0a] border border-gray-200 dark:border-gray-800 rounded-lg px-4 py-2 text-sm focus:ring-1 focus:ring-primary outline-none text-gray-900 dark:text-white" placeholder="Ex: Carlos Silva" />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Especialidade / Cargo</label>
-                                <input type="text" className="w-full bg-gray-50 dark:bg-[#0a0a0a] border border-gray-200 dark:border-gray-800 rounded-lg px-4 py-2 text-sm focus:ring-1 focus:ring-primary outline-none text-gray-900 dark:text-white" placeholder="Ex: Barbeiro Sênior" />
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Telefone</label>
-                                    <input type="text" className="w-full bg-gray-50 dark:bg-[#0a0a0a] border border-gray-200 dark:border-gray-800 rounded-lg px-4 py-2 text-sm focus:ring-1 focus:ring-primary outline-none text-gray-900 dark:text-white" placeholder="(00) 00000-0000" />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">E-mail</label>
-                                    <input type="email" className="w-full bg-gray-50 dark:bg-[#0a0a0a] border border-gray-200 dark:border-gray-800 rounded-lg px-4 py-2 text-sm focus:ring-1 focus:ring-primary outline-none text-gray-900 dark:text-white" placeholder="email@exemplo.com" />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex justify-end gap-3 mt-8">
-                            <button onClick={() => setIsAddProfModalOpen(false)} className="px-5 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors border border-gray-200 dark:border-gray-700">Cancelar</button>
-                            <button onClick={() => setIsAddProfModalOpen(false)} className="px-5 py-2 text-sm font-bold bg-primary text-black rounded-lg hover:bg-cyan-400 transition-colors shadow-sm">Salvar Profissional</button>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }

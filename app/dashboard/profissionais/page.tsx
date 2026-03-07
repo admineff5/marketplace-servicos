@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Search, Edit2, Trash2, X, UserSquare2, Check, Clock, CalendarDays, Upload, Image as ImageIcon } from "lucide-react";
+import { Plus, Search, Edit2, Trash2, X, UserSquare2, Check, Clock, CalendarDays, Upload, Image as ImageIcon, MapPin } from "lucide-react";
 
 // AVATARES PRE-DEFINIDOS DO MOCK
 const MOCK_AVATARS = [
@@ -12,14 +12,21 @@ const MOCK_AVATARS = [
     "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80",
 ];
 
+// Mock das Unidades (Vindo das Configurações)
+const MOCK_LOCATIONS = [
+    { id: 1, name: "Matriz - Centro Vitória" },
+    { id: 2, name: "Filial - Vila Velha" },
+];
+
 const INITIAL_MOCK_PROFISSIONAIS = [
-    { id: 1, name: "Rodrigo Silva", role: "Barbeiro Sênior", img: MOCK_AVATARS[0], days: "Segunda a Sábado", hours: "09:00 - 19:00" },
-    { id: 2, name: "Ana Beatriz", role: "Esteticista", img: MOCK_AVATARS[2], days: "Terça a Sexta", hours: "10:00 - 18:00" },
+    { id: 1, name: "Rodrigo Silva", role: "Barbeiro Sênior", img: MOCK_AVATARS[0], days: "Segunda a Sábado", hours: "09:00 - 19:00", unitId: 1 },
+    { id: 2, name: "Ana Beatriz", role: "Esteticista", img: MOCK_AVATARS[2], days: "Terça a Sexta", hours: "10:00 - 18:00", unitId: 2 },
 ];
 
 export default function GestaoProfissionaisPage() {
     const [professionals, setProfessionals] = useState(INITIAL_MOCK_PROFISSIONAIS);
     const [searchTerm, setSearchTerm] = useState("");
+    const [unitFilter, setUnitFilter] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showAvatarSelector, setShowAvatarSelector] = useState(false);
 
@@ -30,11 +37,14 @@ export default function GestaoProfissionaisPage() {
     const [formTimeStart, setFormTimeStart] = useState("09:00");
     const [formTimeEnd, setFormTimeEnd] = useState("18:00");
     const [formAvatar, setFormAvatar] = useState("");
+    const [formUnitId, setFormUnitId] = useState("");
 
-    const filteredProfessionals = professionals.filter(p =>
-        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.role.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredProfessionals = professionals.filter(p => {
+        const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            p.role.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesUnit = !unitFilter || p.unitId === Number(unitFilter);
+        return matchesSearch && matchesUnit;
+    });
 
     const resetForm = () => {
         setFormName("");
@@ -43,6 +53,7 @@ export default function GestaoProfissionaisPage() {
         setFormTimeStart("09:00");
         setFormTimeEnd("18:00");
         setFormAvatar("");
+        setFormUnitId("");
         setShowAvatarSelector(false);
     };
 
@@ -52,7 +63,7 @@ export default function GestaoProfissionaisPage() {
     };
 
     const handleSave = () => {
-        if (!formName || !formRole) return;
+        if (!formName || !formRole || !formUnitId) return;
 
         setProfessionals([...professionals, {
             id: Date.now(),
@@ -60,7 +71,8 @@ export default function GestaoProfissionaisPage() {
             role: formRole,
             days: formDays,
             hours: `${formTimeStart} - ${formTimeEnd}`,
-            img: formAvatar || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" // Fallback Default
+            unitId: Number(formUnitId),
+            img: formAvatar || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80"
         }]);
 
         setIsModalOpen(false);
@@ -93,7 +105,7 @@ export default function GestaoProfissionaisPage() {
                 </div>
 
                 {/* Filter Bar */}
-                <div className="bg-white dark:bg-[#111112] rounded-2xl border border-gray-200 dark:border-[#222] p-4 flex flex-col sm:flex-row gap-4">
+                <div className="bg-white dark:bg-[#111112] rounded-2xl border border-gray-200 dark:border-[#222] p-4 flex flex-col sm:flex-row gap-4 shadow-sm">
                     <div className="relative flex-1">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                         <input
@@ -103,6 +115,18 @@ export default function GestaoProfissionaisPage() {
                             onChange={e => setSearchTerm(e.target.value)}
                             className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all"
                         />
+                    </div>
+                    <div className="sm:w-64">
+                        <select
+                            value={unitFilter}
+                            onChange={e => setUnitFilter(e.target.value)}
+                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-primary transition-all appearance-none cursor-pointer"
+                        >
+                            <option value="">Todas as Unidades</option>
+                            {MOCK_LOCATIONS.map(loc => (
+                                <option key={loc.id} value={loc.id}>{loc.name}</option>
+                            ))}
+                        </select>
                     </div>
                 </div>
 
@@ -120,7 +144,13 @@ export default function GestaoProfissionaisPage() {
 
                             {/* Data block */}
                             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-0.5">{prof.name}</h3>
-                            <p className="text-sm font-semibold text-cyan-700 dark:text-primary mb-4">{prof.role}</p>
+                            <p className="text-sm font-semibold text-cyan-700 dark:text-primary mb-2">{prof.role}</p>
+
+                            {/* Unit Tag */}
+                            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4 border border-gray-200 dark:border-gray-700">
+                                <MapPin className="w-3 h-3" />
+                                {MOCK_LOCATIONS.find(l => l.id === prof.unitId)?.name}
+                            </div>
 
                             <div className="w-full flex flex-col gap-2 mt-auto">
                                 <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-[#1a1a1c] px-3 py-2 rounded-lg border border-gray-100 dark:border-[#2a2a2c]">
@@ -148,7 +178,7 @@ export default function GestaoProfissionaisPage() {
                         <div className="col-span-full py-16 text-center text-gray-500 dark:text-gray-400 bg-white dark:bg-[#111112] rounded-2xl border border-dashed border-gray-300 dark:border-[#333]">
                             <div className="flex flex-col items-center justify-center gap-3">
                                 <UserSquare2 className="w-12 h-12 opacity-20" />
-                                <p className="text-lg">Nenhum profissional cadastrado.</p>
+                                <p className="text-lg">Nenhum profissional encontrado.</p>
                             </div>
                         </div>
                     )}
@@ -192,7 +222,7 @@ export default function GestaoProfissionaisPage() {
 
                                 <div className="flex-1 text-center sm:text-left">
                                     <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-1">Foto do Perfil</h3>
-                                    <p className="text-xs text-gray-500 mb-3">Escolha um avatar da galeria rápida ou clique na foto para simular upload.</p>
+                                    <p className="text-xs text-gray-500 mb-3">Escolha um avatar da galeria rápida.</p>
 
                                     {/* Avatar Fast Picker */}
                                     <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
@@ -200,7 +230,7 @@ export default function GestaoProfissionaisPage() {
                                             <div
                                                 key={idx}
                                                 onClick={() => setFormAvatar(av)}
-                                                className={`w - 10 h - 10 rounded - full border - 2 cursor - pointer overflow - hidden transition - all ${formAvatar === av ? 'border-primary ring-2 ring-primary/30 scale-110 shadow-lg' : 'border-transparent hover:border-gray-400'} `}
+                                                className={`w-10 h-10 rounded-full border-2 cursor-pointer overflow-hidden transition-all ${formAvatar === av ? 'border-primary ring-2 ring-primary/30 scale-110 shadow-lg' : 'border-transparent hover:border-gray-400'} `}
                                             >
                                                 <img src={av} alt="Avatar" className="w-full h-full object-cover" />
                                             </div>
@@ -210,6 +240,22 @@ export default function GestaoProfissionaisPage() {
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                <div className="col-span-1 sm:col-span-2">
+                                    <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5 uppercase tracking-wider">
+                                        Unidade / Loja *
+                                    </label>
+                                    <select
+                                        value={formUnitId}
+                                        onChange={e => setFormUnitId(e.target.value)}
+                                        className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-4 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all appearance-none cursor-pointer"
+                                    >
+                                        <option value="">Selecione a Unidade</option>
+                                        {MOCK_LOCATIONS.map(loc => (
+                                            <option key={loc.id} value={loc.id}>{loc.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+
                                 <div>
                                     <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5 uppercase tracking-wider">
                                         Nome Completo *
@@ -293,7 +339,7 @@ export default function GestaoProfissionaisPage() {
                             </button>
                             <button
                                 onClick={handleSave}
-                                disabled={!formName || !formRole}
+                                disabled={!formName || !formRole || !formUnitId}
                                 className="flex items-center gap-2 px-6 py-2.5 bg-primary text-black text-sm font-bold rounded-xl shadow-lg shadow-cyan-500/20 hover:bg-cyan-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <Check className="w-4 h-4" />
