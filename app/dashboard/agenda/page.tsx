@@ -104,8 +104,18 @@ export default function AgendaPage() {
 
     return (
         <div className="flex flex-col h-[calc(100vh-8rem)] gap-4">
-            {/* Top Action Bar Outside Agenda UI */}
-            <div className="flex justify-end shrink-0">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0">
+                <div>
+                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-2">
+                        <CalendarIcon className="w-6 h-6 text-cyan-700 dark:text-primary" />
+                        Agenda
+                    </h1>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        Gerencie seus horários e acompanhe os agendamentos.
+                    </p>
+                </div>
+
+                {/* Top Action Bar Outside Agenda UI */}
                 <div className="flex bg-gray-200 dark:bg-gray-800/80 rounded-lg p-1 shadow-sm border border-gray-300 dark:border-gray-700">
                     <button
                         onClick={() => setAgendaLayout("calendar")}
