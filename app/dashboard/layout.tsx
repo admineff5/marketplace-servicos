@@ -22,7 +22,8 @@ import {
     X,
     SearchCheck,
     CalendarOff,
-    Target
+    Target,
+    FileText
 } from "lucide-react";
 
 const SIDEBAR_LINKS = [
@@ -35,6 +36,7 @@ const SIDEBAR_LINKS = [
     { name: "Profissionais", href: "/dashboard/profissionais", icon: UserSquare2 },
     { name: "Serviços", href: "/dashboard/servicos", icon: Scissors },
     { name: "Produtos", href: "/dashboard/produtos", icon: Package },
+    { name: "Relatórios", href: "/dashboard/relatorios", icon: FileText },
     { name: "Configurações", href: "/dashboard/config", icon: Settings },
 ];
 

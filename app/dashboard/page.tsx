@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Link2, CalendarCheck, Users, Banknote, Scissors, TrendingUp, TrendingDown, ArrowUpRight, ArrowDownRight, FileText, ChevronRight, X, Sparkles, Filter, Store, Wallet, AlertCircle } from "lucide-react";
+import { Link2, CalendarCheck, Users, Banknote, Scissors, TrendingUp, TrendingDown, ArrowUpRight, ArrowDownRight, FileText, ChevronRight, X, Sparkles, Filter, Store, Wallet, AlertCircle, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 
 // 1. KPI Mocks (6 cards like Trinks)
@@ -20,49 +20,10 @@ const RECENT_APPOINTMENTS = [
     { id: 3, client: "Pedro Alves", service: "Barba Terapia", professional: "João Silva", time: "Amanhã, 10:00", status: "Confirmado" },
 ];
 
-// -- REPORTS DATA FOR CENTRAL --
-const REPORTS_CATEGORIES = [
-    "Agendamentos",
-    "Clientes",
-    "Estoque / Produtos",
-    "Financeiro",
-    "Profissionais",
-];
-
-const REPORTS_LIST = {
-    "Agendamentos": [
-        { title: "Relatório de Descrição e Quantidade (Por Período)", active: true, desc: "Lista completa de todos os agendamentos filtrados por data." },
-        { title: "Relatório de Agendamentos Online", active: true, desc: "Veja quem marcou pelo link público." },
-        { title: "Status de Agendamentos (Confirmados vs Faltas)", active: true, desc: "Taxa de comparecimento e cancelamentos frequentes." },
-    ],
-    "Clientes": [
-        { title: "Ranking de Clientes (Frequência)", active: true, desc: "Lista dos VIPs e clientes que mais visitam a loja." },
-        { title: "Relatório de Aniversariantes", active: true, desc: "Saiba quem faz aniversário no mês para enviar promoções." },
-        { title: "Clientes Inativos (> 30 dias)", active: true, desc: "Clientes que não retornaram recentemente." },
-        { title: "Ticket Médio por Cliente", active: false, desc: "Em breve: Cálculo de gasto médio." },
-    ],
-    "Estoque / Produtos": [
-        { title: "Posição Atual de Estoque", active: true, desc: "Lista de todos os produtos físicos e saldo atual." },
-        { title: "Produtos em Alerta (Baixo Estoque)", active: true, desc: "Filtro rápido dos itens que precisam de reposição." },
-        { title: "Curva ABC de Vendas", active: false, desc: "Em breve: Produtos mais rentáveis da loja." },
-    ],
-    "Financeiro": [
-        { title: "Fluxo Diário / Resumo de Caixa", active: true, desc: "Entradas e Saídas macro do período." },
-        { title: "Relatório de Despesas e Contas a Pagar", active: true, desc: "Lista de todas as despesas avulsas." },
-        { title: "Fechamento Mensal Demonstrativo", active: false, desc: "Em breve: DRE completo." },
-    ],
-    "Profissionais": [
-        { title: "Comissão Prevista e Realizada", active: true, desc: "Valores devidos a cada cadeira." },
-        { title: "Produtividade (Atendimentos por Mês)", active: true, desc: "Comparativo de quantidade de clientes por profissional." },
-    ],
-};
-
-
 export default function DashboardIndex() {
-    const [isReportsModalOpen, setIsReportsModalOpen] = useState(false);
-    const [selectedReportCategory, setSelectedReportCategory] = useState("Agendamentos");
+    const [isPrivacyMode, setIsPrivacyMode] = useState(true);
 
-    const activeReports = REPORTS_LIST[selectedReportCategory as keyof typeof REPORTS_LIST] || [];
+    const maskValue = (val: string) => isPrivacyMode ? "****" : val;
 
     return (
         <div className="space-y-6 max-w-7xl mx-auto pb-10">
@@ -74,6 +35,23 @@ export default function DashboardIndex() {
                     </h2>
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Resumo das métricas principais da sua loja (Mês atual vs Passado).</p>
                 </div>
+
+                <button
+                    onClick={() => setIsPrivacyMode(!isPrivacyMode)}
+                    className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 rounded-xl text-sm font-semibold text-gray-600 dark:text-gray-300 hover:text-cyan-700 dark:hover:text-primary transition-colors shadow-sm"
+                >
+                    {isPrivacyMode ? (
+                        <>
+                            <Eye className="w-4 h-4" />
+                            <span>Mostrar Valores</span>
+                        </>
+                    ) : (
+                        <>
+                            <EyeOff className="w-4 h-4" />
+                            <span>Ocultar Valores</span>
+                        </>
+                    )}
+                </button>
             </div>
 
             {/* FAIXA UNIFICADA 6 CARDS (Métricas Chave estilo Painel) */}
@@ -88,7 +66,7 @@ export default function DashboardIndex() {
                                 kpi.title === 'Despesa' ? 'text-red-500' :
                                     'text-gray-900 dark:text-white'
                                 }`}>
-                                {kpi.value}
+                                {maskValue(kpi.value)}
                             </p>
 
                             <div className="flex items-center gap-1 mt-1 opacity-80">
@@ -149,9 +127,6 @@ export default function DashboardIndex() {
                             </div>
                         ))}
                     </div>
-                    <Link href="/dashboard/agenda" className="sm:hidden mt-4 pt-4 border-t border-gray-100 dark:border-[#222] flex items-center justify-center gap-1 text-sm font-semibold text-cyan-700 dark:text-primary transition-colors w-full text-center">
-                        Abrir Agenda <ChevronRight className="w-4 h-4" />
-                    </Link>
                 </div>
 
                 {/* Lado Direito Menor: Relatórios Call to Action */}
@@ -171,121 +146,15 @@ export default function DashboardIndex() {
                             </p>
                         </div>
 
-                        <button
-                            onClick={() => setIsReportsModalOpen(true)}
+                        <Link
+                            href="/dashboard/relatorios"
                             className="relative z-10 w-full bg-primary hover:bg-cyan-400 text-black font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.02] shadow-sm dark:shadow-lg dark:shadow-cyan-500/20"
                         >
-                            Gerar Relatório <ArrowUpRight className="w-5 h-5" />
-                        </button>
+                            Ir para Relatórios <ArrowUpRight className="w-5 h-5" />
+                        </Link>
                     </div>
                 </div>
-
             </div>
-
-            {/* ========================================= */}
-            {/* OVERLAY / CENTRAL DE RELATÓRIOS (MODAL)    */}
-            {/* ========================================= */}
-            {isReportsModalOpen && (
-                <div className="fixed inset-0 z-[100] bg-gray-50 dark:bg-[#0a0a0a] flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-300">
-
-                    {/* Header Modal */}
-                    <div className="w-full bg-white dark:bg-[#111112] border-b border-gray-200 dark:border-[#222] px-4 sm:px-8 py-4 sm:py-6 flex items-center justify-between sticky top-0 z-10">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-xl flex items-center justify-center">
-                                <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-700 dark:text-primary" />
-                            </div>
-                            <div>
-                                <h2 className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">Relatórios Principais</h2>
-                                <p className="text-xs sm:text-sm text-gray-500">Exporte ou analise os dados cruzados da sua loja.</p>
-                            </div>
-                        </div>
-
-                        <button
-                            onClick={() => setIsReportsModalOpen(false)}
-                            className="bg-gray-100 hover:bg-gray-200 dark:bg-[#222] dark:hover:bg-[#333] text-gray-600 dark:text-gray-300 p-2.5 sm:px-4 sm:py-2.5 rounded-xl font-semibold flex items-center gap-2 transition-colors"
-                        >
-                            <span className="hidden sm:inline">Fechar Painel</span>
-                            <X className="w-5 h-5" />
-                        </button>
-                    </div>
-
-                    {/* Content Area */}
-                    <div className="flex-1 w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-6 lg:gap-8 p-4 sm:p-8 overflow-hidden h-full">
-
-                        {/* Sidebar Categorias */}
-                        <div className="w-full lg:w-64 shrink-0 flex flex-col gap-2 overflow-x-auto pb-4 lg:pb-0 lg:overflow-visible flex-row lg:flex-col custom-scrollbar">
-                            <h4 className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2 pl-2 lg:block hidden">Departamentos</h4>
-
-                            {REPORTS_CATEGORIES.map((cat) => (
-                                <button
-                                    key={cat}
-                                    onClick={() => setSelectedReportCategory(cat)}
-                                    className={`whitespace-nowrap lg:whitespace-normal text-left px-4 py-3 rounded-xl font-bold transition-all text-sm border ${selectedReportCategory === cat
-                                        ? 'bg-primary text-black border-primary shadow-sm'
-                                        : 'bg-white hover:bg-gray-50 dark:bg-[#111] dark:hover:bg-[#1a1a1c] text-gray-600 dark:text-gray-300 border-gray-200 dark:border-[#222]'
-                                        }`}
-                                >
-                                    {cat}
-                                </button>
-                            ))}
-                        </div>
-
-                        {/* Lista de Relatorios Cards */}
-                        <div className="flex-1 overflow-y-auto custom-scrollbar pb-20">
-                            <div className="flex items-center gap-2 mb-6">
-                                <Filter className="w-4 h-4 text-cyan-700 dark:text-primary" />
-                                <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                                    Catálogo: <span className="text-cyan-700 dark:text-primary">{selectedReportCategory}</span>
-                                </h3>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {activeReports.map((report, idx) => (
-                                    <div
-                                        key={idx}
-                                        className={`group relative flex flex-col border rounded-2xl p-5 sm:p-6 transition-all ${report.active
-                                            ? 'bg-white dark:bg-[#161618] border-gray-200 dark:border-[#2a2a2c] hover:border-primary/50 hover:shadow-md cursor-pointer'
-                                            : 'bg-gray-50/50 dark:bg-[#0f0f10] border-gray-100 dark:border-[#1a1a1c] opacity-60 cursor-not-allowed'
-                                            }`}
-                                    >
-                                        <div className="flex items-start gap-4">
-                                            <div className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${report.active ? 'bg-primary/10 text-cyan-700 dark:text-primary' : 'bg-gray-200 dark:bg-gray-800 text-gray-400'
-                                                }`}>
-                                                <FileText className="w-5 h-5" />
-                                            </div>
-                                            <div>
-                                                <h4 className={`text-sm sm:text-base font-bold mb-1 ${report.active ? 'text-gray-900 dark:text-white group-hover:text-cyan-700 dark:hover:text-primary transition-colors' : 'text-gray-500 dark:text-gray-500'
-                                                    }`}>
-                                                    {report.title}
-                                                </h4>
-                                                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
-                                                    {report.desc}
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        {report.active ? (
-                                            <div className="mt-4 pt-4 border-t border-gray-100 dark:border-[#222] flex justify-end">
-                                                <span className="text-xs font-bold text-cyan-700 dark:text-primary flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    Acessar Relatório <ChevronRight className="w-3 h-3" />
-                                                </span>
-                                            </div>
-                                        ) : (
-                                            <div className="absolute top-4 right-4">
-                                                <span className="inline-flex items-center gap-1 rounded bg-gray-200 dark:bg-[#222] px-2 py-0.5 text-[10px] font-bold text-gray-500 dark:text-gray-400 capitalize">
-                                                    <AlertCircle className="w-3 h-3" /> Em Breve
-                                                </span>
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            )}
-
         </div>
     );
 }
