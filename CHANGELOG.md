@@ -1,3 +1,11 @@
+## [0.4.0] - Novo Dashboard e Central de Relatórios - 2026-03-07
+### Adicionado
+- **Faixa de Indicadores (Painel Rápido):** O antigo formato estendido do Gráfico e blocos colossais foi dizimado da Visão Geral (`app/dashboard`). Agora abrimos um Layout Clean de 6 Cards Diretos (*Resultado, Receita, Despesa, Agendamentos, Presença Online e Atendimentos*) com setas verdes/vermelhas orientando métricas de Mês em Vigência vs Mês Passado.
+- **Central de Relatórios:** Criado ecossistema modal Overlap que domina 100% da tela do Lojista ao clicar no CTA de *Gerar Relatório*, listando num Switch lateral para Desktop e Horizontal no Celular todas as 5 Categorias da Arquitetura (*Agenda, Cadastro de Clientes, Bens e Estoque, Matriz Financeira e Comissão de Profissionais*).
+- **Lista de Documentos:** Incorparados mais de 10 Relatórios oficiais em botões clickáveis `active` e mais 4 sugestões descritivas `disabled` identificadas por uma Tag "Ideia Futura/Em breve". 
+
+---
+
 ## [0.3.1] - Patch de Navbar Mobile - 2026-03-07
 ### Fixed
 - Correção de responsividade do Navbar público (`app/page.tsx`): Removida a classe acidental `hidden` (no breakpoint sm) que desaparecia com os botões "Cadastrar-se" e "Login" do topo da tela em celulares, tornando o onboarding de clientes inacessível em certas dimensões. Refatorado os botões com layout fluído `text-xs py-1.5` nas telas estreitas.
