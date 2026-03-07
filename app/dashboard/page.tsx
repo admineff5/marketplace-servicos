@@ -156,24 +156,24 @@ export default function DashboardIndex() {
 
                 {/* Lado Direito Menor: Relatórios Call to Action */}
                 <div className="lg:col-span-4 flex flex-col gap-4">
-                    <div className="bg-gradient-to-br from-gray-900 to-black dark:from-[#111] dark:to-[#0a0a0a] rounded-2xl p-6 shadow-xl border border-gray-800 relative overflow-hidden flex flex-col h-full justify-between">
+                    <div className="bg-white dark:bg-gradient-to-br dark:from-[#111] dark:to-[#0a0a0a] rounded-2xl p-6 shadow-sm dark:shadow-xl border border-gray-200 dark:border-gray-800 relative overflow-hidden flex flex-col h-full justify-between">
                         {/* Abstract BG */}
-                        <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/20 blur-3xl rounded-full pointer-events-none"></div>
-                        <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-cyan-600/20 blur-3xl rounded-full pointer-events-none"></div>
+                        <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/10 blur-3xl rounded-full pointer-events-none"></div>
+                        <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-cyan-600/10 blur-3xl rounded-full pointer-events-none"></div>
 
                         <div className="relative z-10 mb-8">
-                            <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mb-4 backdrop-blur-sm border border-white/10">
-                                <FileText className="w-6 h-6 text-white" />
+                            <div className="w-12 h-12 bg-gray-50 dark:bg-white/10 rounded-xl flex items-center justify-center mb-4 border border-gray-100 dark:border-white/10">
+                                <FileText className="w-6 h-6 text-gray-900 dark:text-white" />
                             </div>
-                            <h3 className="text-xl font-bold text-white mb-2">Central de Relatórios</h3>
-                            <p className="text-sm text-gray-400">
+                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Central de Relatórios</h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
                                 Tenha o controle total da sua empresa em mãos. Acesse relatórios gerenciais, financeiros e de clientes com um clique.
                             </p>
                         </div>
 
                         <button
                             onClick={() => setIsReportsModalOpen(true)}
-                            className="relative z-10 w-full bg-primary hover:bg-cyan-400 text-black font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.02] shadow-lg shadow-cyan-500/20"
+                            className="relative z-10 w-full bg-primary hover:bg-cyan-400 text-black font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.02] shadow-sm dark:shadow-lg dark:shadow-cyan-500/20"
                         >
                             Gerar Relatório <ArrowUpRight className="w-5 h-5" />
                         </button>

@@ -1,3 +1,10 @@
+## [0.4.2] - Patch de UI e Tematização - 2026-03-07
+### Ajustado
+- Tabela Feriados e Bloqueios (`app/dashboard/bloqueios`): Os resquícios visuais em tema laranja (Headers, Borders e botões de pesquisa convertidos da UI antiga) foram modernizados usando os tons cinzas do padrão do software.
+- Central de Relatório CTA (`app/dashboard/page.tsx`): O Background do Card da direita que englobava o botão "Gerar Relatórios" agora obedece o Tema Light (bg-white e fontes pretas), ativando as cores sólidas e fontes brancas estritamente quando o modo Noturno estiver ligado.
+
+---
+
 ## [0.4.1] - Patch de Layout do Dashboard - 2026-03-07
 ### Ajustado
 - Na visão `app/dashboard/page.tsx`, a lista de "Próximos Horários" foi limitada de cinco para três listagens mockadas, pareadas simetricamente à altura do Bloco CTA ("Gerar Relatórios") adjacente, eliminando o espaço vazio e a necessidade de scroll nos Pcs.

@@ -56,10 +56,9 @@ export default function FeriadosBloqueiosPage() {
                         onChange={e => setDateEnd(e.target.value)}
                         className="bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-1.5 text-sm text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all"
                     />
-                    <button type="button" className="flex items-center justify-center w-9 h-9 ml-1 bg-[#8c5026] hover:bg-[#a65f2d] dark:bg-[#8c5026] dark:hover:bg-[#a65f2d] text-white rounded-lg shadow-sm transition-colors" title="Pesquisar Formato Antigo">
+                    <button type="button" className="flex items-center justify-center w-9 h-9 ml-1 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg shadow-sm transition-colors" title="Pesquisar">
                         <Search className="w-4 h-4" />
                     </button>
-                    <span className="text-xs text-gray-400 italic hidden xl:block">(Buscador marrom legado convertido em primário opcional mantendo estética)</span>
                 </div>
 
                 <div className="flex w-full md:w-auto justify-end">
@@ -72,26 +71,26 @@ export default function FeriadosBloqueiosPage() {
                 </div>
             </div>
 
-            {/* Resultado da Tabela Estilo Legacy Orange convertida */}
-            <div className="bg-white dark:bg-[#111] border border-[#e69b59]/30 dark:border-gray-800 rounded-2xl flex-1 flex flex-col overflow-hidden shadow-sm">
+            {/* Resultado da Tabela Estilo Legacy Convertida p/ Padrao */}
+            <div className="bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 rounded-2xl flex-1 flex flex-col overflow-hidden shadow-sm">
 
                 <div className="block w-full overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="bg-[#eba05b] text-white">
-                                <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider whitespace-nowrap border-r border-[#d98c4b]">Data</th>
-                                <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider whitespace-nowrap border-r border-[#d98c4b]">Dia da Semana</th>
-                                <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider whitespace-nowrap border-r border-[#d98c4b]">Profissional</th>
-                                <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider whitespace-nowrap border-r border-[#d98c4b]">Situação</th>
-                                <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider whitespace-nowrap border-r border-[#d98c4b]">Motivo</th>
-                                <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider whitespace-nowrap border-r border-[#d98c4b]">Horário Abertura</th>
-                                <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider whitespace-nowrap border-r border-[#d98c4b]">Horário Fechamento</th>
-                                <th className="py-3 px-4 text-xs border-[#d98c4b] w-20 text-center">Ações</th>
+                            <tr className="bg-gray-50/50 dark:bg-gray-800/20 text-gray-500 dark:text-gray-400">
+                                <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider whitespace-nowrap border-r border-gray-100 dark:border-gray-800/50">Data</th>
+                                <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider whitespace-nowrap border-r border-gray-100 dark:border-gray-800/50">Dia da Semana</th>
+                                <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider whitespace-nowrap border-r border-gray-100 dark:border-gray-800/50">Profissional</th>
+                                <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider whitespace-nowrap border-r border-gray-100 dark:border-gray-800/50">Situação</th>
+                                <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider whitespace-nowrap border-r border-gray-100 dark:border-gray-800/50">Motivo</th>
+                                <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider whitespace-nowrap border-r border-gray-100 dark:border-gray-800/50">Horário Abertura</th>
+                                <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider whitespace-nowrap border-r border-gray-100 dark:border-gray-800/50">Horário Fechamento</th>
+                                <th className="py-3 px-4 text-xs w-20 text-center">Ações</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100 dark:divide-gray-800/50">
                             {MOCK_BLOCKS.map((row) => (
-                                <tr key={row.id} className="hover:bg-orange-50/50 dark:hover:bg-gray-800/20 transition-colors">
+                                <tr key={row.id} className="hover:bg-gray-50 dark:hover:bg-[#161618] transition-colors">
                                     <td className="py-3 px-4 text-sm font-semibold text-gray-900 dark:text-gray-100 border-r border-gray-100 dark:border-gray-800/50">
                                         <div className="flex items-center gap-2">
                                             <CalendarOff className="w-3.5 h-3.5 text-orange-500" />
