@@ -5,12 +5,12 @@ import { Search, Plus, Package, Edit2, Trash2, X, Check, Upload, AlertTriangle, 
 
 // Mock Data para Simular Produtos
 const MOCK_PRODUTOS = [
-    { id: 1, name: "Minoxidil Kirkland 5% (Loção)", price: 89.90, stock: 2, image: "https://images.unsplash.com/photo-1629198688000-71f23e745b6e?w=300&auto=format&fit=crop&q=80" },
-    { id: 2, name: "Pomada Modeladora Efeito Matte", price: 45.00, stock: 15, image: "https://images.unsplash.com/photo-1620916297397-a4a5402a3c6c?w=300&auto=format&fit=crop&q=80" },
-    { id: 3, name: "Ração Super Premium Cães Adultos 15kg", price: 219.90, stock: 8, image: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=300&auto=format&fit=crop&q=80" },
-    { id: 4, name: "Óleo Hidratante para Barba", price: 35.00, stock: 4, image: "https://images.unsplash.com/photo-1599305090598-fe179d501227?w=300&auto=format&fit=crop&q=80" },
+    { id: 1, name: "Minoxidil Kirkland 5% (Loção)", price: 89.90, stock: 2, image: "https://images.unsplash.com/photo-1611078513926-538466b0dcda?w=300&auto=format&fit=crop&q=80" },
+    { id: 2, name: "Pomada Modeladora Efeito Matte", price: 45.00, stock: 15, image: "https://images.unsplash.com/photo-1599305090598-fe179d501227?w=300&auto=format&fit=crop&q=80" },
+    { id: 3, name: "Navalha Clássica Master de Aço", price: 119.90, stock: 8, image: "https://images.unsplash.com/photo-1593510987185-1ec2256148a3?w=300&auto=format&fit=crop&q=80" },
+    { id: 4, name: "Óleo Hidratante Premium para Barba", price: 35.00, stock: 4, image: "https://images.unsplash.com/photo-1621607512214-68297480165e?w=300&auto=format&fit=crop&q=80" },
     { id: 5, name: "Shampoo Anticaspa Force", price: 29.90, stock: 12, image: "https://images.unsplash.com/photo-1585232351009-aa87416fca90?w=300&auto=format&fit=crop&q=80" },
-    { id: 6, name: "Shampoo Banho e Tosa Pelos Claros", price: 42.00, stock: 0, image: "https://images.unsplash.com/photo-1584305574647-0cc959fabb1a?w=300&auto=format&fit=crop&q=80" },
+    { id: 6, name: "Gel Pós Barba Refrescante", price: 42.00, stock: 0, image: "https://images.unsplash.com/photo-1626285861696-9f0bf5a49ceb?w=300&auto=format&fit=crop&q=80" },
 ];
 
 export default function GestaoProdutosPage() {
@@ -223,9 +223,25 @@ export default function GestaoProdutosPage() {
                                         <Upload className="w-5 h-5 text-white" />
                                     </div>
                                 </div>
-                                <div>
+                                <div className="flex-1 space-y-2">
                                     <h3 className="text-sm font-bold text-gray-900 dark:text-white">Foto do Produto</h3>
-                                    <p className="text-xs text-gray-500 mt-1">Clique ao lado para adicionar foto referencial do estoque.</p>
+                                    <p className="text-xs text-gray-500">Cole uma URL de imagem ou pesquise no Google Imagens.</p>
+                                    <div className="flex gap-2">
+                                        <input
+                                            type="url"
+                                            value={formImage}
+                                            onChange={e => setFormImage(e.target.value)}
+                                            placeholder="https://..."
+                                            className="flex-1 bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2 text-xs focus:ring-1 focus:ring-primary outline-none text-gray-900 dark:text-white"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => window.open(`https://www.google.com/search?tbm=isch&q=${encodeURIComponent(formName ? formName + ' foto produto' : 'produto barbearia')}`, '_blank')}
+                                            className="shrink-0 bg-gray-100 hover:bg-gray-200 dark:bg-[#222] dark:hover:bg-[#333] px-3 py-2 rounded-lg text-xs font-semibold text-gray-700 dark:text-gray-300 transition-colors border border-gray-200 dark:border-[#2a2a2c]"
+                                        >
+                                            Pesquisar WEB
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 

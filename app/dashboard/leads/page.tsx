@@ -11,7 +11,7 @@ const INITIAL_LEADS = [
     { id: 1, name: "Fernanda Lima", origin: "Instagram", service: "Micro de Sobrancelha", stage: "Novos Contatos", phone: "11999999999", date: "Há 2 horas" },
     { id: 2, name: "Pedro Henrique", origin: "WhatsApp", service: "Corte + Barba", stage: "Em Negociação", phone: "11988888888", date: "Ontem" },
     { id: 3, name: "Maria Cláudia", origin: "Indicação", service: "Limpeza de Pele", stage: "Em Negociação", phone: "11977777777", date: "Pela Manhã" },
-    { id: 4, name: "José Roberto", origin: "Google Ads", service: "Consulta Pet", stage: "Agendamento Confirmado", phone: "11966666666", date: "Segunda-feira" },
+    { id: 4, name: "José Roberto", origin: "Google Ads", service: "Progressiva Masculina", stage: "Agendamento Confirmado", phone: "11966666666", date: "Segunda-feira" },
     { id: 5, name: "Camila Borges", origin: "Instagram", service: "Camuflagem", stage: "Perdido", phone: "11955555555", date: "Semana passada" },
 ];
 

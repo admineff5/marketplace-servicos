@@ -5,10 +5,10 @@ import { Search, Plus, CalendarOff, Edit2, Trash2, X } from "lucide-react";
 
 // Mock Data
 const MOCK_BLOCKS = [
-    { id: 1, dateStr: "15/11/2026", weekDay: "Domingo", situation: "Feriado", reason: "Proclamação da República", openTime: "-", closeTime: "-", isAllDay: true, prof: "Restaurante Inteiro (Todos)" },
-    { id: 2, dateStr: "20/12/2026", weekDay: "Sexta-feira", situation: "Horário Especial", reason: "Confraternização da Loja", openTime: "08:00", closeTime: "12:00", isAllDay: false, prof: "Restaurante Inteiro (Todos)" },
-    { id: 3, dateStr: "25/12/2026", weekDay: "Quarta-feira", situation: "Feriado", reason: "Natal", openTime: "-", closeTime: "-", isAllDay: true, prof: "Restaurante Inteiro (Todos)" },
-    { id: 4, dateStr: "01/01/2027", weekDay: "Sexta-feira", situation: "Feriado", reason: "Ano Novo", openTime: "-", closeTime: "-", isAllDay: true, prof: "Restaurante Inteiro (Todos)" },
+    { id: 1, dateStr: "15/11/2026", weekDay: "Domingo", situation: "Feriado", reason: "Proclamação da República", openTime: "-", closeTime: "-", isAllDay: true, prof: "Barbearia Inteira (Todos)" },
+    { id: 2, dateStr: "20/12/2026", weekDay: "Sexta-feira", situation: "Horário Especial", reason: "Confraternização da Loja", openTime: "08:00", closeTime: "12:00", isAllDay: false, prof: "Barbearia Inteira (Todos)" },
+    { id: 3, dateStr: "25/12/2026", weekDay: "Quarta-feira", situation: "Feriado", reason: "Natal", openTime: "-", closeTime: "-", isAllDay: true, prof: "Barbearia Inteira (Todos)" },
+    { id: 4, dateStr: "01/01/2027", weekDay: "Sexta-feira", situation: "Feriado", reason: "Ano Novo", openTime: "-", closeTime: "-", isAllDay: true, prof: "Barbearia Inteira (Todos)" },
     { id: 5, dateStr: "08/03/2026", weekDay: "Domingo", situation: "Atestado", reason: "Licença Médica", openTime: "-", closeTime: "-", isAllDay: true, prof: "Rodrigo" },
 ];
 

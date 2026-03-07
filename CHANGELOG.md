@@ -1,3 +1,10 @@
+## [0.4.4] - Higienização de Mock Data (Nicho de Barbearia) - 2026-03-07
+### Ajustado
+- Remodelação Lexical e Imagética: Substituídos os mocks residuais que não condiziam com o arquétipo principal da Barbearia. Elementos como 'Consulta Pet', 'Rações' e abrangência de 'Restaurante Inteiro' foram expurgados convertidos para Progessivas e Navalhas autênticas.
+- Facilitador de Produtos: No Modal de "Adicionar Produto", o placeholder de upload recebeu uma dupla camada que aceita uma URL de imagem colada diretamente, acompanhada do Botão `Pesquisar WEB` – que preenche os metadados do form para invocar a Busca do Google Imagens instantaneamente.
+
+---
+
 ## [0.4.3] - Patch de Acessibilidade da Cor Primária (100% Light Mode) - 2026-03-07
 ### Ajustado
 - Contraste Universal de Interfaces Light: A cor primária padrão (`text-primary`), que ditava o tom "Ciano Claro", possuía péssima legibilidade no modo diurno (fundo branco). Um remapeamento estético com varredura em 33 Lógicas do sistema alterou todos os Letreiros e Ícones do app para um Ciano Escurecido (`text-cyan-700`) nas interfaces claras, conservando a beleza original neon apenas sob o fundo noturno.
