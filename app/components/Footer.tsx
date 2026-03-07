@@ -14,7 +14,7 @@ export function Footer() {
                         className="object-contain grayscale opacity-60 dark:opacity-40"
                     />
                     <p className="text-sm font-semibold text-gray-800 dark:text-gray-300">
-                        © 2026 AgendeJá - A product by EFF5 reFresh • eFFiciency • Freedom <span className="text-cyan-700 dark:text-primary font-bold ml-1">v0.4.3</span>
+                        © 2026 AgendeJá - A product by EFF5 reFresh • eFFiciency • Freedom <span className="text-cyan-700 dark:text-primary font-bold ml-1">v0.5.0</span>
                     </p>
                 </div>
 

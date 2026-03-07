@@ -29,6 +29,7 @@ export default function GestaoProfissionaisPage() {
     const [unitFilter, setUnitFilter] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showAvatarSelector, setShowAvatarSelector] = useState(false);
+    const [editingProf, setEditingProf] = useState<any>(null);
 
     // Form State
     const [formName, setFormName] = useState("");
@@ -55,6 +56,7 @@ export default function GestaoProfissionaisPage() {
         setFormAvatar("");
         setFormUnitId("");
         setShowAvatarSelector(false);
+        setEditingProf(null);
     };
 
     const openNewModal = () => {
@@ -62,18 +64,51 @@ export default function GestaoProfissionaisPage() {
         setIsModalOpen(true);
     };
 
+    const handleEdit = (prof: any) => {
+        setEditingProf(prof);
+        setFormName(prof.name);
+        setFormRole(prof.role);
+        setFormDays(prof.days);
+        const [start, end] = prof.hours.split(" - ");
+        setFormTimeStart(start);
+        setFormTimeEnd(end);
+        setFormAvatar(prof.img);
+        setFormUnitId(prof.unitId.toString());
+        setIsModalOpen(true);
+    };
+
+    const handleDelete = (id: number) => {
+        if (window.confirm("Tem certeza que deseja excluir este profissional?")) {
+            setProfessionals(professionals.filter(p => p.id !== id));
+        }
+    };
+
     const handleSave = () => {
         if (!formName || !formRole || !formUnitId) return;
 
-        setProfessionals([...professionals, {
-            id: Date.now(),
-            name: formName,
-            role: formRole,
-            days: formDays,
-            hours: `${formTimeStart} - ${formTimeEnd}`,
-            unitId: Number(formUnitId),
-            img: formAvatar || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80"
-        }]);
+        if (editingProf) {
+            setProfessionals(professionals.map(p =>
+                p.id === editingProf.id ? {
+                    ...p,
+                    name: formName,
+                    role: formRole,
+                    days: formDays,
+                    hours: `${formTimeStart} - ${formTimeEnd}`,
+                    unitId: Number(formUnitId),
+                    img: formAvatar || p.img
+                } : p
+            ));
+        } else {
+            setProfessionals([...professionals, {
+                id: Date.now(),
+                name: formName,
+                role: formRole,
+                days: formDays,
+                hours: `${formTimeStart} - ${formTimeEnd}`,
+                unitId: Number(formUnitId),
+                img: formAvatar || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80"
+            }]);
+        }
 
         setIsModalOpen(false);
         resetForm();
@@ -165,10 +200,16 @@ export default function GestaoProfissionaisPage() {
 
                             {/* Hover Actions */}
                             <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button className="p-2 bg-white dark:bg-[#222] text-gray-600 dark:text-gray-300 hover:text-cyan-700 dark:hover:text-primary rounded-lg shadow-sm border border-gray-100 dark:border-gray-800 transition-colors" title="Editar">
+                                <button
+                                    onClick={() => handleEdit(prof)}
+                                    className="p-2 bg-white dark:bg-[#222] text-gray-600 dark:text-gray-300 hover:text-cyan-700 dark:hover:text-primary rounded-lg shadow-sm border border-gray-100 dark:border-gray-800 transition-colors" title="Editar"
+                                >
                                     <Edit2 className="w-4 h-4" />
                                 </button>
-                                <button className="p-2 bg-white dark:bg-[#222] text-gray-600 dark:text-gray-300 hover:text-red-500 rounded-lg shadow-sm border border-gray-100 dark:border-gray-800 transition-colors" title="Excluir">
+                                <button
+                                    onClick={() => handleDelete(prof.id)}
+                                    className="p-2 bg-white dark:bg-[#222] text-gray-600 dark:text-gray-300 hover:text-red-500 rounded-lg shadow-sm border border-gray-100 dark:border-gray-800 transition-colors" title="Excluir"
+                                >
                                     <Trash2 className="w-4 h-4" />
                                 </button>
                             </div>
@@ -196,8 +237,12 @@ export default function GestaoProfissionaisPage() {
                         {/* Modal Header */}
                         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#161618]">
                             <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                <Plus className="w-5 h-5 text-cyan-700 dark:text-primary" />
-                                Novo Profissional
+                                {editingProf ? (
+                                    <Edit2 className="w-5 h-5 text-cyan-700 dark:text-primary" />
+                                ) : (
+                                    <Plus className="w-5 h-5 text-cyan-700 dark:text-primary" />
+                                )}
+                                {editingProf ? "Editar Profissional" : "Novo Profissional"}
                             </h2>
                             <button onClick={() => setIsModalOpen(false)} className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                                 <X className="w-5 h-5" />

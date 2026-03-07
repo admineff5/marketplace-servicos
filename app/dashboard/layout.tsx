@@ -40,10 +40,17 @@ const SIDEBAR_LINKS = [
     { name: "Configurações", href: "/dashboard/config", icon: Settings },
 ];
 
+const NOTIFICATIONS = [
+    { id: 1, title: "Novo Agendamento", description: "Carlos Silva agendou Corte + Barba para às 15:00.", time: "5 min atrás", type: "success" },
+    { id: 2, title: "Estoque Baixo", description: "Pomada Modeladora Efeito Matte está com menos de 3 unidades.", time: "2 horas atrás", type: "error" },
+    { id: 3, title: "Lembrete de Pagamento", description: "A mensalidade da plataforma vence amanhã.", time: "1 dia atrás", type: "warning" },
+];
+
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const [isCollapsed, setIsCollapsed] = useState(true);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
     return (
         <div className="flex h-screen bg-gray-50 dark:bg-[#0a0a0a] overflow-hidden">
@@ -138,10 +145,46 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <button className="relative p-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">
-                            <Bell className="w-5 h-5" />
-                            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-[#111]"></span>
-                        </button>
+                        <div className="relative">
+                            <button
+                                onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+                                className={`relative p-2 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 ${isNotificationsOpen ? 'text-cyan-700 dark:text-primary bg-gray-100 dark:bg-gray-800' : 'text-gray-500 dark:text-gray-400'}`}
+                            >
+                                <Bell className="w-5 h-5" />
+                                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-[#111]"></span>
+                            </button>
+
+                            {/* Notifications Dropdown */}
+                            {isNotificationsOpen && (
+                                <>
+                                    <div className="fixed inset-0 z-10" onClick={() => setIsNotificationsOpen(false)} />
+                                    <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 rounded-2xl shadow-2xl overflow-hidden z-20 animate-in fade-in zoom-in-95 duration-200">
+                                        <div className="p-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gray-50/50 dark:bg-[#161618]">
+                                            <h3 className="font-bold text-gray-900 dark:text-white">Notificações</h3>
+                                            <span className="text-[10px] font-bold bg-primary text-black px-2 py-0.5 rounded-full uppercase tracking-wider">3 Novas</span>
+                                        </div>
+                                        <div className="max-h-[70vh] overflow-y-auto">
+                                            {NOTIFICATIONS.map((notif) => (
+                                                <div key={notif.id} className="p-4 border-b border-gray-100 dark:border-gray-800 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer group">
+                                                    <div className="flex justify-between items-start mb-1">
+                                                        <span className={`text-[10px] font-bold uppercase tracking-widest ${notif.type === 'error' ? 'text-red-500' : notif.type === 'warning' ? 'text-amber-500' : 'text-cyan-600 dark:text-primary'}`}>
+                                                            {notif.title}
+                                                        </span>
+                                                        <span className="text-[10px] text-gray-400">{notif.time}</span>
+                                                    </div>
+                                                    <p className="text-sm text-gray-600 dark:text-gray-300 leading-snug group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
+                                                        {notif.description}
+                                                    </p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <button className="w-full py-3 text-xs font-bold text-gray-500 dark:text-gray-400 hover:text-cyan-700 dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-800 transition-all border-t border-gray-100 dark:border-gray-800 uppercase tracking-widest">
+                                            Ver Tudo
+                                        </button>
+                                    </div>
+                                </>
+                            )}
+                        </div>
                         <div className="h-6 w-px bg-gray-200 dark:bg-gray-800"></div>
                         <ThemeToggle />
                         <div className="flex items-center gap-2 pl-2 cursor-pointer">

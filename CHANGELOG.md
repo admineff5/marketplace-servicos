@@ -1,3 +1,15 @@
+## [0.5.0] - 2026-03-07
+### Adicionado
+- **CRUD de Profissionais:** Implementada funcionalidade completa de Edição e Exclusão na gestão de equipe.
+- **Vínculo com Unidades:** Profissionais agora são obrigatoriamente vinculados a uma Unidade (Franquia/Loja), com suporte a filtros por localidade.
+- **Popup de Alertas:** Novo sistema de notificações no cabeçalho do Dashboard, listando alertas de agendamentos e estoque.
+
+### Ajustado
+- **Centralização de Configurações:** Removida a aba redundante de Profissionais dentro das Configurações, unificando a gestão na barra lateral.
+- **Bump de Versão:** Sistema atualizado para v0.5.0.
+
+---
+
 ## [0.4.5] - 2026-03-07
 ### Adicionado
 - **Modo Privacidade:** Implementada máscara de valores (`**`) no dashboard para proteger dados sensíveis. Toggle de "olho" adicionado no cabeçalho.
