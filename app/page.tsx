@@ -362,7 +362,7 @@ export default function Home() {
             <div className="flex items-center gap-2 sm:gap-4 border-l border-gray-200 dark:border-gray-800 pl-3 sm:pl-4 ml-1 sm:ml-2">
               <Link
                 href="/login"
-                className="text-xs sm:text-sm font-medium text-gray-700 hover:text-black dark:text-gray-200 dark:hover:text-primary transition-colors"
+                className="text-xs sm:text-sm font-medium text-gray-700 hover:text-black dark:text-gray-200 dark:hover:text-cyan-700 dark:hover:text-primary transition-colors"
               >
                 Login
               </Link>
@@ -392,7 +392,7 @@ export default function Home() {
               priority
             />
             <h1 className="mx-auto max-w-3xl text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-              O que você quer <span className="text-primary">agendar</span>{" "}
+              O que você quer <span className="text-cyan-700 dark:text-primary">agendar</span>{" "}
               hoje?
             </h1>
 
@@ -403,7 +403,7 @@ export default function Home() {
               {/* Search Input Large */}
               <div className="relative w-full max-w-4xl mx-auto mb-8">
                 <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
-                  <Sparkles className="h-6 w-6 text-primary animate-pulse" />
+                  <Sparkles className="h-6 w-6 text-cyan-700 dark:text-primary animate-pulse" />
                 </div>
                 <input
                   type="text"
@@ -425,12 +425,12 @@ export default function Home() {
                     key={cat.name}
                     onClick={() => setActiveCategory(cat.name)}
                     className={`flex-shrink-0 flex items-center gap-2.5 px-6 py-3 rounded-full border transition-all ${activeCategory === cat.name
-                        ? "bg-primary/20 border-primary text-primary shadow-[0_0_10px_rgba(0,255,255,0.2)]"
+                        ? "bg-primary/20 border-primary text-cyan-700 dark:text-primary shadow-[0_0_10px_rgba(0,255,255,0.2)]"
                         : "bg-transparent border-white/10 text-gray-300 hover:border-white/30 hover:bg-white/5 hover:text-white"
                       } `}
                   >
                     <cat.icon
-                      className={`w-5 h-5 ${activeCategory === cat.name ? "opacity-100" : "opacity-70 text-primary"} `}
+                      className={`w-5 h-5 ${activeCategory === cat.name ? "opacity-100" : "opacity-70 text-cyan-700 dark:text-primary"} `}
                     />
                     <span className="text-sm font-semibold tracking-wide">
                       {cat.name}
@@ -454,7 +454,7 @@ export default function Home() {
               {/* Magic AI Search Bar-Compact */}
               <div className="relative w-full lg:w-1/3 min-w-[320px]">
                 <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-                  <Sparkles className="h-4 w-4 text-primary animate-pulse" />
+                  <Sparkles className="h-4 w-4 text-cyan-700 dark:text-primary animate-pulse" />
                 </div>
                 <input
                   type="text"
@@ -472,12 +472,12 @@ export default function Home() {
                     key={cat.name}
                     onClick={() => setActiveCategory(cat.name)}
                     className={`flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full border transition-all ${activeCategory === cat.name
-                        ? "bg-primary/20 border-primary text-primary"
+                        ? "bg-primary/20 border-primary text-cyan-700 dark:text-primary"
                         : "bg-transparent border-white/10 text-gray-300 hover:bg-white/5 hover:text-white"
                       } `}
                   >
                     <cat.icon
-                      className={`w-3.5 h-3.5 ${activeCategory === cat.name ? "opacity-100" : "opacity-70 text-primary"} `}
+                      className={`w-3.5 h-3.5 ${activeCategory === cat.name ? "opacity-100" : "opacity-70 text-cyan-700 dark:text-primary"} `}
                     />
                     <span className="text-xs font-semibold tracking-wide">
                       {cat.name}
@@ -503,14 +503,14 @@ export default function Home() {
               <div className="flex items-center gap-1 bg-gray-200 dark:bg-gray-800 p-1 rounded-lg">
                 <button
                   onClick={() => setLayoutMode("grid")}
-                  className={`p-2 rounded-md transition-colors ${layoutMode === "grid" ? "bg-white dark:bg-black shadow-sm text-primary" : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"} `}
+                  className={`p-2 rounded-md transition-colors ${layoutMode === "grid" ? "bg-white dark:bg-black shadow-sm text-cyan-700 dark:text-primary" : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"} `}
                   title="Visualização em Grade"
                 >
                   <LayoutGrid className="w-5 h-5" />
                 </button>
                 <button
                   onClick={() => setLayoutMode("list")}
-                  className={`p-2 rounded-md transition-colors ${layoutMode === "list" ? "bg-white dark:bg-black shadow-sm text-primary" : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"} `}
+                  className={`p-2 rounded-md transition-colors ${layoutMode === "list" ? "bg-white dark:bg-black shadow-sm text-cyan-700 dark:text-primary" : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"} `}
                   title="Visualização em Lista"
                 >
                   <List className="w-5 h-5" />
@@ -577,7 +577,7 @@ export default function Home() {
                     className={`flex flex-col flex-1 p-6 ${layoutMode === "grid" ? "pt-10" : ""} `}
                   >
                     <div className="flex items-center gap-2 mb-1">
-                      <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors line-clamp-1">
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-cyan-700 dark:hover:text-primary transition-colors line-clamp-1">
                         {company.name}
                       </h3>
                     </div>
@@ -696,7 +696,7 @@ export default function Home() {
                         {selectedCompany.name}
                       </h2>
                       <div className="flex items-center gap-3">
-                        <p className="text-primary font-medium text-sm">
+                        <p className="text-cyan-700 dark:text-primary font-medium text-sm">
                           {selectedCompany.niche}
                         </p>
                         <div className="flex items-center gap-1 text-sm bg-yellow-500/10 text-yellow-500 px-2 py-0.5 rounded-full">
@@ -716,7 +716,7 @@ export default function Home() {
 
                 <div className="flex flex-wrap gap-3 mb-8">
                   <div className="flex items-center gap-2 text-xs font-medium text-gray-300 bg-[#1a1a1c] border border-[#2a2a2c] px-3 py-1.5 rounded-lg">
-                    <MapPin className="w-3.5 h-3.5 text-primary" />
+                    <MapPin className="w-3.5 h-3.5 text-cyan-700 dark:text-primary" />
                     {selectedCompany.address}
                   </div>
                 </div>
@@ -746,7 +746,7 @@ export default function Home() {
                           </div>
                           <div>
                             <h4
-                              className={`font-semibold text-sm transition-colors ${isSelected ? "text-primary" : "text-gray-200 group-hover:text-white"} `}
+                              className={`font-semibold text-sm transition-colors ${isSelected ? "text-cyan-700 dark:text-primary" : "text-gray-200 group-hover:text-white"} `}
                             >
                               {service.name}
                             </h4>
@@ -756,7 +756,7 @@ export default function Home() {
                           </div>
                         </div>
                         <p
-                          className={`font-bold text-sm ${isSelected ? "text-primary" : "text-gray-300"} `}
+                          className={`font-bold text-sm ${isSelected ? "text-cyan-700 dark:text-primary" : "text-gray-300"} `}
                         >
                           {service.price}
                         </p>
@@ -794,7 +794,7 @@ export default function Home() {
                             />
                           </div>
                           <span
-                            className={`text-xs font-medium transition-colors ${isSelected ? "text-primary font-bold" : "text-gray-400 group-hover:text-gray-200"} `}
+                            className={`text-xs font-medium transition-colors ${isSelected ? "text-cyan-700 dark:text-primary font-bold" : "text-gray-400 group-hover:text-gray-200"} `}
                           >
                             {person.name}
                           </span>

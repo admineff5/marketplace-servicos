@@ -63,7 +63,7 @@ export default function GestaoClientesPage() {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                         <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-2">
-                            <Users className="w-6 h-6 text-primary" />
+                            <Users className="w-6 h-6 text-cyan-700 dark:text-primary" />
                             Gestão de Clientes
                         </h1>
                         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
@@ -155,7 +155,7 @@ export default function GestaoClientesPage() {
                                             <div className="flex items-center justify-end gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <button
                                                     onClick={() => handleOpenHistory(cliente)}
-                                                    className="p-2 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
+                                                    className="p-2 text-gray-500 hover:text-cyan-700 dark:hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
                                                     title="Ver Histórico"
                                                 >
                                                     <History className="w-4 h-4" />
@@ -188,7 +188,7 @@ export default function GestaoClientesPage() {
                     >
                         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#161618]">
                             <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                <Plus className="w-5 h-5 text-primary" />
+                                <Plus className="w-5 h-5 text-cyan-700 dark:text-primary" />
                                 Adicionar Cliente
                             </h2>
                             <button onClick={() => setIsModalOpen(false)} className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
@@ -198,7 +198,7 @@ export default function GestaoClientesPage() {
 
                         <div className="p-6 space-y-5">
                             <div className="bg-primary/10 dark:bg-cyan-900/10 border border-primary/20 p-4 rounded-xl flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
-                                <Users className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                                <Users className="w-5 h-5 text-cyan-700 dark:text-primary shrink-0 mt-0.5" />
                                 <p>Os clientes que agendarem pelo seu link público aparecerão aqui <strong>automaticamente</strong>. Use este painel apenas para inserir clientes de balcão ou antigos.</p>
                             </div>
 
@@ -256,7 +256,7 @@ export default function GestaoClientesPage() {
                     >
                         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#161618]">
                             <div className="flex items-center gap-3">
-                                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-xl">
+                                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center font-bold text-cyan-700 dark:text-primary text-xl">
                                     {selectedClient.name.charAt(0)}
                                 </div>
                                 <div>
@@ -271,7 +271,7 @@ export default function GestaoClientesPage() {
 
                         <div className="p-6">
                             <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                                <History className="w-4 h-4 text-primary" />
+                                <History className="w-4 h-4 text-cyan-700 dark:text-primary" />
                                 Últimos Agendamentos (MOCK)
                             </h3>
 
@@ -283,7 +283,7 @@ export default function GestaoClientesPage() {
                                             <p className="text-xs text-gray-500">com Rodrigo Silva</p>
                                         </div>
                                         <div className="text-right">
-                                            <p className="text-sm font-semibold text-primary">R$ 75,00</p>
+                                            <p className="text-sm font-semibold text-cyan-700 dark:text-primary">R$ 75,00</p>
                                             <p className="text-xs text-gray-500">{selectedClient.lastVisit === 'Ontem' ? '12/10/2026' : 'Em breve'}</p>
                                         </div>
                                     </div>

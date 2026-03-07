@@ -96,7 +96,7 @@ export default function Login() {
                                         id="remember-me"
                                         name="remember-me"
                                         type="checkbox"
-                                        className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded dark:border-gray-700 dark:bg-gray-800"
+                                        className="h-4 w-4 text-cyan-700 dark:text-primary focus:ring-primary border-gray-300 rounded dark:border-gray-700 dark:bg-gray-800"
                                     />
                                     <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
                                         Lembrar-me
@@ -104,7 +104,7 @@ export default function Login() {
                                 </div>
 
                                 <div className="text-sm">
-                                    <a href="#" className="font-medium text-primary hover:text-cyan-400">
+                                    <a href="#" className="font-medium text-cyan-700 dark:text-primary hover:text-cyan-700 dark:hover:text-cyan-400">
                                         Esqueceu a senha?
                                     </a>
                                 </div>

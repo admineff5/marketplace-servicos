@@ -72,14 +72,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
                     <button
                         onClick={() => setIsCollapsed(!isCollapsed)}
-                        className={`absolute -right-3 top-1/2 -translate-y-1/2 bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 rounded-full p-1 text-gray-500 hover:text-primary hover:border-primary transition-colors ${isCollapsed ? 'hidden' : 'flex'}`}
+                        className={`absolute -right-3 top-1/2 -translate-y-1/2 bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 rounded-full p-1 text-gray-500 hover:text-cyan-700 dark:hover:text-primary hover:border-primary transition-colors ${isCollapsed ? 'hidden' : 'flex'}`}
                     >
                         <ChevronLeft className="w-4 h-4" />
                     </button>
                     {isCollapsed && (
                         <button
                             onClick={() => setIsCollapsed(!isCollapsed)}
-                            className="absolute -right-3 top-1/2 -translate-y-1/2 bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 rounded-full p-1 text-gray-500 hover:text-primary hover:border-primary transition-colors"
+                            className="absolute -right-3 top-1/2 -translate-y-1/2 bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 rounded-full p-1 text-gray-500 hover:text-cyan-700 dark:hover:text-primary hover:border-primary transition-colors"
                         >
                             <ChevronRight className="w-4 h-4" />
                         </button>

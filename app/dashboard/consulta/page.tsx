@@ -152,7 +152,7 @@ export default function ConsultaAgendamentos() {
 
                     <div className="flex flex-wrap items-center justify-end gap-3 pt-4 border-t border-gray-100 dark:border-gray-800">
                         <label className="flex items-center gap-2 mr-auto cursor-pointer group">
-                            <input type="checkbox" className="rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary bg-transparent w-4 h-4 cursor-pointer accent-primary" />
+                            <input type="checkbox" className="rounded border-gray-300 dark:border-gray-600 text-cyan-700 dark:text-primary focus:ring-primary bg-transparent w-4 h-4 cursor-pointer accent-primary" />
                             <span className="text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-200 transition-colors">Somente agendamentos recorrentes</span>
                         </label>
 
@@ -174,7 +174,7 @@ export default function ConsultaAgendamentos() {
             <div className="bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 rounded-2xl flex-1 flex flex-col overflow-hidden shadow-sm">
 
                 {isSearching ? (
-                    <div className="h-40 sm:h-64 flex items-center justify-center text-primary">
+                    <div className="h-40 sm:h-64 flex items-center justify-center text-cyan-700 dark:text-primary">
                         <div className="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
                     </div>
                 ) : (

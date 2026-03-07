@@ -78,7 +78,7 @@ export default function ClienteDashboard() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="bg-white dark:bg-[#111] border border-gray-100 dark:border-gray-800 rounded-2xl p-6 shadow-sm flex items-center gap-4">
                     <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
-                        <Calendar className="w-6 h-6 text-primary" />
+                        <Calendar className="w-6 h-6 text-cyan-700 dark:text-primary" />
                     </div>
                     <div>
                         <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Agendados</p>
@@ -111,7 +111,7 @@ export default function ClienteDashboard() {
                     <button
                         onClick={() => setActiveTab("upcoming")}
                         className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === "upcoming"
-                            ? 'border-primary text-primary'
+                            ? 'border-primary text-cyan-700 dark:text-primary'
                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:border-gray-700'
                             }`}
                     >
@@ -120,7 +120,7 @@ export default function ClienteDashboard() {
                     <button
                         onClick={() => setActiveTab("past")}
                         className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === "past"
-                            ? 'border-primary text-primary'
+                            ? 'border-primary text-cyan-700 dark:text-primary'
                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:border-gray-700'
                             }`}
                     >
@@ -145,7 +145,7 @@ export default function ClienteDashboard() {
                                     <div className="flex items-start justify-between">
                                         <div>
                                             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">{item.service}</h3>
-                                            <p className="font-medium text-primary text-sm">{item.company}</p>
+                                            <p className="font-medium text-cyan-700 dark:text-primary text-sm">{item.company}</p>
                                         </div>
                                         <span className={`px-2.5 py-1 text-xs font-bold rounded-full ${item.status === 'confirmed' ? 'bg-green-500/10 text-green-500' : 'bg-yellow-500/10 text-yellow-500'}`}>
                                             {item.status === 'confirmed' ? 'Confirmado' : 'Aguardando'}
@@ -176,7 +176,7 @@ export default function ClienteDashboard() {
                                     <button className="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors w-full sm:w-auto">
                                         Reagendar
                                     </button>
-                                    <button className="px-4 py-2 bg-primary/10 text-primary border border-primary/20 rounded-lg text-sm font-bold hover:bg-primary hover:text-black transition-colors w-full sm:w-auto">
+                                    <button className="px-4 py-2 bg-primary/10 text-cyan-700 dark:text-primary border border-primary/20 rounded-lg text-sm font-bold hover:bg-primary hover:text-black transition-colors w-full sm:w-auto">
                                         Ver Rota
                                     </button>
                                 </div>
@@ -220,7 +220,7 @@ export default function ClienteDashboard() {
                                     <Receipt className="w-4 h-4" />
                                     Recibo
                                 </button>
-                                <button className="px-4 py-2 flex items-center gap-2 bg-primary/10 text-primary border border-primary/20 rounded-lg text-sm font-bold hover:bg-primary hover:text-black transition-colors w-full sm:w-auto">
+                                <button className="px-4 py-2 flex items-center gap-2 bg-primary/10 text-cyan-700 dark:text-primary border border-primary/20 rounded-lg text-sm font-bold hover:bg-primary hover:text-black transition-colors w-full sm:w-auto">
                                     Agendar de Novo
                                 </button>
                             </div>

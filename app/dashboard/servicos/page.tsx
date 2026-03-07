@@ -98,7 +98,7 @@ export default function GestaoServicosPage() {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                         <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-2">
-                            <Scissors className="w-6 h-6 text-primary" />
+                            <Scissors className="w-6 h-6 text-cyan-700 dark:text-primary" />
                             Gestão de Serviços
                         </h1>
                         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
@@ -171,7 +171,7 @@ export default function GestaoServicosPage() {
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex items-center justify-end gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <button className="p-2 text-gray-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors" title="Editar Serviço">
+                                                <button className="p-2 text-gray-400 hover:text-cyan-700 dark:hover:text-primary hover:bg-primary/10 rounded-lg transition-colors" title="Editar Serviço">
                                                     <Edit2 className="w-4 h-4" />
                                                 </button>
                                                 <button className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors" title="Excluir Serviço">
@@ -207,7 +207,7 @@ export default function GestaoServicosPage() {
                         {/* Modal Header */}
                         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#161618]">
                             <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                <Plus className="w-5 h-5 text-primary" />
+                                <Plus className="w-5 h-5 text-cyan-700 dark:text-primary" />
                                 Novo Serviço
                             </h2>
                             <button onClick={() => setIsModalOpen(false)} className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
@@ -250,7 +250,7 @@ export default function GestaoServicosPage() {
                                         {/* Backdrop invisivel para fechar clicando fora */}
                                         <div className="fixed inset-0 z-40" onClick={() => setShowSuggestions(false)}></div>
                                         <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#151516] border border-gray-200 dark:border-[#2a2a2c] rounded-xl shadow-2xl z-50 max-h-60 overflow-y-auto custom-scrollbar">
-                                            <div className="p-2 sticky top-0 bg-white dark:bg-[#151516] border-b border-gray-100 dark:border-[#2a2a2c] flex items-center gap-2 text-xs text-primary font-bold px-4 py-3">
+                                            <div className="p-2 sticky top-0 bg-white dark:bg-[#151516] border-b border-gray-100 dark:border-[#2a2a2c] flex items-center gap-2 text-xs text-cyan-700 dark:text-primary font-bold px-4 py-3">
                                                 <Info className="w-4 h-4" /> Escolha no catálogo base do sistema para preencher automaticamente:
                                             </div>
                                             {SUGGESTED_SERVICES.map((cat, idx) => (
@@ -261,7 +261,7 @@ export default function GestaoServicosPage() {
                                                 >
                                                     <div className="flex items-center gap-2 mb-1">
                                                         <span className="text-[10px] uppercase font-bold text-gray-400 bg-gray-100 dark:bg-[#222] px-1.5 py-0.5 rounded">{cat.category}</span>
-                                                        <span className="font-semibold text-sm text-gray-900 dark:text-white group-hover:text-primary transition-colors">{cat.name}</span>
+                                                        <span className="font-semibold text-sm text-gray-900 dark:text-white group-hover:text-cyan-700 dark:hover:text-primary transition-colors">{cat.name}</span>
                                                     </div>
                                                     <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">{cat.description}</p>
                                                 </div>

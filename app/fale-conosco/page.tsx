@@ -52,7 +52,7 @@ export default function FaleConosco() {
                         <div className="hidden sm:flex items-center gap-4 border-l border-gray-200 dark:border-gray-800 pl-4 ml-2">
                             <Link
                                 href="/login"
-                                className="text-sm font-medium text-gray-700 hover:text-black dark:text-gray-200 dark:hover:text-primary transition-colors"
+                                className="text-sm font-medium text-gray-700 hover:text-black dark:text-gray-200 dark:hover:text-cyan-700 dark:hover:text-primary transition-colors"
                             >
                                 Login
                             </Link>
@@ -72,7 +72,7 @@ export default function FaleConosco() {
 
                 <div className="text-center mb-16 max-w-2xl mx-auto">
                     <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
-                        Fale <span className="text-primary">Conosco</span>
+                        Fale <span className="text-cyan-700 dark:text-primary">Conosco</span>
                     </h1>
                     <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
                         Tem alguma dúvida, encontrou um problema ou deseja dar uma sugestão?
@@ -88,7 +88,7 @@ export default function FaleConosco() {
                         <div className="space-y-6">
                             <div className="flex items-start gap-4">
                                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center shrink-0">
-                                    <Mail className="w-5 h-5 text-primary" />
+                                    <Mail className="w-5 h-5 text-cyan-700 dark:text-primary" />
                                 </div>
                                 <div>
                                     <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">E-mail</h3>
@@ -97,7 +97,7 @@ export default function FaleConosco() {
                             </div>
                             <div className="flex items-start gap-4">
                                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center shrink-0">
-                                    <Phone className="w-5 h-5 text-primary" />
+                                    <Phone className="w-5 h-5 text-cyan-700 dark:text-primary" />
                                 </div>
                                 <div>
                                     <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Telefone / WhatsApp (Suporte)</h3>
@@ -106,7 +106,7 @@ export default function FaleConosco() {
                             </div>
                             <div className="flex items-start gap-4">
                                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center shrink-0">
-                                    <MapPin className="w-5 h-5 text-primary" />
+                                    <MapPin className="w-5 h-5 text-cyan-700 dark:text-primary" />
                                 </div>
                                 <div>
                                     <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Escritório</h3>

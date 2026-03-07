@@ -150,7 +150,7 @@ export default function FeriadosBloqueiosPage() {
                         {/* Header */}
                         <div className="flex justify-between items-center p-5 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/20">
                             <h2 className="text-xl font-bold flex items-center gap-2 text-gray-900 dark:text-white">
-                                <Plus className="w-5 h-5 text-primary" /> Novo Bloqueio de Agenda
+                                <Plus className="w-5 h-5 text-cyan-700 dark:text-primary" /> Novo Bloqueio de Agenda
                             </h2>
                             <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
                                 <X className="w-6 h-6" />

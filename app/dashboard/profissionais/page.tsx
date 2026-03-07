@@ -75,7 +75,7 @@ export default function GestaoProfissionaisPage() {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                         <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-2">
-                            <UserSquare2 className="w-6 h-6 text-primary" />
+                            <UserSquare2 className="w-6 h-6 text-cyan-700 dark:text-primary" />
                             Gestão de Profissionais
                         </h1>
                         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
@@ -120,7 +120,7 @@ export default function GestaoProfissionaisPage() {
 
                             {/* Data block */}
                             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-0.5">{prof.name}</h3>
-                            <p className="text-sm font-semibold text-primary mb-4">{prof.role}</p>
+                            <p className="text-sm font-semibold text-cyan-700 dark:text-primary mb-4">{prof.role}</p>
 
                             <div className="w-full flex flex-col gap-2 mt-auto">
                                 <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-[#1a1a1c] px-3 py-2 rounded-lg border border-gray-100 dark:border-[#2a2a2c]">
@@ -135,7 +135,7 @@ export default function GestaoProfissionaisPage() {
 
                             {/* Hover Actions */}
                             <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button className="p-2 bg-white dark:bg-[#222] text-gray-600 dark:text-gray-300 hover:text-primary rounded-lg shadow-sm border border-gray-100 dark:border-gray-800 transition-colors" title="Editar">
+                                <button className="p-2 bg-white dark:bg-[#222] text-gray-600 dark:text-gray-300 hover:text-cyan-700 dark:hover:text-primary rounded-lg shadow-sm border border-gray-100 dark:border-gray-800 transition-colors" title="Editar">
                                     <Edit2 className="w-4 h-4" />
                                 </button>
                                 <button className="p-2 bg-white dark:bg-[#222] text-gray-600 dark:text-gray-300 hover:text-red-500 rounded-lg shadow-sm border border-gray-100 dark:border-gray-800 transition-colors" title="Excluir">
@@ -166,7 +166,7 @@ export default function GestaoProfissionaisPage() {
                         {/* Modal Header */}
                         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#161618]">
                             <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                <Plus className="w-5 h-5 text-primary" />
+                                <Plus className="w-5 h-5 text-cyan-700 dark:text-primary" />
                                 Novo Profissional
                             </h2>
                             <button onClick={() => setIsModalOpen(false)} className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
@@ -183,7 +183,7 @@ export default function GestaoProfissionaisPage() {
                                     {formAvatar ? (
                                         <img src={formAvatar} alt="Preview" className="w-full h-full object-cover" />
                                     ) : (
-                                        <ImageIcon className="w-8 h-8 text-gray-400 group-hover:text-primary transition-colors" />
+                                        <ImageIcon className="w-8 h-8 text-gray-400 group-hover:text-cyan-700 dark:hover:text-primary transition-colors" />
                                     )}
                                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                         <Upload className="w-6 h-6 text-white" />
@@ -238,7 +238,7 @@ export default function GestaoProfissionaisPage() {
                             {/* Working Hours Box */}
                             <div className="p-5 border border-gray-200 dark:border-[#2a2a2c] rounded-2xl bg-white dark:bg-[#111] space-y-4">
                                 <h3 className="text-sm font-bold text-gray-900 dark:text-white border-b border-gray-100 dark:border-[#2a2a2c] pb-2 flex items-center gap-2">
-                                    <Clock className="w-4 h-4 text-primary" /> Atendimento Padrão
+                                    <Clock className="w-4 h-4 text-cyan-700 dark:text-primary" /> Atendimento Padrão
                                 </h3>
 
                                 <div>

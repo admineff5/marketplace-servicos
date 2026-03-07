@@ -70,7 +70,7 @@ export default function DashboardIndex() {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                        <Store className="w-6 h-6 text-primary" /> Visão Geral
+                        <Store className="w-6 h-6 text-cyan-700 dark:text-primary" /> Visão Geral
                     </h2>
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Resumo das métricas principais da sua loja (Mês atual vs Passado).</p>
                 </div>
@@ -84,7 +84,7 @@ export default function DashboardIndex() {
                             <h3 className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm font-semibold">{kpi.title}</h3>
                         </div>
                         <div>
-                            <p className={`text-lg sm:text-xl font-black ${kpi.title === 'Resultado' ? 'text-primary' :
+                            <p className={`text-lg sm:text-xl font-black ${kpi.title === 'Resultado' ? 'text-cyan-700 dark:text-primary' :
                                 kpi.title === 'Despesa' ? 'text-red-500' :
                                     'text-gray-900 dark:text-white'
                                 }`}>
@@ -113,11 +113,11 @@ export default function DashboardIndex() {
                     <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100 dark:border-[#222]">
                         <div>
                             <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                <CalendarCheck className="w-5 h-5 text-primary" /> Próximos Horários
+                                <CalendarCheck className="w-5 h-5 text-cyan-700 dark:text-primary" /> Próximos Horários
                             </h3>
                             <p className="text-xs text-gray-500 mt-1">Acompanhe quem passará pela porta nas próximas horas.</p>
                         </div>
-                        <Link href="/dashboard/agenda" className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-gray-500 hover:text-primary transition-colors">
+                        <Link href="/dashboard/agenda" className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-gray-500 hover:text-cyan-700 dark:hover:text-primary transition-colors">
                             Ver agenda completa <ChevronRight className="w-4 h-4" />
                         </Link>
                     </div>
@@ -149,7 +149,7 @@ export default function DashboardIndex() {
                             </div>
                         ))}
                     </div>
-                    <Link href="/dashboard/agenda" className="sm:hidden mt-4 pt-4 border-t border-gray-100 dark:border-[#222] flex items-center justify-center gap-1 text-sm font-semibold text-primary transition-colors w-full text-center">
+                    <Link href="/dashboard/agenda" className="sm:hidden mt-4 pt-4 border-t border-gray-100 dark:border-[#222] flex items-center justify-center gap-1 text-sm font-semibold text-cyan-700 dark:text-primary transition-colors w-full text-center">
                         Abrir Agenda <ChevronRight className="w-4 h-4" />
                     </Link>
                 </div>
@@ -192,7 +192,7 @@ export default function DashboardIndex() {
                     <div className="w-full bg-white dark:bg-[#111112] border-b border-gray-200 dark:border-[#222] px-4 sm:px-8 py-4 sm:py-6 flex items-center justify-between sticky top-0 z-10">
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-xl flex items-center justify-center">
-                                <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+                                <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-700 dark:text-primary" />
                             </div>
                             <div>
                                 <h2 className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">Relatórios Principais</h2>
@@ -233,9 +233,9 @@ export default function DashboardIndex() {
                         {/* Lista de Relatorios Cards */}
                         <div className="flex-1 overflow-y-auto custom-scrollbar pb-20">
                             <div className="flex items-center gap-2 mb-6">
-                                <Filter className="w-4 h-4 text-primary" />
+                                <Filter className="w-4 h-4 text-cyan-700 dark:text-primary" />
                                 <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                                    Catálogo: <span className="text-primary">{selectedReportCategory}</span>
+                                    Catálogo: <span className="text-cyan-700 dark:text-primary">{selectedReportCategory}</span>
                                 </h3>
                             </div>
 
@@ -249,12 +249,12 @@ export default function DashboardIndex() {
                                             }`}
                                     >
                                         <div className="flex items-start gap-4">
-                                            <div className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${report.active ? 'bg-primary/10 text-primary' : 'bg-gray-200 dark:bg-gray-800 text-gray-400'
+                                            <div className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${report.active ? 'bg-primary/10 text-cyan-700 dark:text-primary' : 'bg-gray-200 dark:bg-gray-800 text-gray-400'
                                                 }`}>
                                                 <FileText className="w-5 h-5" />
                                             </div>
                                             <div>
-                                                <h4 className={`text-sm sm:text-base font-bold mb-1 ${report.active ? 'text-gray-900 dark:text-white group-hover:text-primary transition-colors' : 'text-gray-500 dark:text-gray-500'
+                                                <h4 className={`text-sm sm:text-base font-bold mb-1 ${report.active ? 'text-gray-900 dark:text-white group-hover:text-cyan-700 dark:hover:text-primary transition-colors' : 'text-gray-500 dark:text-gray-500'
                                                     }`}>
                                                     {report.title}
                                                 </h4>
@@ -266,7 +266,7 @@ export default function DashboardIndex() {
 
                                         {report.active ? (
                                             <div className="mt-4 pt-4 border-t border-gray-100 dark:border-[#222] flex justify-end">
-                                                <span className="text-xs font-bold text-primary flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <span className="text-xs font-bold text-cyan-700 dark:text-primary flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                                     Acessar Relatório <ChevronRight className="w-3 h-3" />
                                                 </span>
                                             </div>

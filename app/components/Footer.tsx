@@ -14,12 +14,12 @@ export function Footer() {
                         className="object-contain grayscale opacity-60 dark:opacity-40"
                     />
                     <p className="text-sm font-semibold text-gray-800 dark:text-gray-300">
-                        © 2026 AgendeJá - A product by EFF5 reFresh • eFFiciency • Freedom <span className="text-primary font-bold ml-1">v0.4.2</span>
+                        © 2026 AgendeJá - A product by EFF5 reFresh • eFFiciency • Freedom <span className="text-cyan-700 dark:text-primary font-bold ml-1">v0.4.3</span>
                     </p>
                 </div>
 
                 <div className="flex items-center gap-6">
-                    <Link href="/fale-conosco" className="text-sm font-medium text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-primary transition-colors">
+                    <Link href="/fale-conosco" className="text-sm font-medium text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-cyan-700 dark:hover:text-primary transition-colors">
                         Fale Conosco
                     </Link>
                     <div className="flex items-center gap-4 border-l border-gray-200 dark:border-gray-800 pl-6 ml-2">

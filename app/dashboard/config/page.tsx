@@ -34,7 +34,7 @@ export default function ConfigPage() {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                        <Settings className="w-6 h-6 text-primary" />
+                        <Settings className="w-6 h-6 text-cyan-700 dark:text-primary" />
                         Configurações
                     </h1>
                     <p className="text-gray-500 dark:text-gray-400 mt-1">
@@ -116,7 +116,7 @@ export default function ConfigPage() {
                                         <div className="flex justify-between items-start mb-4">
                                             <div className="flex items-center gap-3">
                                                 <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
-                                                    <MapPin className="w-5 h-5 text-primary" />
+                                                    <MapPin className="w-5 h-5 text-cyan-700 dark:text-primary" />
                                                 </div>
                                                 <input
                                                     type="text"
@@ -217,7 +217,7 @@ export default function ConfigPage() {
                                                 <tr key={prof.id} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/20 transition-colors">
                                                     <td className="px-6 py-4">
                                                         <div className="flex items-center gap-3">
-                                                            <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
+                                                            <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-cyan-700 dark:text-primary font-bold">
                                                                 {prof.name.charAt(0)}
                                                             </div>
                                                             <span className="font-bold text-gray-900 dark:text-white">{prof.name}</span>
@@ -236,7 +236,7 @@ export default function ConfigPage() {
                                                         </span>
                                                     </td>
                                                     <td className="px-6 py-4 text-right">
-                                                        <button className="text-gray-500 hover:text-gray-900 dark:hover:text-primary transition-colors hover:underline font-semibold text-xs uppercase tracking-wide">
+                                                        <button className="text-gray-500 hover:text-gray-900 dark:hover:text-cyan-700 dark:hover:text-primary transition-colors hover:underline font-semibold text-xs uppercase tracking-wide">
                                                             Editar
                                                         </button>
                                                     </td>

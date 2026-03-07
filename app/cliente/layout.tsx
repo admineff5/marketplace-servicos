@@ -32,7 +32,7 @@ export default function ClienteLayout({ children }: { children: React.ReactNode 
 
                         <Link
                             href="/"
-                            className="hidden sm:flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-primary dark:text-gray-300 dark:hover:text-primary transition-colors"
+                            className="hidden sm:flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-cyan-700 dark:hover:text-primary dark:text-gray-300 dark:hover:text-cyan-700 dark:hover:text-primary transition-colors"
                         >
                             <Home className="w-4 h-4" />
                             Início

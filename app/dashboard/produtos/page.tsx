@@ -62,7 +62,7 @@ export default function GestaoProdutosPage() {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                         <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-2">
-                            <Package className="w-6 h-6 text-primary" />
+                            <Package className="w-6 h-6 text-cyan-700 dark:text-primary" />
                             Gestão de Produtos
                         </h1>
                         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
@@ -163,7 +163,7 @@ export default function GestaoProdutosPage() {
 
                                 {/* Hover Actions */}
                                 <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button className="p-2 bg-white/90 dark:bg-black/70 backdrop-blur-sm text-gray-600 dark:text-gray-300 hover:text-primary rounded-lg shadow-sm transition-colors" title="Editar">
+                                    <button className="p-2 bg-white/90 dark:bg-black/70 backdrop-blur-sm text-gray-600 dark:text-gray-300 hover:text-cyan-700 dark:hover:text-primary rounded-lg shadow-sm transition-colors" title="Editar">
                                         <Edit2 className="w-4 h-4" />
                                     </button>
                                     <button className="p-2 bg-white/90 dark:bg-black/70 backdrop-blur-sm text-gray-600 dark:text-gray-300 hover:text-red-500 rounded-lg shadow-sm transition-colors" title="Excluir">
@@ -176,7 +176,7 @@ export default function GestaoProdutosPage() {
                             <div className="p-4 flex flex-col flex-1">
                                 <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">{produto.name}</h3>
                                 <div className="mt-auto pt-4 flex items-center justify-between border-t border-gray-100 dark:border-[#222]">
-                                    <p className="text-lg font-black text-primary">R$ {produto.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+                                    <p className="text-lg font-black text-cyan-700 dark:text-primary">R$ {produto.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
                                     <p className="text-xs font-semibold text-gray-500 dark:text-gray-400">Vendendo</p>
                                 </div>
                             </div>
@@ -202,7 +202,7 @@ export default function GestaoProdutosPage() {
                     >
                         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#161618]">
                             <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                <Package className="w-5 h-5 text-primary" />
+                                <Package className="w-5 h-5 text-cyan-700 dark:text-primary" />
                                 Novo Produto
                             </h2>
                             <button onClick={() => setIsModalOpen(false)} className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
@@ -217,7 +217,7 @@ export default function GestaoProdutosPage() {
                                     {formImage ? (
                                         <img src={formImage} alt="Preview" className="w-full h-full object-cover" />
                                     ) : (
-                                        <ImageIcon className="w-6 h-6 text-gray-400 group-hover:text-primary transition-colors" />
+                                        <ImageIcon className="w-6 h-6 text-gray-400 group-hover:text-cyan-700 dark:hover:text-primary transition-colors" />
                                     )}
                                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                         <Upload className="w-5 h-5 text-white" />

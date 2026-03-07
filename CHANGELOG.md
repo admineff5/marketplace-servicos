@@ -1,3 +1,9 @@
+## [0.4.3] - Patch de Acessibilidade da Cor Primária (100% Light Mode) - 2026-03-07
+### Ajustado
+- Contraste Universal de Interfaces Light: A cor primária padrão (`text-primary`), que ditava o tom "Ciano Claro", possuía péssima legibilidade no modo diurno (fundo branco). Um remapeamento estético com varredura em 33 Lógicas do sistema alterou todos os Letreiros e Ícones do app para um Ciano Escurecido (`text-cyan-700`) nas interfaces claras, conservando a beleza original neon apenas sob o fundo noturno.
+
+---
+
 ## [0.4.2] - Patch de UI e Tematização - 2026-03-07
 ### Ajustado
 - Tabela Feriados e Bloqueios (`app/dashboard/bloqueios`): Os resquícios visuais em tema laranja (Headers, Borders e botões de pesquisa convertidos da UI antiga) foram modernizados usando os tons cinzas do padrão do software.

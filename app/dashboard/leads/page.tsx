@@ -55,7 +55,7 @@ export default function GestaoLeadsPage() {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                         <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-2">
-                            <Target className="w-6 h-6 text-primary" />
+                            <Target className="w-6 h-6 text-cyan-700 dark:text-primary" />
                             Gestão de Leads (CRM)
                         </h1>
                         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
@@ -130,7 +130,7 @@ export default function GestaoLeadsPage() {
 
                                                 {/* Title & Info */}
                                                 <h4 className="font-bold text-gray-900 dark:text-white text-sm leading-snug">{lead.name}</h4>
-                                                <p className="text-xs text-primary font-medium mt-1">{lead.service}</p>
+                                                <p className="text-xs text-cyan-700 dark:text-primary font-medium mt-1">{lead.service}</p>
 
                                                 <div className="mt-4 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 pt-3 border-t border-gray-100 dark:border-[#222]">
                                                     <div className="flex items-center gap-1">
@@ -146,12 +146,12 @@ export default function GestaoLeadsPage() {
                                                 {/* Arrows for moving Lead MVP style */}
                                                 <div className="absolute top-1/2 -translate-y-1/2 -left-2 -right-2 flex justify-between opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                                                     {idx > 0 && (
-                                                        <button onClick={() => moveLead(lead.id, 'prev')} className="w-6 h-6 rounded-full bg-white dark:bg-black border border-gray-200 dark:border-gray-800 shadow-md flex items-center justify-center text-gray-500 hover:text-primary pointer-events-auto transform -translate-x-1/2">
+                                                        <button onClick={() => moveLead(lead.id, 'prev')} className="w-6 h-6 rounded-full bg-white dark:bg-black border border-gray-200 dark:border-gray-800 shadow-md flex items-center justify-center text-gray-500 hover:text-cyan-700 dark:hover:text-primary pointer-events-auto transform -translate-x-1/2">
                                                             {"<"}
                                                         </button>
                                                     )}
                                                     {idx < STAGES.length - 1 && (
-                                                        <button onClick={() => moveLead(lead.id, 'next')} className="w-6 h-6 ml-auto rounded-full bg-white dark:bg-black border border-gray-200 dark:border-gray-800 shadow-md flex items-center justify-center text-gray-500 hover:text-primary pointer-events-auto transform translate-x-1/2">
+                                                        <button onClick={() => moveLead(lead.id, 'next')} className="w-6 h-6 ml-auto rounded-full bg-white dark:bg-black border border-gray-200 dark:border-gray-800 shadow-md flex items-center justify-center text-gray-500 hover:text-cyan-700 dark:hover:text-primary pointer-events-auto transform translate-x-1/2">
                                                             {">"}
                                                         </button>
                                                     )}
@@ -176,7 +176,7 @@ export default function GestaoLeadsPage() {
             {isModalOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}>
                     <div className="bg-white dark:bg-[#111112] p-8 rounded-3xl max-w-sm w-full text-center" onClick={e => e.stopPropagation()}>
-                        <Target className="w-12 h-12 text-primary mx-auto mb-4" />
+                        <Target className="w-12 h-12 text-cyan-700 dark:text-primary mx-auto mb-4" />
                         <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Novo Lead Manual</h3>
                         <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Em breve: a integração via API das mensagens do Instagram cairão aqui sozinhas!</p>
                         <button onClick={() => setIsModalOpen(false)} className="w-full bg-gray-100 dark:bg-[#222] text-gray-900 dark:text-white font-bold py-3 rounded-xl hover:bg-gray-200 dark:hover:bg-[#333] transition-colors">Voltar</button>
