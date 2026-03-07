@@ -1,6 +1,8 @@
 ## [0.4.3] - Patch de Acessibilidade da Cor Primária (100% Light Mode) - 2026-03-07
 ### Ajustado
 - Contraste Universal de Interfaces Light: A cor primária padrão (`text-primary`), que ditava o tom "Ciano Claro", possuía péssima legibilidade no modo diurno (fundo branco). Um remapeamento estético com varredura em 33 Lógicas do sistema alterou todos os Letreiros e Ícones do app para um Ciano Escurecido (`text-cyan-700`) nas interfaces claras, conservando a beleza original neon apenas sob o fundo noturno.
+- Correção de Overflow (Leads): Transição da classe `custom-scrollbar` para `scrollbar-hide` aplicada de forma cirúrgica na Gestão de Leads, extirpando a barra de rolagem horizontal nativa que quebrava o frame, mantendo apenas a interatividade do Mouse/Touch.
+- Padronização Hierárquica de Ícones: Varredura de integridade injetou os correspondentes iconográficos (Mapeados da Sidebar) junto as tags `<h1>` de todas as rotas (Com ênfase nas falhas encontradas em Consultas e Feriados).
 
 ---
 

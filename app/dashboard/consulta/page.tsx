@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Download, FilterX, CalendarIcon, ChevronLeft, ChevronRight, User, Hash } from "lucide-react";
+import { Search, Download, FilterX, CalendarIcon, ChevronLeft, ChevronRight, User, Hash , SearchCheck} from "lucide-react";
 
 // Mock Data local for demonstration
 const MOCK_RESULTS = [
@@ -44,6 +44,7 @@ export default function ConsultaAgendamentos() {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        <SearchCheck className="w-6 h-6 text-cyan-700 dark:text-primary" />
                         Consulta de Agendamentos
                     </h1>
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Busque, filtre e exporte os horários da sua empresa.</p>
