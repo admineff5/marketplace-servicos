@@ -1,3 +1,11 @@
+## [0.4.5] - 2026-03-07
+### Adicionado
+- **Modo Privacidade:** Implementada máscara de valores (`**`) no dashboard para proteger dados sensíveis. Toggle de "olho" adicionado no cabeçalho.
+- **Navegação de Relatórios:** Link direto para Central de Relatórios adicionado na Sidebar.
+- **Nova Rota:** Rota independente `/dashboard/relatorios` criada para centralizar a gestão de dados.
+
+---
+
 ## [0.4.4] - Higienização de Mock Data (Nicho de Barbearia) - 2026-03-07
 ### Ajustado
 - Remodelação Lexical e Imagética: Substituídos os mocks residuais que não condiziam com o arquétipo principal da Barbearia. Elementos como 'Consulta Pet', 'Rações' e abrangência de 'Restaurante Inteiro' foram expurgados convertidos para Progessivas e Navalhas autênticas.

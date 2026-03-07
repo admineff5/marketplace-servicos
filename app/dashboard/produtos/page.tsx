@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Plus, Package, Edit2, Trash2, X, Check, Upload, AlertTriangle, TrendingUp, Image as ImageIcon } from "lucide-react";
+import { Search, Plus, Package, Edit2, Trash2, X, Check, Upload, AlertTriangle, TrendingUp, Image as ImageIcon, Eye, EyeOff } from "lucide-react";
 
 // Mock Data para Simular Produtos
 const MOCK_PRODUTOS = [
@@ -17,6 +17,9 @@ export default function GestaoProdutosPage() {
     const [produtos, setProdutos] = useState(MOCK_PRODUTOS);
     const [searchTerm, setSearchTerm] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isPrivacyMode, setIsPrivacyMode] = useState(true);
+
+    const maskValue = (val: string) => isPrivacyMode ? "****" : val;
 
     // Form State
     const [formName, setFormName] = useState("");
@@ -99,9 +102,17 @@ export default function GestaoProdutosPage() {
                                 <TrendingUp className="w-5 h-5 text-green-600 dark:text-green-400" />
                             </div>
                             <div>
-                                <p className="text-sm font-semibold text-gray-500 dark:text-gray-400">Valor Imobilizado</p>
+                                <div className="flex items-center gap-2">
+                                    <p className="text-sm font-semibold text-gray-500 dark:text-gray-400">Valor Imobilizado</p>
+                                    <button
+                                        onClick={() => setIsPrivacyMode(!isPrivacyMode)}
+                                        className="text-gray-400 hover:text-cyan-700 dark:hover:text-primary transition-colors"
+                                    >
+                                        {isPrivacyMode ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
+                                    </button>
+                                </div>
                                 <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                                    R$ {valorTotalEstoque.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                    {maskValue(`R$ ${valorTotalEstoque.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`)}
                                 </p>
                             </div>
                         </div>
