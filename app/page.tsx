@@ -202,28 +202,28 @@ const enhancedMockCompanies = MOCK_COMPANIES.map((company) => ({
   ...company,
   staff: company.staff
     ? company.staff.map((s, i) => ({
-        ...s,
-        availability:
-          i % 2 === 0
-            ? ["08:00", "09:30", "13:00", "14:30", "16:00"]
-            : ["10:00", "11:00", "15:00", "17:30", "18:15"],
-      }))
+      ...s,
+      availability:
+        i % 2 === 0
+          ? ["08:00", "09:30", "13:00", "14:30", "16:00"]
+          : ["10:00", "11:00", "15:00", "17:30", "18:15"],
+    }))
     : [
-        {
-          id: "f1",
-          name: "Profissional 1",
-          image:
-            "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=60",
-          availability: ["08:00", "10:00", "14:00"],
-        },
-        {
-          id: "f2",
-          name: "Profissional 2",
-          image:
-            "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=60",
-          availability: ["09:00", "11:00", "15:00", "16:30"],
-        },
-      ],
+      {
+        id: "f1",
+        name: "Profissional 1",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=60",
+        availability: ["08:00", "10:00", "14:00"],
+      },
+      {
+        id: "f2",
+        name: "Profissional 2",
+        image:
+          "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=60",
+        availability: ["09:00", "11:00", "15:00", "16:30"],
+      },
+    ],
 }));
 
 export default function Home() {
@@ -359,18 +359,18 @@ export default function Home() {
 
           <nav className="flex items-center gap-3">
             <ThemeToggle />
-            <div className="hidden sm:flex items-center gap-4 border-l border-gray-200 dark:border-gray-800 pl-4 ml-2">
+            <div className="flex items-center gap-2 sm:gap-4 border-l border-gray-200 dark:border-gray-800 pl-3 sm:pl-4 ml-1 sm:ml-2">
               <Link
                 href="/login"
-                className="text-sm font-medium text-gray-700 hover:text-black dark:text-gray-200 dark:hover:text-primary transition-colors"
+                className="text-xs sm:text-sm font-medium text-gray-700 hover:text-black dark:text-gray-200 dark:hover:text-primary transition-colors"
               >
                 Login
               </Link>
               <Link
                 href="/register"
-                className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-black transition-transform hover:scale-105"
+                className="rounded-full bg-primary px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-black transition-transform hover:scale-105"
               >
-                Cadastrar-se
+                Cadastrar
               </Link>
             </div>
           </nav>
@@ -424,11 +424,10 @@ export default function Home() {
                   <button
                     key={cat.name}
                     onClick={() => setActiveCategory(cat.name)}
-                    className={`flex-shrink-0 flex items-center gap-2.5 px-6 py-3 rounded-full border transition-all ${
-                      activeCategory === cat.name
+                    className={`flex-shrink-0 flex items-center gap-2.5 px-6 py-3 rounded-full border transition-all ${activeCategory === cat.name
                         ? "bg-primary/20 border-primary text-primary shadow-[0_0_10px_rgba(0,255,255,0.2)]"
                         : "bg-transparent border-white/10 text-gray-300 hover:border-white/30 hover:bg-white/5 hover:text-white"
-                    } `}
+                      } `}
                   >
                     <cat.icon
                       className={`w-5 h-5 ${activeCategory === cat.name ? "opacity-100" : "opacity-70 text-primary"} `}
@@ -445,11 +444,10 @@ export default function Home() {
 
         {/* The Sticky Search Bar (Only appears when scrolling past hero) */}
         <div
-          className={`fixed top-16 left-0 right-0 z-30 w-full bg-[#050505] border-b border-white / 10 shadow-2xl py-3 transform transition-all duration-300 ease -in -out ${
-            isSticky
+          className={`fixed top-16 left-0 right-0 z-30 w-full bg-[#050505] border-b border-white / 10 shadow-2xl py-3 transform transition-all duration-300 ease -in -out ${isSticky
               ? "translate-y-0 opacity-100"
               : "-translate-y-full opacity-0 pointer-events-none"
-          } `}
+            } `}
         >
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col lg:flex-row items-center gap-4 justify-between">
@@ -473,11 +471,10 @@ export default function Home() {
                   <button
                     key={cat.name}
                     onClick={() => setActiveCategory(cat.name)}
-                    className={`flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full border transition-all ${
-                      activeCategory === cat.name
+                    className={`flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full border transition-all ${activeCategory === cat.name
                         ? "bg-primary/20 border-primary text-primary"
                         : "bg-transparent border-white/10 text-gray-300 hover:bg-white/5 hover:text-white"
-                    } `}
+                      } `}
                   >
                     <cat.icon
                       className={`w-3.5 h-3.5 ${activeCategory === cat.name ? "opacity-100" : "opacity-70 text-primary"} `}
@@ -538,9 +535,8 @@ export default function Home() {
                 <div
                   key={company.id}
                   onClick={() => handleOpenCompany(company)}
-                  className={`group flex rounded-2xl bg-white border border-gray-100 shadow-sm transition-all hover:shadow-lg hover:-translate-y-1 dark:bg-gray-900 dark:border-gray-800 overflow-hidden cursor-pointer ${
-                    layoutMode === "grid" ? "flex-col" : "flex-row h-[200px]"
-                  } `}
+                  className={`group flex rounded-2xl bg-white border border-gray-100 shadow-sm transition-all hover:shadow-lg hover:-translate-y-1 dark:bg-gray-900 dark:border-gray-800 overflow-hidden cursor-pointer ${layoutMode === "grid" ? "flex-col" : "flex-row h-[200px]"
+                    } `}
                 >
                   {/* Image Header */}
                   <div
@@ -825,11 +821,10 @@ export default function Home() {
                             setSelectedDate(ds.fullDateStr);
                             setSelectedTime(null);
                           }}
-                          className={`flex flex-col items-center justify-center shrink-0 w-[72px] h-[84px] rounded-2xl border transition-all cursor-pointer ${
-                            isSelected
+                          className={`flex flex-col items-center justify-center shrink-0 w-[72px] h-[84px] rounded-2xl border transition-all cursor-pointer ${isSelected
                               ? "border-primary bg-primary text-black shadow-[0_0_15px_rgba(0,255,255,0.4)]"
                               : "border-[#2a2a2c] bg-[#151516] text-gray-400 hover:border-gray-500 hover:text-white hover:bg-[#1e1f22]"
-                          } `}
+                            } `}
                         >
                           <span className="text-[11px] font-bold uppercase tracking-wider mb-1">
                             {ds.dayName}

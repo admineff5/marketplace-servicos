@@ -1,3 +1,9 @@
+## [0.3.1] - Patch de Navbar Mobile - 2026-03-07
+### Fixed
+- Correção de responsividade do Navbar público (`app/page.tsx`): Removida a classe acidental `hidden` (no breakpoint sm) que desaparecia com os botões "Cadastrar-se" e "Login" do topo da tela em celulares, tornando o onboarding de clientes inacessível em certas dimensões. Refatorado os botões com layout fluído `text-xs py-1.5` nas telas estreitas.
+
+---
+
 ## [0.3.0] - Módulo de Captura e Retenção - 2026-03-07
 ### Adicionado
 - **Gestão de Clientes (`app/dashboard/clientes`):** Listagem robusta contendo histórico, contato direto por WhatsApp, status VIP/Frequente e contagem atrelada de visitas confirmadas e faltas.
