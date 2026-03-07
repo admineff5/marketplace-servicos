@@ -91,7 +91,7 @@ export default function GestaoLeadsPage() {
                 </div>
 
                 {/* Kanban Board Container -> Scrollable overflow in Mobile */}
-                <div className="flex-1 overflow-x-auto custom-scrollbar pb-6 pl-1 pr-4">
+                <div className="flex-1 overflow-x-auto scrollbar-hide pb-6 pl-1 pr-4">
                     <div className="flex gap-6 min-w-max h-full">
 
                         {STAGES.map((stage, idx) => {
@@ -111,15 +111,15 @@ export default function GestaoLeadsPage() {
                                     </div>
 
                                     {/* Column Body / Cards */}
-                                    <div className="p-4 flex-1 flex flex-col gap-4 overflow-y-auto">
+                                    <div className="p-4 flex-1 flex flex-col gap-4 overflow-y-auto scrollbar-hide">
                                         {columnLeads.length > 0 ? columnLeads.map(lead => (
                                             <div key={lead.id} className="bg-white dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] p-4 rounded-xl shadow-sm hover:shadow-md hover:border-primary/30 transition-all group relative">
 
                                                 {/* Meta */}
                                                 <div className="flex justify-between items-start mb-2">
                                                     <span className={`text-[10px] font-bold uppercase tracking-wide px-2 py-1 rounded-md ${lead.origin === 'Instagram' ? 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400' :
-                                                            lead.origin === 'WhatsApp' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
-                                                                'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                                                        lead.origin === 'WhatsApp' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+                                                            'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
                                                         }`}>
                                                         {lead.origin}
                                                     </span>
