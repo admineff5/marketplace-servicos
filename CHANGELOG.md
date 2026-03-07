@@ -1,3 +1,9 @@
+## [0.4.1] - Patch de Layout do Dashboard - 2026-03-07
+### Ajustado
+- Na visão `app/dashboard/page.tsx`, a lista de "Próximos Horários" foi limitada de cinco para três listagens mockadas, pareadas simetricamente à altura do Bloco CTA ("Gerar Relatórios") adjacente, eliminando o espaço vazio e a necessidade de scroll nos Pcs.
+
+---
+
 ## [0.4.0] - Novo Dashboard e Central de Relatórios - 2026-03-07
 ### Adicionado
 - **Faixa de Indicadores (Painel Rápido):** O antigo formato estendido do Gráfico e blocos colossais foi dizimado da Visão Geral (`app/dashboard`). Agora abrimos um Layout Clean de 6 Cards Diretos (*Resultado, Receita, Despesa, Agendamentos, Presença Online e Atendimentos*) com setas verdes/vermelhas orientando métricas de Mês em Vigência vs Mês Passado.

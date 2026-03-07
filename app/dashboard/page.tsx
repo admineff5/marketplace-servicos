@@ -18,8 +18,6 @@ const RECENT_APPOINTMENTS = [
     { id: 1, client: "Marcelo Souza", service: "Corte + Barba", professional: "João Silva", time: "Hoje, 14:00", status: "Confirmado" },
     { id: 2, client: "Lucas Fernandes", service: "Corte Degradê", professional: "Marcio", time: "Hoje, 15:30", status: "Pendente" },
     { id: 3, client: "Pedro Alves", service: "Barba Terapia", professional: "João Silva", time: "Amanhã, 10:00", status: "Confirmado" },
-    { id: 4, client: "Fernanda Lima", service: "Micro de Sobrancelha", professional: "Ana", time: "Amanhã, 14:00", status: "Confirmado" },
-    { id: 5, client: "Carlos Machado", service: "Corte Clássico", professional: "João Silva", time: "Amanhã, 16:30", status: "Pendente" },
 ];
 
 // -- REPORTS DATA FOR CENTRAL --
