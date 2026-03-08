@@ -280,11 +280,14 @@ export default function AgendaPage() {
                                     <div className="flex flex-1 overflow-y-auto relative">
                                         {/* Time Column */}
                                         <div className="w-16 shrink-0 border-r border-gray-200 dark:border-gray-800 flex flex-col">
-                                            {Array.from({ length: 24 }).map((_, i) => (
-                                                <div key={i} className="h-16 border-b border-gray-100 dark:border-gray-800/50 flex items-start justify-end pr-2 py-1">
-                                                    <span className="text-[10px] text-gray-400">{i}:00</span>
-                                                </div>
-                                            ))}
+                                            {Array.from({ length: 15 }).map((_, i) => {
+                                                const hour = i + 7;
+                                                return (
+                                                    <div key={i} className="h-16 border-b border-gray-100 dark:border-gray-800/50 flex items-start justify-end pr-2 py-1">
+                                                        <span className="text-[10px] text-gray-400">{hour}:00</span>
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
                                         {/* 7 Days Columns */}
                                         <div className="flex-1 grid grid-cols-7">
@@ -306,13 +309,25 @@ export default function AgendaPage() {
                                                         </div>
                                                         {/* Hour Slots */}
                                                         <div className="relative">
-                                                            {Array.from({ length: 24 }).map((_, h) => (
+                                                            {Array.from({ length: 15 }).map((_, h) => (
                                                                 <div key={h} className="h-16 border-b border-gray-100 dark:border-gray-800/50 w-full hover:bg-gray-50 dark:hover:bg-gray-800/30 cursor-pointer"></div>
                                                             ))}
 
                                                             {colApts.map(apt => {
-                                                                const hourStart = parseInt(apt.start.replace(/\D/g, ''));
-                                                                const topOffset = (hourStart < 7 ? hourStart + 12 : hourStart) * 64;
+                                                                // Helper to parse time string like "9am", "10:30am", "2pm"
+                                                                const parseTime = (timeStr: string) => {
+                                                                    const time = timeStr.toLowerCase();
+                                                                    let [h, m] = time.replace(/[am|pm]/g, '').split(':').map(Number);
+                                                                    if (isNaN(m)) m = 0;
+                                                                    if (time.includes('pm') && h < 12) h += 12;
+                                                                    if (time.includes('am') && h === 12) h = 0;
+                                                                    return h + m / 60;
+                                                                };
+
+                                                                const startTime = parseTime(apt.start);
+                                                                const topOffset = (startTime - 7) * 64; // (hour - startHour) * hourHeight
+
+                                                                if (startTime < 7 || startTime > 22) return null;
 
                                                                 return (
                                                                     <div
@@ -338,11 +353,14 @@ export default function AgendaPage() {
                                     <div className="flex flex-1 overflow-y-auto relative">
                                         {/* Time Column */}
                                         <div className="w-16 shrink-0 border-r border-gray-200 dark:border-gray-800 flex flex-col">
-                                            {Array.from({ length: 24 }).map((_, i) => (
-                                                <div key={i} className="h-20 border-b border-gray-100 dark:border-gray-800/50 flex items-start justify-end pr-2 py-1">
-                                                    <span className="text-[10px] text-gray-400">{i}:00</span>
-                                                </div>
-                                            ))}
+                                            {Array.from({ length: 15 }).map((_, i) => {
+                                                const hour = i + 7;
+                                                return (
+                                                    <div key={i} className="h-24 border-b border-gray-100 dark:border-gray-800/50 flex items-start justify-end pr-2 py-1">
+                                                        <span className="text-[10px] text-gray-400">{hour}:00</span>
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
                                         {/* Single Day Column */}
                                         <div className="flex-1 relative bg-blue-50/10 dark:bg-blue-900/5">
@@ -351,12 +369,24 @@ export default function AgendaPage() {
                                                 <span className="text-2xl mt-1 w-10 h-10 flex items-center justify-center rounded-full bg-blue-600 text-white font-normal">{currentDate.getDate()}</span>
                                             </div>
                                             <div className="relative">
-                                                {Array.from({ length: 24 }).map((_, h) => (
-                                                    <div key={h} className="h-20 border-b border-gray-100 dark:border-gray-800/50 w-full hover:bg-gray-50 dark:hover:bg-gray-800/30 cursor-pointer"></div>
+                                                {Array.from({ length: 15 }).map((_, h) => (
+                                                    <div key={h} className="h-24 border-b border-gray-100 dark:border-gray-800/50 w-full hover:bg-gray-50 dark:hover:bg-gray-800/30 cursor-pointer"></div>
                                                 ))}
                                                 {MOCK_APPOINTMENTS.filter(a => a.date === currentDate.getDate() && a.month === currentDate.getMonth() && a.year === currentDate.getFullYear() && selectedPros.includes(a.prof)).map((apt, idx) => {
-                                                    const hourStart = parseInt(apt.start.replace(/\D/g, ''));
-                                                    const topOffset = (hourStart < 7 ? hourStart + 12 : hourStart) * 80;
+                                                    const parseTime = (timeStr: string) => {
+                                                        const time = timeStr.toLowerCase();
+                                                        let [h, m] = time.replace(/[am|pm]/g, '').split(':').map(Number);
+                                                        if (isNaN(m)) m = 0;
+                                                        if (time.includes('pm') && h < 12) h += 12;
+                                                        if (time.includes('am') && h === 12) h = 0;
+                                                        return h + m / 60;
+                                                    };
+
+                                                    const startTime = parseTime(apt.start);
+                                                    const topOffset = (startTime - 7) * 96; // (hour - startHour) * hourHeight (24*4 = 96 approx)
+
+                                                    if (startTime < 7 || startTime > 22) return null;
+
                                                     return (
                                                         <div
                                                             key={apt.id}
