@@ -1,10 +1,8 @@
-"use client";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus, Search, Edit2, Trash2, X, UserSquare2, Check, Clock, CalendarDays, Upload, Image as ImageIcon, MapPin } from "lucide-react";
 
-// AVATARES PRE-DEFINIDOS DO MOCK
-const MOCK_AVATARS = [
+// AVATARES PRE-DEFINIDOS PARA NOVOS CADASTROS
+const DEFAULT_AVATARS = [
     "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=150&auto=format&fit=crop&q=80",
     "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80",
     "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&auto=format&fit=crop&q=80",
@@ -12,19 +10,10 @@ const MOCK_AVATARS = [
     "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80",
 ];
 
-// Mock das Unidades (Vindo das Configurações)
-const MOCK_LOCATIONS = [
-    { id: 1, name: "Matriz - Centro Vitória" },
-    { id: 2, name: "Filial - Vila Velha" },
-];
-
-const INITIAL_MOCK_PROFISSIONAIS = [
-    { id: 1, name: "Rodrigo Silva", role: "Barbeiro Sênior", img: MOCK_AVATARS[0], days: "Segunda a Sábado", hours: "09:00 - 19:00", unitId: 1 },
-    { id: 2, name: "Ana Beatriz", role: "Esteticista", img: MOCK_AVATARS[2], days: "Terça a Sexta", hours: "10:00 - 18:00", unitId: 2 },
-];
-
 export default function GestaoProfissionaisPage() {
-    const [professionals, setProfessionals] = useState(INITIAL_MOCK_PROFISSIONAIS);
+    const [professionals, setProfessionals] = useState<any[]>([]);
+    const [locations, setLocations] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [unitFilter, setUnitFilter] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -40,10 +29,32 @@ export default function GestaoProfissionaisPage() {
     const [formAvatar, setFormAvatar] = useState("");
     const [formUnitId, setFormUnitId] = useState("");
 
-    const filteredProfessionals = professionals.filter(p => {
-        const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            p.role.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesUnit = !unitFilter || p.unitId === Number(unitFilter);
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const fetchData = async () => {
+        try {
+            setIsLoading(true);
+            const [profRes, locRes] = await Promise.all([
+                fetch('/api/employees'),
+                fetch('/api/locations')
+            ]);
+            const profs = await profRes.json();
+            const locs = await locRes.json();
+            setProfessionals(profs);
+            setLocations(locs);
+        } catch (error) {
+            console.error("Erro ao carregar dados:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const filteredProfessionals = (professionals || []).filter(p => {
+        const matchesSearch = p.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            p.role?.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesUnit = !unitFilter || p.locationId === unitFilter;
         return matchesSearch && matchesUnit;
     });
 
@@ -67,51 +78,58 @@ export default function GestaoProfissionaisPage() {
     const handleEdit = (prof: any) => {
         setEditingProf(prof);
         setFormName(prof.name);
-        setFormRole(prof.role);
-        setFormDays(prof.days);
-        const [start, end] = prof.hours.split(" - ");
+        setFormRole(prof.role || "");
+        setFormDays(prof.days || "Segunda a Sexta");
+        const [start, end] = (prof.hours || "09:00 - 18:00").split(" - ");
         setFormTimeStart(start);
         setFormTimeEnd(end);
-        setFormAvatar(prof.img);
-        setFormUnitId(prof.unitId.toString());
+        setFormAvatar(prof.image || "");
+        setFormUnitId(prof.locationId || "");
         setIsModalOpen(true);
     };
 
-    const handleDelete = (id: number) => {
+    const handleDelete = async (id: string) => {
         if (window.confirm("Tem certeza que deseja excluir este profissional?")) {
-            setProfessionals(professionals.filter(p => p.id !== id));
+            try {
+                const res = await fetch(`/api/employees/${id}`, { method: 'DELETE' });
+                if (res.ok) fetchData();
+            } catch (error) {
+                console.error("Erro ao excluir:", error);
+            }
         }
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!formName || !formRole || !formUnitId) return;
 
-        if (editingProf) {
-            setProfessionals(professionals.map(p =>
-                p.id === editingProf.id ? {
-                    ...p,
-                    name: formName,
-                    role: formRole,
-                    days: formDays,
-                    hours: `${formTimeStart} - ${formTimeEnd}`,
-                    unitId: Number(formUnitId),
-                    img: formAvatar || p.img
-                } : p
-            ));
-        } else {
-            setProfessionals([...professionals, {
-                id: Date.now(),
-                name: formName,
-                role: formRole,
-                days: formDays,
-                hours: `${formTimeStart} - ${formTimeEnd}`,
-                unitId: Number(formUnitId),
-                img: formAvatar || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80"
-            }]);
-        }
+        const payload = {
+            name: formName,
+            role: formRole,
+            days: formDays,
+            hours: `${formTimeStart} - ${formTimeEnd}`,
+            locationId: formUnitId,
+            image: formAvatar || (editingProf?.image || DEFAULT_AVATARS[0]),
+            companyId: "dummy-company-id" // Deixando placeholder até ter auth real
+        };
 
-        setIsModalOpen(false);
-        resetForm();
+        try {
+            const url = editingProf ? `/api/employees/${editingProf.id}` : '/api/employees';
+            const method = editingProf ? 'PUT' : 'POST';
+
+            const res = await fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                setIsModalOpen(false);
+                resetForm();
+                fetchData();
+            }
+        } catch (error) {
+            console.error("Erro ao salvar:", error);
+        }
     };
 
     return (
@@ -158,7 +176,7 @@ export default function GestaoProfissionaisPage() {
                             className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-primary transition-all appearance-none cursor-pointer"
                         >
                             <option value="">Todas as Unidades</option>
-                            {MOCK_LOCATIONS.map(loc => (
+                            {locations.map(loc => (
                                 <option key={loc.id} value={loc.id}>{loc.name}</option>
                             ))}
                         </select>
@@ -173,7 +191,7 @@ export default function GestaoProfissionaisPage() {
                             {/* Profile Avatar Frame */}
                             <div className="relative mb-4">
                                 <div className="w-24 h-24 rounded-full border-4 border-gray-50 dark:border-[#1a1a1c] shadow-md overflow-hidden bg-gray-200 dark:bg-gray-800">
-                                    <img src={prof.img} alt={prof.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                    <img src={prof.image} alt={prof.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                                 </div>
                             </div>
 
@@ -184,7 +202,7 @@ export default function GestaoProfissionaisPage() {
                             {/* Unit Tag */}
                             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4 border border-gray-200 dark:border-gray-700">
                                 <MapPin className="w-3 h-3" />
-                                {MOCK_LOCATIONS.find(l => l.id === prof.unitId)?.name}
+                                {locations.find(l => l.id === prof.locationId)?.name}
                             </div>
 
                             <div className="w-full flex flex-col gap-2 mt-auto">
@@ -271,7 +289,7 @@ export default function GestaoProfissionaisPage() {
 
                                     {/* Avatar Fast Picker */}
                                     <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
-                                        {MOCK_AVATARS.map((av, idx) => (
+                                        {DEFAULT_AVATARS.map((av, idx) => (
                                             <div
                                                 key={idx}
                                                 onClick={() => setFormAvatar(av)}
@@ -295,7 +313,7 @@ export default function GestaoProfissionaisPage() {
                                         className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-4 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all appearance-none cursor-pointer"
                                     >
                                         <option value="">Selecione a Unidade</option>
-                                        {MOCK_LOCATIONS.map(loc => (
+                                        {locations.map(loc => (
                                             <option key={loc.id} value={loc.id}>{loc.name}</option>
                                         ))}
                                     </select>

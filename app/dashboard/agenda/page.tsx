@@ -1,38 +1,48 @@
-"use client";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus, ChevronLeft, ChevronRight, X, User, Edit2, Trash2, Mail, MoreVertical, Calendar as CalendarIcon, Clock, Menu, LayoutList } from "lucide-react";
-
-// Mock Data
-const MOCK_APPOINTMENTS = [
-    { id: 1, date: 2, month: 1, year: 2026, title: "corte de cabelo - Rodrigo", start: "9am", end: "10am", color: "text-blue-500 dark:text-gray-300", dot: "bg-blue-500", prof: "Rodrigo", client: "Thiago", phone: "https://wa.me/5527992661278", desc: "reagendado pela IA." },
-    { id: 2, date: 2, month: 1, year: 2026, title: "Corte de cabelo - Rodrigo", start: "10am", end: "11am", color: "text-blue-500 dark:text-gray-300", dot: "bg-blue-500", prof: "Rodrigo", client: "Lucas Almeida", phone: "https://wa.me/5511999999999", clientNote: "Oi João! Consigo pedir pra você focar um pouco mais nas laterais hoje? Está crescendo muito rápido. Abraços!" },
-    { id: 3, date: 2, month: 1, year: 2026, title: "corte de cabelo - Rodrigo", start: "2pm", end: "3pm", color: "text-purple-500 dark:text-gray-300", dot: "bg-purple-500", prof: "Rodrigo" },
-    { id: 4, date: 2, month: 1, year: 2026, title: "Corte de cabelo - Rodrigo", start: "2pm", end: "3pm", color: "text-pink-500 dark:text-gray-300", dot: "bg-pink-500", prof: "Rodrigo" },
-    { id: 5, date: 3, month: 1, year: 2026, title: "Corte de cabelo - Rodrigo", start: "10am", end: "11am", color: "text-green-500 dark:text-gray-300", dot: "bg-green-500", prof: "Rodrigo" },
-    { id: 6, date: 4, month: 1, year: 2026, title: "corte de barba - Thiago", start: "9:40am", end: "10:10am", color: "text-purple-500 dark:text-gray-300", dot: "bg-purple-500", prof: "Thiago", client: "Marcos Oliveira", phone: "https://wa.me/5511988888888", clientNote: "Alergia leve a lâminas muito afiadas na bochecha, pode usar máquina mais suave?" },
-    { id: 7, date: 4, month: 1, year: 2026, title: "Corte de barba - Rodrigo", start: "1:05pm", end: "1:40pm", color: "text-blue-500 dark:text-gray-300", dot: "bg-blue-500", prof: "Rodrigo" },
-    { id: 8, date: 9, month: 1, year: 2026, title: "Corte de cabelo - Thiago", start: "10am", end: "11am", color: "text-green-500 dark:text-gray-300", dot: "bg-green-500", prof: "Thiago", client: "Rodrigo", phone: "https://wa.me/5527992661278", desc: "reagendado pela IA." },
-    { id: 9, date: 9, month: 1, year: 2026, title: "corte de cabelo - Rodrigo", start: "4pm", end: "5pm", color: "text-purple-500 dark:text-gray-300", dot: "bg-purple-500", prof: "Rodrigo" },
-    { id: 10, date: 13, month: 1, year: 2026, title: "corte de cabelo - Thiago", start: "11am", end: "12pm", color: "text-yellow-500 dark:text-gray-300", dot: "bg-yellow-500", prof: "Thiago" },
-    { id: 11, date: 21, month: 1, year: 2026, title: "corte de cabelo - Rodrigo", start: "9am", end: "10am", color: "text-purple-500 dark:text-gray-300", dot: "bg-purple-500", prof: "Rodrigo" },
-];
 
 const WEEKDAYS = ["DOM.", "SEG.", "TER.", "QUA.", "QUI.", "SEX.", "SÁB."];
 const MONTHS = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-const ALL_PROS = ["Rodrigo", "Thiago"];
 
 export default function AgendaPage() {
-    const [selectedAppointment, setSelectedAppointment] = useState<typeof MOCK_APPOINTMENTS[0] | null>(null);
+    const [appointments, setAppointments] = useState<any[]>([]);
+    const [professionals, setProfessionals] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [selectedAppointment, setSelectedAppointment] = useState<any | null>(null);
     const [viewMode, setViewMode] = useState<"Mês" | "Semana" | "Dia">("Mês");
     const [agendaLayout, setAgendaLayout] = useState<"calendar" | "list">("calendar");
-    const [selectedPros, setSelectedPros] = useState<string[]>(["Rodrigo", "Thiago"]);
-    const [currentDate, setCurrentDate] = useState(new Date(2026, 1, 9)); // Start pointing at mock day
+    const [selectedPros, setSelectedPros] = useState<string[]>([]);
+    const [currentDate, setCurrentDate] = useState(new Date());
     const [searchQuery, setSearchQuery] = useState("");
+
+    useEffect(() => {
+        fetchData();
+    }, [currentDate, viewMode]);
+
+    const fetchData = async () => {
+        try {
+            setIsLoading(true);
+            // Fetch professionals to populate filters
+            const profRes = await fetch('/api/employees');
+            const profs = await profRes.json();
+            setProfessionals(profs);
+            if (selectedPros.length === 0) setSelectedPros(profs.map((p: any) => p.name));
+
+            // Fetch appointments - in a real scenario we'd filter by date range based on viewMode
+            const dateStr = currentDate.toISOString().split('T')[0];
+            const apptRes = await fetch(`/api/appointments?date=${dateStr}`);
+            const appts = await apptRes.json();
+            setAppointments(appts);
+        } catch (error) {
+            console.error("Erro ao buscar dados da agenda:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const closeModal = () => setSelectedAppointment(null);
 
-    const filteredPros = ALL_PROS.filter(p => p.toLowerCase().includes(searchQuery.toLowerCase()));
+    const filteredPros = professionals.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
     const navPrev = () => {
         const newDate = new Date(currentDate);
@@ -244,7 +254,7 @@ export default function AgendaPage() {
                                         {/* 5 Weeks Grid */}
                                         <div className="grid grid-cols-7 flex-1">
                                             {calendarGrid.map((day, i) => {
-                                                const dayAppointments = MOCK_APPOINTMENTS.filter(apt => apt.date === day.date && apt.month === month && apt.year === year && selectedPros.includes(apt.prof));
+                                                const dayAppointments = appointments.filter((apt: any) => apt.date === day.date && apt.month === month && apt.year === year && selectedPros.includes(apt.prof));
                                                 const dayIsToday = isToday(day.date);
 
                                                 return (
@@ -256,7 +266,7 @@ export default function AgendaPage() {
                                                         </div>
 
                                                         <div className="flex flex-col gap-0.5 px-0.5">
-                                                            {dayAppointments.map(apt => (
+                                                            {dayAppointments.map((apt: any) => (
                                                                 <div
                                                                     key={apt.id}
                                                                     onClick={() => setSelectedAppointment(apt)}
@@ -298,7 +308,7 @@ export default function AgendaPage() {
                                                 const cMon = colDate.getMonth();
                                                 const cYear = colDate.getFullYear();
                                                 const isColToday = cDate === todayDate.getDate() && cMon === todayDate.getMonth() && cYear === todayDate.getFullYear();
-                                                const colApts = MOCK_APPOINTMENTS.filter(a => a.date === cDate && a.month === cMon && a.year === cYear && selectedPros.includes(a.prof));
+                                                const colApts = appointments.filter((a: any) => a.date === cDate && a.month === cMon && a.year === cYear && selectedPros.includes(a.prof));
 
                                                 return (
                                                     <div key={i} className={`relative border-r border-gray-200 dark:border-gray-800 ${isColToday ? 'bg-blue-50/10 dark:bg-blue-900/5' : ''}`}>
@@ -313,7 +323,7 @@ export default function AgendaPage() {
                                                                 <div key={h} className="h-16 border-b border-gray-100 dark:border-gray-800/50 w-full hover:bg-gray-50 dark:hover:bg-gray-800/30 cursor-pointer"></div>
                                                             ))}
 
-                                                            {colApts.map(apt => {
+                                                            {colApts.map((apt: any) => {
                                                                 // Helper to parse time string like "9am", "10:30am", "2pm"
                                                                 const parseTime = (timeStr: string) => {
                                                                     const time = timeStr.toLowerCase();
@@ -372,7 +382,7 @@ export default function AgendaPage() {
                                                 {Array.from({ length: 15 }).map((_, h) => (
                                                     <div key={h} className="h-24 border-b border-gray-100 dark:border-gray-800/50 w-full hover:bg-gray-50 dark:hover:bg-gray-800/30 cursor-pointer"></div>
                                                 ))}
-                                                {MOCK_APPOINTMENTS.filter(a => a.date === currentDate.getDate() && a.month === currentDate.getMonth() && a.year === currentDate.getFullYear() && selectedPros.includes(a.prof)).map((apt, idx) => {
+                                                {appointments.filter((a: any) => a.date === currentDate.getDate() && a.month === currentDate.getMonth() && a.year === currentDate.getFullYear() && selectedPros.includes(a.prof)).map((apt: any, idx: any) => {
                                                     const parseTime = (timeStr: string) => {
                                                         const time = timeStr.toLowerCase();
                                                         let [h, m] = time.replace(/[am|pm]/g, '').split(':').map(Number);
@@ -410,11 +420,11 @@ export default function AgendaPage() {
                         ) : (
                             <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-gray-50/50 dark:bg-[#1e1f22]">
                                 <div className="max-w-4xl mx-auto space-y-6">
-                                    {MOCK_APPOINTMENTS
-                                        .filter(apt => selectedPros.includes(apt.prof))
+                                    {appointments
+                                        .filter((apt: any) => selectedPros.includes(apt.prof))
                                         // Normally you'd sort by real date here. Just putting them in a fake order based on mock data.
-                                        .sort((a, b) => a.date - b.date)
-                                        .map(apt => (
+                                        .sort((a: any, b: any) => a.date - b.date)
+                                        .map((apt: any) => (
                                             <div key={apt.id} className="bg-white dark:bg-[#25262b] border border-gray-200 dark:border-gray-800 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer flex flex-col sm:flex-row gap-4 sm:items-center justify-between" onClick={() => setSelectedAppointment(apt)}>
                                                 <div className="flex items-start sm:items-center gap-4">
                                                     <div className="hidden sm:flex flex-col items-center justify-center w-14 h-14 bg-gray-50 dark:bg-[#1e1f22] rounded-lg border border-gray-100 dark:border-gray-700 shrink-0">
@@ -454,7 +464,7 @@ export default function AgendaPage() {
                                             </div>
                                         ))}
 
-                                    {MOCK_APPOINTMENTS.filter(apt => selectedPros.includes(apt.prof)).length === 0 && (
+                                    {appointments.filter((apt: any) => selectedPros.includes(apt.prof)).length === 0 && (
                                         <div className="text-center py-20 text-gray-500">
                                             Nenhum agendamento encontrado para os profissionais selecionados.
                                         </div>

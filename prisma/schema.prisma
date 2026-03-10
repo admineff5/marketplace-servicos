@@ -76,22 +76,27 @@ model Employee {
   locationId   String?       // Optional: An employee might belong to a specific branch
   location     Location?     @relation(fields: [locationId], references: [id])
   name         String
+  role         String?       // Specialized role/specialty (e.g., "Barbeiro Sênior")
+  days         String?       // Working days (e.g., "Segunda a Sábado")
+  hours        String?       // Working hours (e.g., "09:00 - 19:00")
+  image        String?       // Avatar URL
   appointments Appointment[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 }
 
 model Service {
-  id         String    @id @default(uuid())
+  id         String        @id @default(uuid())
   companyId  String
-  company    Company   @relation(fields: [companyId], references: [id])
-  locationId String?   // Optional: Services only offered at specific branches
-  location   Location? @relation(fields: [locationId], references: [id])
+  company    Company       @relation(fields: [companyId], references: [id])
+  locationId String?       // Optional: Services only offered at specific branches
+  location   Location?     @relation(fields: [locationId], references: [id])
   name       String
   price      Float
   duration   Int
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  appointments Appointment[]
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
 }
 
 model Product {
@@ -126,11 +131,15 @@ model Appointment {
   id         String            @id @default(uuid())
   employeeId String
   employee   Employee          @relation(fields: [employeeId], references: [id])
+  serviceId  String?           // New: Link to the service being performed
+  service    Service?          @relation(fields: [serviceId], references: [id])
   userId     String
   user       User              @relation("UserAppointments", fields: [userId], references: [id])
   locationId String?           // Track which branch this appointment is for
   location   Location?         @relation(fields: [locationId], references: [id])
   date       DateTime
+  startTime  DateTime?         // New: Explicit start time
+  endTime    DateTime?         // New: Explicit end time
   status     AppointmentStatus @default(PENDING)
   createdAt  DateTime          @default(now())
   updatedAt  DateTime          @updatedAt

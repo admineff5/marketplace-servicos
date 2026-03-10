@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "notify": "node scripts/notify-discord.js",
+    "notify:all": "node scripts/notify-discord.js --all",
+    "status": "node scripts/status-discord.js"
   },
   "dependencies": {
     "lucide-react": "^0.577.0",

@@ -1,6 +1,4 @@
-"use client";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Settings, User, Building, CreditCard, Bell, Shield, Palette, MapPin, X } from "lucide-react";
 
 const TABS = [
@@ -14,12 +12,38 @@ const TABS = [
 
 export default function ConfigPage() {
     const [activeTab, setActiveTab] = useState("profile");
+    const [locations, setLocations] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-    // Mock Locations Data
-    const [locations, setLocations] = useState([
-        { id: 1, name: "Matriz - Centro Vitória", cep: "29010-000", address: "Av. Jerônimo Monteiro", number: "1000", neighborhood: "Centro", maps: "https://maps.google.com/..." },
-        { id: 2, name: "Filial - Vila Velha", cep: "29100-000", address: "Av. Hugo Musso", number: "500", neighborhood: "Praia da Costa", maps: "https://maps.google.com/..." },
-    ]);
+    useEffect(() => {
+        if (activeTab === "locations") {
+            fetchLocations();
+        }
+    }, [activeTab]);
+
+    const fetchLocations = async () => {
+        try {
+            setIsLoading(true);
+            const res = await fetch('/api/locations');
+            const data = await res.json();
+            setLocations(data);
+        } catch (error) {
+            console.error("Erro ao buscar unidades:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleDeleteLocation = async (id: string) => {
+        if (window.confirm("Tem certeza que deseja excluir esta unidade?")) {
+            try {
+                const res = await fetch(`/api/locations/${id}`, { method: 'DELETE' });
+                if (res.ok) fetchLocations();
+            } catch (error) {
+                console.error("Erro ao excluir unidade:", error);
+            }
+        }
+    };
 
     return (
         <div className="space-y-6 max-w-5xl mx-auto">
@@ -103,7 +127,9 @@ export default function ConfigPage() {
                             </div>
 
                             <div className="space-y-4">
-                                {locations.map((loc) => (
+                                {isLoading ? (
+                                    <div className="py-20 text-center text-gray-500">Carregando unidades...</div>
+                                ) : locations.length > 0 ? locations.map((loc) => (
                                     <div key={loc.id} className="border border-gray-200 dark:border-gray-800 rounded-xl p-5 hover:border-primary/50 transition-colors relative group bg-gray-50/50 dark:bg-gray-800/20">
                                         <div className="flex justify-between items-start mb-4">
                                             <div className="flex items-center gap-3">
@@ -116,7 +142,10 @@ export default function ConfigPage() {
                                                     className="font-bold text-lg bg-transparent border-b border-transparent hover:border-gray-300 dark:hover:border-gray-600 focus:border-primary outline-none text-gray-900 dark:text-white px-1 py-0.5"
                                                 />
                                             </div>
-                                            <button className="text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 p-2 rounded-md transition-colors opacity-0 group-hover:opacity-100">
+                                            <button
+                                                onClick={() => handleDeleteLocation(loc.id)}
+                                                className="text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 p-2 rounded-md transition-colors opacity-0 group-hover:opacity-100"
+                                            >
                                                 Remover
                                             </button>
                                         </div>
@@ -140,11 +169,15 @@ export default function ConfigPage() {
                                             </div>
                                             <div className="space-y-1 md:col-span-2">
                                                 <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Link Google Maps (Como chegar)</label>
-                                                <input type="url" defaultValue={loc.maps} className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm text-blue-500 outline-none focus:ring-1 focus:ring-primary" />
+                                                <input type="url" defaultValue={loc.mapsLink} className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm text-blue-500 outline-none focus:ring-1 focus:ring-primary" />
                                             </div>
                                         </div>
                                     </div>
-                                ))}
+                                )) : (
+                                    <div className="py-20 text-center text-gray-500 border border-dashed border-gray-300 dark:border-gray-700 rounded-xl bg-gray-50/50 dark:bg-gray-800/10">
+                                        Nenhuma unidade cadastrada.
+                                    </div>
+                                )}
                             </div>
                         </div>
                     )}

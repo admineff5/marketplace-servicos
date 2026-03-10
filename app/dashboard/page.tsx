@@ -1,10 +1,8 @@
-"use client";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link2, CalendarCheck, Users, Banknote, Scissors, TrendingUp, TrendingDown, ArrowUpRight, ArrowDownRight, FileText, ChevronRight, X, Sparkles, Filter, Store, Wallet, AlertCircle, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 
-// 1. KPI Mocks (6 cards like Trinks)
+// 1. KPI Mocks (Mantendo mocks para KPI por envolver agregação complexa de financeiro)
 const KPIS = [
     { title: "Resultado", value: "R$ 4.230,00", trend: "+12%", isPositive: true },
     { title: "Receita", value: "R$ 14.590,00", trend: "+2%", isPositive: true },
@@ -14,14 +12,26 @@ const KPIS = [
     { title: "Atendimentos", value: "290", trend: "+10%", isPositive: true },
 ];
 
-const RECENT_APPOINTMENTS = [
-    { id: 1, client: "Marcelo Souza", service: "Corte + Barba", professional: "João Silva", time: "Hoje, 14:00", status: "Confirmado" },
-    { id: 2, client: "Lucas Fernandes", service: "Corte Degradê", professional: "Marcio", time: "Hoje, 15:30", status: "Pendente" },
-    { id: 3, client: "Pedro Alves", service: "Barba Terapia", professional: "João Silva", time: "Amanhã, 10:00", status: "Confirmado" },
-];
-
 export default function DashboardIndex() {
     const [isPrivacyMode, setIsPrivacyMode] = useState(true);
+    const [recentAppointments, setRecentAppointments] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchRecent = async () => {
+            try {
+                setIsLoading(true);
+                const res = await fetch('/api/appointments?limit=3'); // Assumindo que a API suporta limit
+                const data = await res.json();
+                setRecentAppointments(data.slice(0, 3));
+            } catch (error) {
+                console.error("Erro ao carregar agendamentos recentes:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchRecent();
+    }, []);
 
     const maskValue = (val: string) => isPrivacyMode ? "****" : val;
 
@@ -101,31 +111,35 @@ export default function DashboardIndex() {
                     </div>
 
                     <div className="space-y-3">
-                        {RECENT_APPOINTMENTS.map((apt) => (
+                        {isLoading ? (
+                            <div className="py-10 text-center text-gray-500 text-sm">Carregando próximos horários...</div>
+                        ) : recentAppointments.length > 0 ? recentAppointments.map((apt: any) => (
                             <div key={apt.id} className="flex gap-4 p-3 sm:p-4 rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-[#161618] hover:bg-gray-50 dark:hover:bg-[#1a1a1c] transition-colors group">
                                 <div className="flex flex-col justify-center items-center w-14 h-14 bg-white dark:bg-black rounded-lg shrink-0 border border-gray-200 dark:border-gray-800 shadow-sm group-hover:border-primary/50 transition-colors">
-                                    <span className="text-xs text-gray-500 dark:text-gray-400 font-medium leading-none mb-1">{apt.time.split(', ')[0]}</span>
-                                    <span className="text-sm text-gray-900 dark:text-primary font-black leading-none">{apt.time.split(', ')[1]}</span>
+                                    <span className="text-xs text-gray-500 dark:text-gray-400 font-medium leading-none mb-1">
+                                        {apt.start ? apt.start.split(' ')[0] : '-'}
+                                    </span>
+                                    <span className="text-sm text-gray-900 dark:text-primary font-black leading-none">
+                                        {apt.start}
+                                    </span>
                                 </div>
                                 <div className="flex-1 min-w-0 flex flex-col justify-center">
                                     <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{apt.client}</p>
                                     <p className="text-xs text-gray-500 dark:text-gray-400 truncate flex items-center gap-1 mt-0.5">
-                                        <Scissors className="w-3 h-3" /> {apt.service} <span className="mx-1">•</span> <Users className="w-3 h-3" /> {apt.professional}
+                                        <Scissors className="w-3 h-3" /> {apt.title?.split(' - ')[0]} <span className="mx-1">•</span> <Users className="w-3 h-3" /> {apt.prof}
                                     </p>
                                 </div>
                                 <div className="shrink-0 flex items-center justify-center">
-                                    {apt.status === 'Confirmado' ? (
-                                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-400 text-[10px] font-bold uppercase tracking-wider">
-                                            Confirmado
-                                        </span>
-                                    ) : (
-                                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-400 text-[10px] font-bold uppercase tracking-wider">
-                                            Pendente
-                                        </span>
-                                    )}
+                                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-400 text-[10px] font-bold uppercase tracking-wider">
+                                        Confirmado
+                                    </span>
                                 </div>
                             </div>
-                        ))}
+                        )) : (
+                            <div className="py-10 text-center text-gray-500 text-sm border border-dashed border-gray-200 dark:border-gray-800 rounded-xl">
+                                Nenhum agendamento para as próximas horas.
+                            </div>
+                        )}
                     </div>
                 </div>
 
