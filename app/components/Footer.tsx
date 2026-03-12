@@ -13,8 +13,8 @@ export function Footer() {
                         height={24}
                         className="object-contain grayscale opacity-60 dark:opacity-40"
                     />
-                    <p className="text-sm font-semibold text-gray-800 dark:text-gray-300">
-                        © 2026 AgendeJá • Desenvolvido por <span className="text-cyan-700 dark:text-primary font-bold">EFF5</span> <span className="mx-2 text-gray-300 dark:text-gray-700">|</span> reFresh • eFFiciency • Freedom <span className="ml-2 text-[10px] bg-gray-100 dark:bg-gray-900 px-2 py-0.5 rounded-full text-gray-500 dark:text-gray-400 font-mono">v0.5.1</span>
+                    <p className="text-gray-500 dark:text-gray-400 text-xs mt-4">
+                        © {new Date().getFullYear()} AgendeJá by EFF5. Todos os direitos reservados. v0.5.2 | <a href="/termos" className="hover:text-primary transition-colors">Termos</a> | <a href="/privacidade" className="hover:text-primary transition-colors">Privacidade</a>
                     </p>
                 </div>
 

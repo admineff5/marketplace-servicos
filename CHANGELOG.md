@@ -1,4 +1,11 @@
-## [0.5.1] - 2026-03-12
+## [0.5.2] - 2026-03-12
+### Fixed
+- Limpeza total de dados mockados (Dashboard, Cliente, Produtos).
+- Correção de bug crítico na navegação da Agenda (Date comparisons).
+- Implementação de APIs DELETE/PUT para profissionais.
+- Ativação de botões de edição/exclusão na gestão de produtos.
+
+## [0.5.1] - 2026-03-11
 ### Adicionado
 - **Autenticação Real:** Substituído mock data por login funcional sincronizado com o banco de dados.
 - **Dark Mode no Login:** Adicionado seletor de tema na tela de acesso.
