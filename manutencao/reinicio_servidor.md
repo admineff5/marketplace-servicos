@@ -100,6 +100,7 @@ cd /data/www/agendaja
 # Se der erro de conflito no git pull, use o comando abaixo para forçar a versão do GitHub:
 git fetch origin main
 git reset --hard origin/main
+npx prisma generate
 npm run build
 pm2 restart agendaja
 ```
