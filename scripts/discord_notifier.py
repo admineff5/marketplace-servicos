@@ -36,11 +36,24 @@ def send_to_discord(webhook_url, content, message_id=None, command="unknown"):
         return None
         
     content = censor_content(content)
-    chunks = textwrap.wrap(content, 1900, replace_whitespace=False, drop_whitespace=False)
+    
+    # Improved chunking that preserves lines and markdown structure
+    max_len = 1900
+    chunks = []
+    current_chunk = ""
+    
+    for line in content.splitlines(keepends=True):
+        if len(current_chunk) + len(line) > max_len:
+            chunks.append(current_chunk)
+            current_chunk = line
+        else:
+            current_chunk += line
+    if current_chunk:
+        chunks.append(current_chunk)
     
     headers = {
         'Content-Type': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        'User-Agent': 'Antigravity-Bot/1.0'
     }
     
     last_response = None
@@ -52,23 +65,20 @@ def send_to_discord(webhook_url, content, message_id=None, command="unknown"):
             url = f"{webhook_url}?wait=true"
             method = 'POST'
             
-        data = json.dumps({"content": chunk}).encode('utf-8')
+        payload = {"content": chunk}
+        data = json.dumps(payload, ensure_ascii=False).encode('utf-8')
         req = urllib.request.Request(url, data=data, headers=headers, method=method)
         
         try:
             with urllib.request.urlopen(req) as response:
-                print(f"[OK] Mensagem enviada com sucesso para o canal ({command}).")
+                print(f"[OK] Mensagem enviada ({command}) - Chunk {i+1}/{len(chunks)}")
                 res_body = response.read().decode('utf-8')
                 last_response = json.loads(res_body) if res_body else {"status": "success"}
         except urllib.error.HTTPError as e:
-            print(f"[ERROR] Erro {e.code} ao enviar para Discord: {e.reason}")
+            err_msg = e.read().decode('utf-8')
+            print(f"[ERROR] Erro {e.code} ao enviar para Discord: {err_msg}")
             if method == 'PATCH' and (e.code == 404 or e.code == 403):
-                return send_to_discord(webhook_url, content, message_id=None)
-            # Log the response body if possible for debugging
-            try:
-                print(e.read().decode('utf-8'))
-            except:
-                pass
+                return send_to_discord(webhook_url, content, message_id=None, command=command)
     return last_response
 
 def load_state():
@@ -91,6 +101,11 @@ def main():
     
     command = sys.argv[1]
     if sys.argv[2] == "-":
+        try:
+            # Try to reconfigure stdin to utf-8 if on Python 3.7+
+            sys.stdin.reconfigure(encoding='utf-8')
+        except AttributeError:
+            pass
         content = sys.stdin.read()
     else:
         content = sys.argv[2]

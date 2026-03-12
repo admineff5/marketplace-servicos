@@ -3,21 +3,15 @@
 import { useState } from "react";
 import { Search, Plus, Package, Edit2, Trash2, X, Check, Upload, AlertTriangle, TrendingUp, Image as ImageIcon, Eye, EyeOff } from "lucide-react";
 
-// Mock Data para Simular Produtos
-const MOCK_PRODUTOS = [
-    { id: 1, name: "Minoxidil Kirkland 5% (Loção)", price: 89.90, stock: 2, image: "https://images.unsplash.com/photo-1534620808146-d33bb39128b2?w=300&auto=format&fit=crop&q=80" },
-    { id: 2, name: "Pomada Modeladora Efeito Matte", price: 45.00, stock: 15, image: "https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?w=300&auto=format&fit=crop&q=80" },
-    { id: 3, name: "Navalha Clássica Master de Aço", price: 119.90, stock: 8, image: "https://images.unsplash.com/photo-1581404094186-09511516e118?w=300&auto=format&fit=crop&q=80" },
-    { id: 4, name: "Óleo Hidratante Premium para Barba", price: 35.00, stock: 4, image: "https://images.unsplash.com/photo-1621607512214-68297480165e?w=300&auto=format&fit=crop&q=80" },
-    { id: 5, name: "Shampoo Anticaspa Force", price: 29.90, stock: 12, image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=300&auto=format&fit=crop&q=80" },
-    { id: 6, name: "Gel Pós Barba Refrescante", price: 42.00, stock: 0, image: "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=300&auto=format&fit=crop&q=80" },
-];
+// Mock Data - Iniciar vazio para produção/testes reais
+const MOCK_PRODUTOS: any[] = [];
 
 export default function GestaoProdutosPage() {
     const [produtos, setProdutos] = useState(MOCK_PRODUTOS);
     const [searchTerm, setSearchTerm] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isPrivacyMode, setIsPrivacyMode] = useState(true);
+    const [editingProduto, setEditingProduto] = useState<any>(null);
 
     const maskValue = (val: string) => isPrivacyMode ? "****" : val;
 
@@ -36,18 +30,44 @@ export default function GestaoProdutosPage() {
         setFormPrice("");
         setFormStock("");
         setFormImage("");
+        setEditingProduto(null);
+    };
+
+    const handleEdit = (produto: any) => {
+        setEditingProduto(produto);
+        setFormName(produto.name);
+        setFormPrice(produto.price.toString());
+        setFormStock(produto.stock.toString());
+        setFormImage(produto.image);
+        setIsModalOpen(true);
+    };
+
+    const handleDelete = (id: number) => {
+        if (window.confirm("Deseja excluir este produto?")) {
+            setProdutos(produtos.filter(p => p.id !== id));
+        }
     };
 
     const handleSave = () => {
         if (!formName || !formPrice || !formStock) return;
 
-        setProdutos([{
-            id: Date.now(),
-            name: formName,
-            price: parseFloat(formPrice),
-            stock: parseInt(formStock, 10),
-            image: formImage || "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&auto=format&fit=crop&q=80" // Generic Fallback
-        }, ...produtos]);
+        if (editingProduto) {
+            setProdutos(produtos.map(p => p.id === editingProduto.id ? {
+                ...p,
+                name: formName,
+                price: parseFloat(formPrice),
+                stock: parseInt(formStock, 10),
+                image: formImage
+            } : p));
+        } else {
+            setProdutos([{
+                id: Date.now(),
+                name: formName,
+                price: parseFloat(formPrice),
+                stock: parseInt(formStock, 10),
+                image: formImage || "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&auto=format&fit=crop&q=80" // Generic Fallback
+            }, ...produtos]);
+        }
 
         setIsModalOpen(false);
         resetForm();
@@ -174,10 +194,10 @@ export default function GestaoProdutosPage() {
 
                                 {/* Hover Actions */}
                                 <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button className="p-2 bg-white/90 dark:bg-black/70 backdrop-blur-sm text-gray-600 dark:text-gray-300 hover:text-cyan-700 dark:hover:text-primary rounded-lg shadow-sm transition-colors" title="Editar">
+                                    <button onClick={() => handleEdit(produto)} className="p-2 bg-white/90 dark:bg-black/70 backdrop-blur-sm text-gray-600 dark:text-gray-300 hover:text-cyan-700 dark:hover:text-primary rounded-lg shadow-sm transition-colors" title="Editar">
                                         <Edit2 className="w-4 h-4" />
                                     </button>
-                                    <button className="p-2 bg-white/90 dark:bg-black/70 backdrop-blur-sm text-gray-600 dark:text-gray-300 hover:text-red-500 rounded-lg shadow-sm transition-colors" title="Excluir">
+                                    <button onClick={() => handleDelete(produto.id)} className="p-2 bg-white/90 dark:bg-black/70 backdrop-blur-sm text-gray-600 dark:text-gray-300 hover:text-red-500 rounded-lg shadow-sm transition-colors" title="Excluir">
                                         <Trash2 className="w-4 h-4" />
                                     </button>
                                 </div>
@@ -214,7 +234,7 @@ export default function GestaoProdutosPage() {
                         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#161618]">
                             <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
                                 <Package className="w-5 h-5 text-cyan-700 dark:text-primary" />
-                                Novo Produto
+                                {editingProduto ? "Editar Produto" : "Novo Produto"}
                             </h2>
                             <button onClick={() => setIsModalOpen(false)} className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                                 <X className="w-5 h-5" />

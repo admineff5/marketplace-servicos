@@ -5,12 +5,12 @@ import Link from "next/link";
 
 // 1. KPI Mocks (Mantendo mocks para KPI por envolver agregação complexa de financeiro)
 const KPIS = [
-    { title: "Resultado", value: "R$ 4.230,00", trend: "+12%", isPositive: true },
-    { title: "Receita", value: "R$ 14.590,00", trend: "+2%", isPositive: true },
-    { title: "Despesa", value: "R$ 10.360,00", trend: "-5%", isPositive: false },
-    { title: "Agendamentos", value: "342", trend: "+18%", isPositive: true },
-    { title: "Agendamentos Online", value: "128", trend: "+40%", isPositive: true },
-    { title: "Atendimentos", value: "290", trend: "+10%", isPositive: true },
+    { title: "Resultado", value: "R$ 0,00", trend: "0%", isPositive: true },
+    { title: "Receita", value: "R$ 0,00", trend: "0%", isPositive: true },
+    { title: "Despesa", value: "R$ 0,00", trend: "0%", isPositive: false },
+    { title: "Agendamentos", value: "0", trend: "0%", isPositive: true },
+    { title: "Agendamentos Online", value: "0", trend: "0%", isPositive: true },
+    { title: "Atendimentos", value: "0", trend: "0%", isPositive: true },
 ];
 
 export default function DashboardIndex() {

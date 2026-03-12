@@ -61,7 +61,7 @@ export default function AgendaPage() {
         setCurrentDate(newDate);
     };
 
-    const jumpToToday = () => setCurrentDate(new Date(2026, 1, 9)); // Mock today Date
+    const jumpToToday = () => setCurrentDate(new Date()); 
 
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
@@ -92,7 +92,7 @@ export default function AgendaPage() {
         }
     }
 
-    const todayDate = new Date(2026, 1, 9); // mock today
+    const todayDate = new Date();
     const isToday = (d: number | null) => d === todayDate.getDate() && month === todayDate.getMonth() && year === todayDate.getFullYear();
 
     let headerTitle = `${MONTHS[month]} de ${year}`;
@@ -255,7 +255,16 @@ export default function AgendaPage() {
                                         {/* 5 Weeks Grid */}
                                         <div className="grid grid-cols-7 flex-1">
                                             {calendarGrid.map((day, i) => {
-                                                const dayAppointments = appointments.filter((apt: any) => apt.date === day.date && apt.month === month && apt.year === year && selectedPros.includes(apt.prof));
+                                                const dayAppointments = appointments.filter((apt: any) => {
+                                                    if (!day.date) return false;
+                                                    const aptDate = new Date(apt.date);
+                                                    return (
+                                                        aptDate.getDate() === day.date &&
+                                                        aptDate.getMonth() === month &&
+                                                        aptDate.getFullYear() === year &&
+                                                        selectedPros.includes(apt.prof)
+                                                    );
+                                                });
                                                 const dayIsToday = isToday(day.date);
 
                                                 return (
@@ -308,8 +317,16 @@ export default function AgendaPage() {
                                                 const cDate = colDate.getDate();
                                                 const cMon = colDate.getMonth();
                                                 const cYear = colDate.getFullYear();
-                                                const isColToday = cDate === todayDate.getDate() && cMon === todayDate.getMonth() && cYear === todayDate.getFullYear();
-                                                const colApts = appointments.filter((a: any) => a.date === cDate && a.month === cMon && a.year === cYear && selectedPros.includes(a.prof));
+                                                const isColToday = cDate === new Date().getDate() && cMon === new Date().getMonth() && cYear === new Date().getFullYear();
+                                                const colApts = appointments.filter((apt: any) => {
+                                                    const aptDate = new Date(apt.date);
+                                                    return (
+                                                        aptDate.getDate() === cDate &&
+                                                        aptDate.getMonth() === cMon &&
+                                                        aptDate.getFullYear() === cYear &&
+                                                        selectedPros.includes(apt.prof)
+                                                    );
+                                                });
 
                                                 return (
                                                     <div key={i} className={`relative border-r border-gray-200 dark:border-gray-800 ${isColToday ? 'bg-blue-50/10 dark:bg-blue-900/5' : ''}`}>
@@ -383,7 +400,15 @@ export default function AgendaPage() {
                                                 {Array.from({ length: 15 }).map((_, h) => (
                                                     <div key={h} className="h-24 border-b border-gray-100 dark:border-gray-800/50 w-full hover:bg-gray-50 dark:hover:bg-gray-800/30 cursor-pointer"></div>
                                                 ))}
-                                                {appointments.filter((a: any) => a.date === currentDate.getDate() && a.month === currentDate.getMonth() && a.year === currentDate.getFullYear() && selectedPros.includes(a.prof)).map((apt: any, idx: any) => {
+                                                {appointments.filter((apt: any) => {
+                                                    const aptDate = new Date(apt.date);
+                                                    return (
+                                                        aptDate.getDate() === currentDate.getDate() &&
+                                                        aptDate.getMonth() === currentDate.getMonth() &&
+                                                        aptDate.getFullYear() === currentDate.getFullYear() &&
+                                                        selectedPros.includes(apt.prof)
+                                                    );
+                                                }).map((apt: any, idx: any) => {
                                                     const parseTime = (timeStr: string) => {
                                                         const time = timeStr.toLowerCase();
                                                         let [h, m] = time.replace(/[am|pm]/g, '').split(':').map(Number);

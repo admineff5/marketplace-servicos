@@ -4,58 +4,9 @@ import { Calendar, Clock, MapPin, Receipt, Star, CheckCircle, Search, Filter } f
 import Image from "next/image";
 import { useState } from "react";
 
-// Mock data
-const UPCOMING_APPOINTMENTS = [
-    {
-        id: 1,
-        service: "Corte Degradê",
-        company: "Barbearia do João",
-        date: "Amanhã, 14:30",
-        professional: "João Silva",
-        price: "R$ 45,00",
-        address: "Centro, São Paulo",
-        image: "https://images.unsplash.com/photo-1520286161962-d6fc7b8f9e2b?auto=format&fit=crop&q=80&w=150",
-        status: "confirmed"
-    },
-    {
-        id: 2,
-        service: "Banho Premium",
-        company: "Petshop Cão Feliz",
-        date: "15/05/2026, 10:00",
-        professional: "Dra. Ana",
-        price: "R$ 60,00",
-        address: "Jardins, São Paulo",
-        image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=150",
-        status: "pending"
-    }
-];
-
-const PAST_APPOINTMENTS = [
-    {
-        id: 3,
-        service: "Limpeza de Pele",
-        company: "Estética Bela Pele",
-        date: "20/02/2026, 16:00",
-        professional: "Márcia",
-        price: "R$ 120,00",
-        address: "Pinheiros, São Paulo",
-        image: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&q=80&w=150",
-        rating: 5,
-        status: "completed"
-    },
-    {
-        id: 4,
-        service: "Revisão Geral",
-        company: "Oficina do Toninho",
-        date: "10/01/2026, 09:00",
-        professional: "Toninho",
-        price: "R$ 350,00",
-        address: "Mooca, São Paulo",
-        image: "https://images.unsplash.com/photo-1504222490345-c075b6008014?auto=format&fit=crop&q=80&w=150",
-        rating: 4,
-        status: "completed"
-    }
-];
+// Data will be fetched from API
+const UPCOMING_APPOINTMENTS: any[] = [];
+const PAST_APPOINTMENTS: any[] = [];
 
 
 export default function ClienteDashboard() {
