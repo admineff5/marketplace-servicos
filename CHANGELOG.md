@@ -1,4 +1,22 @@
-## [0.6.0] - 2026-03-12
+## [0.7.0] - 2026-03-12
+**Fase:** Beta  
+**Tipo de release:** Minor  
+**Resumo:** Refatoração de Segurança e Gestão do Cliente: Logout funcional, proteção de rotas e gestão complexa de endereços/pagamentos.
+
+### Added
+- **Gestão de Endereços:** Novo sistema de múltiplos endereços com formulário estruturado e opção de "Padrão".
+- **Gestão de Pagamentos:** Gerenciamento de múltiplos cartões com histórico, bandeiras e opção de "Favorito".
+- **Segurança:** Implementação de Middleware para proteção de rotas base (`/cliente`, `/dashboard`).
+- **Autenticação:** Rota dedicada de Logout para limpeza total de sessão e cookies.
+
+### Changed
+- **Sessão:** Aumento da duração da sessão para 7 dias (correção de perda de login).
+- **UX Perfil:** Refatoração total da página de perfil para suportar as novas entidades de gestão.
+
+### Fixed
+- **Botão Sair:** Corrigido o bug onde o botão de sair não deslogava efetivamente o usuário.
+- **Vazamento de Rota:** Corrigida falha que permitia acesso ao painel do cliente via URL direta sem login.
+---
 **Fase:** Beta  
 **Tipo de release:** Minor  
 **Resumo:** Implementação de persistência real para produtos, serviços e histórico de cliente, com estabilização de build para Next.js 15.

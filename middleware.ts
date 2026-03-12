@@ -27,7 +27,7 @@ export function middleware(request: NextRequest) {
         response.cookies.set('auth_session', session.value, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            maxAge: 15 * 60,
+            maxAge: 7 * 24 * 60 * 60, // 7 dias de persistência
             path: "/",
         });
         return response;
@@ -37,5 +37,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/dashboard/:path*', '/cliente/:path*', '/login', '/register'],
+    matcher: ['/dashboard/:path*', '/cliente/:path*', '/dashboard', '/cliente', '/login', '/register'],
 };
