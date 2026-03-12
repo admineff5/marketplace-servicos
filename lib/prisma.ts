@@ -5,12 +5,10 @@ const prismaClientSingleton = () => {
     if (!url) {
         console.error("❌ CRITICAL: DATABASE_URL is missing in process.env");
     } else {
-        console.log("✅ Prisma: DATABASE_URL loaded (starting with: " + url.substring(0, 15) + "...)");
+        console.log("✅ Prisma: DATABASE_URL loaded from environment");
     }
     
-    return new PrismaClient({
-        datasourceUrl: url
-    });
+    return new PrismaClient();
 };
 
 declare global {
