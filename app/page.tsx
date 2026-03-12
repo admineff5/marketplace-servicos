@@ -134,7 +134,7 @@ export default function Home() {
   const closeModal = () => setSelectedCompany(null);
 
   const activeProfessionalData = selectedCompany?.staff?.find(
-    (p) => p.id === selectedProfessional,
+    (p: any) => p.id === selectedProfessional,
   );
 
   // Generate 14 next days for mock selection
@@ -435,7 +435,7 @@ export default function Home() {
                           {company.description}
                         </p>
                         <div className="flex flex-wrap gap-2 mt-3">
-                          {company.services.slice(0, 3).map((s, idx) => (
+                          {company.services.slice(0, 3).map((s: any, idx: number) => (
                             <span
                               key={idx}
                               className="text-xs font-semibold bg-gray-100 dark:bg-gray-800/60 text-gray-600 dark:text-gray-300 px-2.5 py-1 rounded-md border border-gray-200 dark:border-gray-700/50"
@@ -572,7 +572,7 @@ export default function Home() {
                   1. Escolha um Serviço
                 </h3>
                 <div className="space-y-3 mb-8">
-                  {selectedCompany.services.map((service, idx) => {
+                  {selectedCompany.services.map((service: any, idx: number) => {
                     const isSelected = selectedService === service.name;
                     return (
                       <div
@@ -617,7 +617,7 @@ export default function Home() {
                     2. Profissional
                   </h3>
                   <div className="flex items-center gap-4 overflow-x-auto pb-4 mb-6 scrollbar-hide py-3 px-2">
-                    {selectedCompany.staff?.map((person) => {
+                    {selectedCompany.staff?.map((person: any) => {
                       const isSelected = selectedProfessional === person.id;
                       return (
                         <div
@@ -705,7 +705,7 @@ export default function Home() {
                             : `O profissional ${activeProfessionalData.name} não realizará atendimentos neste dia(${currentBlock.situation}).`}
                         </p>
                       ) : activeProfessionalData.availability?.length > 0 ? (
-                        activeProfessionalData.availability.map((time, idx) => {
+                        activeProfessionalData.availability.map((time: any, idx: number) => {
                           const isSelected = selectedTime === time;
                           return (
                             <button
