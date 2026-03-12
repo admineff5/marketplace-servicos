@@ -5,14 +5,13 @@ const prismaClientSingleton = () => {
     if (!url) {
         console.error("❌ CRITICAL: DATABASE_URL is missing in process.env");
     } else {
-        console.log(`✅ Prisma: DATABASE_URL detected (Length: ${url.length} chars)`);
-        if (url.includes('"')) {
-            console.warn("⚠️ Warning: DATABASE_URL contains quotes, this might cause issues.");
-        }
+        console.log(`✅ Prisma Bridge: Injecting URL (Length: ${url.trim().length} chars)`);
     }
     
-    // Attempting to force the URL if detected but rejected by default constructor
-    return new PrismaClient();
+    // Explicitly pass the URL to ensure all build workers receive the connection string
+    return new PrismaClient({
+        datasourceUrl: url?.trim()
+    } as any);
 };
 
 declare global {
