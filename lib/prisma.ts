@@ -1,6 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 
 const prismaClientSingleton = () => {
+    if (!process.env.DATABASE_URL) {
+        console.warn("⚠️ DATABASE_URL is not defined in the environment.");
+    }
     return new PrismaClient();
 };
 
