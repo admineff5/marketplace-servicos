@@ -13,9 +13,9 @@ export default function Register() {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
-        document: "",
         phone: "",
         password: "",
+        cpf: "",
     });
 
     const [error, setError] = useState("");
@@ -27,15 +27,24 @@ export default function Register() {
         setIsLoading(true);
 
         try {
-            // Lógica temporária: Se o documento ter <= 11 números, é CPF (Cliente). Senão é CNPJ (Parceiro).
-            const numbersOnly = formData.document.replace(/\D/g, "");
-            const role = numbersOnly.length <= 11 ? "CLIENT" : "BUSINESS";
+            // Lógica: Se o usuário preencher um campo adicional futuramente para CNPJ, mudaremos o role.
+            // Por enquanto, registro padrão via formulário principal é CLIENT.
+            const role = "CLIENT";
+            const cleanCPF = formData.cpf.replace(/\D/g, "");
+
+            if (cleanCPF.length !== 11) {
+                throw new Error("O CPF deve conter 11 dígitos.");
+            }
 
             const res = await fetch("/api/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    ...formData,
+                    name: formData.name,
+                    email: formData.email,
+                    phone: formData.phone,
+                    password: formData.password,
+                    cpf: cleanCPF,
                     role
                 }),
             });
@@ -60,7 +69,19 @@ export default function Register() {
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        
+        if (name === "cpf") {
+            // Máscara simples para CPF: 000.000.000-00
+            const x = value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,3})(\d{0,2})/);
+            if (x) {
+                const masked = !x[2] ? x[1] : `${x[1]}.${x[2]}${x[3] ? `.${x[3]}` : ''}${x[4] ? `-${x[4]}` : ''}`;
+                setFormData({ ...formData, [name]: masked });
+            }
+            return;
+        }
+
+        setFormData({ ...formData, [name]: value });
     };
 
     return (
@@ -133,23 +154,24 @@ export default function Register() {
                             </div>
 
                             <div>
-                                <label htmlFor="document" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                                    CPF ou CNPJ
+                                <label htmlFor="cpf" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                                    CPF
                                 </label>
                                 <div className="mt-1">
                                     <input
-                                        id="document"
-                                        name="document"
+                                        id="cpf"
+                                        name="cpf"
                                         type="text"
                                         required
-                                        value={formData.document}
+                                        value={formData.cpf}
                                         onChange={handleChange}
-                                        placeholder="000.000.000-00 ou 00.000.000/0000-00"
+                                        placeholder="000.000.000-00"
+                                        maxLength={14}
                                         className="appearance-none block w-full px-3 py-3 border border-gray-300 dark:border-gray-700 rounded-lg placeholder-gray-400 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-primary focus:border-primary sm:text-sm transition-colors"
                                     />
                                 </div>
                                 <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                                    Seu tipo de conta (Cliente ou Parceiro) será definido pelo documento informado.
+                                    Seu CPF é obrigatório para validação de segurança.
                                 </p>
                             </div>
 

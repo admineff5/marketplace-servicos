@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ThemeToggle } from "../components/ThemeToggle";
 import { Footer } from "../components/Footer";
-import { LogOut, Home, User } from "lucide-react";
+import { LogOut, Home, User, Calendar } from "lucide-react";
 
 export default function ClienteLayout({ children }: { children: React.ReactNode }) {
     return (
@@ -31,11 +31,19 @@ export default function ClienteLayout({ children }: { children: React.ReactNode 
                         <div className="h-6 w-px bg-gray-200 dark:bg-gray-800 mx-1"></div>
 
                         <Link
-                            href="/"
+                            href="/cliente"
                             className="hidden sm:flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-cyan-700 dark:hover:text-primary dark:text-gray-300 dark:hover:text-cyan-700 dark:hover:text-primary transition-colors"
                         >
-                            <Home className="w-4 h-4" />
-                            Início
+                            <Calendar className="w-4 h-4" />
+                            Agendamentos
+                        </Link>
+
+                        <Link
+                            href="/cliente/perfil"
+                            className="hidden sm:flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-cyan-700 dark:hover:text-primary dark:text-gray-300 dark:hover:text-cyan-700 dark:hover:text-primary transition-colors"
+                        >
+                            <User className="w-4 h-4" />
+                            Meu Perfil
                         </Link>
 
                         <div className="flex items-center gap-2 pl-2">

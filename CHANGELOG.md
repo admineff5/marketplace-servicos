@@ -1,10 +1,22 @@
+## [0.6.0] - 2026-03-12
+### Adicionado
+- **CRUD Real de Produtos:** Conectado ao banco de dados OCI com suporte a estoque e imagens.
+- **Upload de Imagens Inteligente:** Suporte a `Ctrl+C + Ctrl+V` para colar imagens diretamente no cadastro de produtos.
+- **CRUD Real de Serviços:** Persistência total de dados de serviços.
+- **Contadores do Cliente:** Painel do cliente agora exibe estatísticas reais de agendamentos e gastos.
+- **Validação de CPF:** Adicionada máscara e validação de 11 dígitos no cadastro de novos usuários.
+
+### Fixed
+- **Estabilização da Agenda/Profissionais:** Tratamento de erros de API ("Application error") para evitar crashes.
+- **Sincronização de Banco (Schema):** Adicionados campos de imagem e estoque ao modelo de Produto via Prisma.
+---
 ## [0.5.2] - 2026-03-12
 ### Fixed
 - Limpeza total de dados mockados (Dashboard, Cliente, Produtos).
 - Correção de bug crítico na navegação da Agenda (Date comparisons).
 - Implementação de APIs DELETE/PUT para profissionais.
 - Ativação de botões de edição/exclusão na gestão de produtos.
-
+---
 ## [0.5.1] - 2026-03-11
 ### Adicionado
 - **Autenticação Real:** Substituído mock data por login funcional sincronizado com o banco de dados.
@@ -15,6 +27,8 @@
 - **Next.js 15 Compatibility:** Refatoração de rotas API para suportar `params` assíncronos.
 - **Sincronização de Schema:** Realinhamento das APIs de `Appointments` e `Employees` com o banco de dados.
 - **Identidade Visual:** Restauração de Logos e atualização do rodapé institucional.
+
+---
 
 ## [0.5.0] - 2026-03-07
 ### Adicionado

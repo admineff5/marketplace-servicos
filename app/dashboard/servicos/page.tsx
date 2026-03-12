@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus, Search, Edit2, Trash2, X, Scissors, Info, LayoutList, ChevronDown, Check } from "lucide-react";
 
 // MOCKS PRE-DEFINIDOS DO PARCEIRO
@@ -30,17 +30,32 @@ const SUGGESTED_SERVICES = [
     { category: "Mãos e Pés", name: "Pedicure Masculina", description: "Corte das unhas dos pés, lixamento, hidratação e cuidado das cutículas." },
 ];
 
-const INITIAL_MOCK_DATA = [
-    { id: 1, name: "Corte Degradê", description: "Corte moderno com fade perfeito.", price: "45.00", promoPrice: "35.00", duration: "45" },
-    { id: 2, name: "Barba Terapia", description: "Barba com toalha quente e ozônio.", price: "40.00", promoPrice: "", duration: "30" },
-    { id: 3, name: "Combo: Corte + Barba", description: "Os dois serviços em uma sessão reduzida.", price: "80.00", promoPrice: "70.00", duration: "70" },
-];
+// INITIAL_MOCK_DATA removed
 
 export default function GestaoServicosPage() {
-    const [services, setServices] = useState(INITIAL_MOCK_DATA);
+    const [services, setServices] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showSuggestions, setShowSuggestions] = useState(false);
+    const [editingService, setEditingService] = useState<any>(null);
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const fetchData = async () => {
+        try {
+            setIsLoading(true);
+            const res = await fetch('/api/services');
+            const data = await res.json();
+            setServices(Array.isArray(data) ? data : []);
+        } catch (error) {
+            console.error("Erro ao buscar serviços:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     // Form State
     const [formName, setFormName] = useState("");
@@ -60,20 +75,54 @@ export default function GestaoServicosPage() {
         setShowSuggestions(false);
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!formName || !formPrice || !formDuration) return;
 
-        setServices([...services, {
-            id: Date.now(),
+        const payload = {
             name: formName,
             description: formDescription,
-            price: parseFloat(formPrice).toFixed(2),
-            promoPrice: formPromoPrice ? parseFloat(formPromoPrice).toFixed(2) : "",
+            price: formPrice,
             duration: formDuration
-        }]);
+        };
 
-        setIsModalOpen(false);
-        resetForm();
+        try {
+            const url = editingService ? `/api/services/${editingService.id}` : '/api/services';
+            const method = editingService ? 'PUT' : 'POST';
+
+            const res = await fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                setIsModalOpen(false);
+                resetForm();
+                fetchData();
+            }
+        } catch (error) {
+            console.error("Erro ao salvar:", error);
+        }
+    };
+
+    const handleDelete = async (id: string) => {
+        if (window.confirm("Deseja realmente excluir este serviço?")) {
+            try {
+                const res = await fetch(`/api/services/${id}`, { method: 'DELETE' });
+                if (res.ok) fetchData();
+            } catch (error) {
+                console.error("Erro ao excluir:", error);
+            }
+        }
+    };
+
+    const handleEdit = (service: any) => {
+        setEditingService(service);
+        setFormName(service.name);
+        setFormDescription(service.description || "");
+        setFormPrice(service.price.toString());
+        setFormDuration(service.duration.toString());
+        setIsModalOpen(true);
     };
 
     const resetForm = () => {
@@ -83,6 +132,7 @@ export default function GestaoServicosPage() {
         setFormPromoPrice("");
         setFormDuration("");
         setShowSuggestions(false);
+        setEditingService(null);
     };
 
     const openNewModal = () => {
@@ -171,10 +221,18 @@ export default function GestaoServicosPage() {
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex items-center justify-end gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <button className="p-2 text-gray-400 hover:text-cyan-700 dark:hover:text-primary hover:bg-primary/10 rounded-lg transition-colors" title="Editar Serviço">
+                                                <button 
+                                                    onClick={() => handleEdit(srv)}
+                                                    className="p-2 text-gray-400 hover:text-cyan-700 dark:hover:text-primary hover:bg-primary/10 rounded-lg transition-colors" 
+                                                    title="Editar Serviço"
+                                                >
                                                     <Edit2 className="w-4 h-4" />
                                                 </button>
-                                                <button className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors" title="Excluir Serviço">
+                                                <button 
+                                                    onClick={() => handleDelete(srv.id)}
+                                                    className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors" 
+                                                    title="Excluir Serviço"
+                                                >
                                                     <Trash2 className="w-4 h-4" />
                                                 </button>
                                             </div>
@@ -208,7 +266,7 @@ export default function GestaoServicosPage() {
                         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#161618]">
                             <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
                                 <Plus className="w-5 h-5 text-cyan-700 dark:text-primary" />
-                                Novo Serviço
+                                {editingService ? "Editar Serviço" : "Novo Serviço"}
                             </h2>
                             <button onClick={() => setIsModalOpen(false)} className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                                 <X className="w-5 h-5" />

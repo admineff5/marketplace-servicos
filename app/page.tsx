@@ -30,206 +30,50 @@ const CATEGORIES = [
   { name: "Estética", icon: Sparkles },
 ];
 
-const MOCK_COMPANIES = [
-  {
-    id: 1,
-    name: "Barbearia do João",
-    niche: "Barbearia",
-    rating: "5.0",
-    reviews: 24,
-    address: "Centro, São Paulo",
-    icon: Scissors,
-    image:
-      "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&q=80&w=800",
-    logo: "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?auto=format&fit=crop&q=80&w=150",
-    description:
-      "Cortes modernos, barba na toalha quente e o ambiente mais descontraído do centro. Agende agora o seu horário com nossos mestres.",
-    services: [
-      { name: "Corte Degradê", price: "R$ 45,00", duration: "40 min" },
-      { name: "Barba Terapia", price: "R$ 35,00", duration: "30 min" },
-      { name: "Corte + Barba", price: "R$ 70,00", duration: "1h 10m" },
-    ],
-    staff: [
-      {
-        id: "s1",
-        name: "João Silva",
-        image:
-          "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&auto=format&fit=crop&q=60",
-      },
-      {
-        id: "s2",
-        name: "Marcio",
-        image:
-          "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=60",
-      },
-    ],
-  },
-  {
-    id: 2,
-    name: "Petshop Cão Feliz",
-    niche: "Petshop",
-    rating: "4.8",
-    reviews: 89,
-    address: "Jardins, São Paulo",
-    icon: Dog,
-    image:
-      "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&q=80&w=800",
-    logo: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=150",
-    description:
-      "O maior cuidado e carinho para o seu melhor amigo. Banho, tosa, hidratação e consultório veterinário.",
-    services: [
-      { name: "Banho Premium", price: "R$ 60,00", duration: "1h" },
-      { name: "Tosa na Tesoura", price: "R$ 80,00", duration: "1h 30m" },
-      { name: "Consulta Vet", price: "R$ 150,00", duration: "45 min" },
-    ],
-    staff: [
-      {
-        id: "s3",
-        name: "Dra. Ana",
-        image:
-          "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&auto=format&fit=crop&q=60",
-      },
-      {
-        id: "s4",
-        name: "Carlos",
-        image:
-          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&auto=format&fit=crop&q=60",
-      },
-    ],
-  },
-  {
-    id: 3,
-    name: "Estética Bela Pele",
-    niche: "Estética",
-    rating: "4.9",
-    reviews: 156,
-    address: "Pinheiros, São Paulo",
-    icon: Sparkles,
-    image:
-      "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=800",
-    logo: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&q=80&w=150",
-    description:
-      "Tratamentos faciais e corporais com tecnologia de ponta e profissionais altamente qualificados.",
-    services: [
-      { name: "Limpeza de Pele", price: "R$ 120,00", duration: "1h 30m" },
-      { name: "Massagem Relaxante", price: "R$ 90,00", duration: "1h" },
-    ],
-  },
-  {
-    id: 4,
-    name: "Clínica Vida Saudável",
-    niche: "Clínica",
-    rating: "5.0",
-    reviews: 42,
-    address: "Vila Mariana, São Paulo",
-    icon: Stethoscope,
-    image:
-      "https://images.unsplash.com/photo-1538108149393-ce90eddc5db7?auto=format&fit=crop&q=80&w=800",
-    logo: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=150",
-    description:
-      "Atendimento médico humanizado com especialistas em diversas áreas. Sua saúde em primeiro lugar.",
-    services: [
-      { name: "Consulta Clínica", price: "R$ 250,00", duration: "45 min" },
-      { name: "Exame de Rotina", price: "R$ 180,00", duration: "30 min" },
-    ],
-  },
-  {
-    id: 6,
-    name: "Petshop Patinhas",
-    niche: "Petshop",
-    rating: "4.6",
-    reviews: 55,
-    address: "Lapa, São Paulo",
-    icon: Dog,
-    image:
-      "https://images.unsplash.com/photo-1541599540903-216a46ca1dc0?auto=format&fit=crop&q=80&w=800",
-    logo: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=150",
-    description:
-      "Tudo que o seu gatinho ou cachorro precisa. Temos serviço de táxi dog gratuito na região.",
-    services: [
-      { name: "Banho Simples", price: "R$ 45,00", duration: "1h" },
-      { name: "Tosa Higiênica", price: "R$ 35,00", duration: "30 min" },
-    ],
-  },
-  {
-    id: 7,
-    name: "Barbearia Vintage",
-    niche: "Barbearia",
-    rating: "4.9",
-    reviews: 312,
-    address: "Vila Madalena, São Paulo",
-    icon: Scissors,
-    image:
-      "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&q=80&w=800",
-    logo: "https://images.unsplash.com/photo-1520286161962-d6fc7b8f9e2b?auto=format&fit=crop&q=80&w=150",
-    description:
-      "A clássica barbearia dos anos 50 no coração da Vila Madalena. Cerveja gelada e sinuca enquanto você espera.",
-    services: [
-      { name: "Corte Clássico", price: "R$ 60,00", duration: "45 min" },
-      { name: "Barba Tradicional", price: "R$ 50,00", duration: "40 min" },
-    ],
-  },
-  {
-    id: 8,
-    name: "Spa Zen",
-    niche: "Estética",
-    rating: "5.0",
-    reviews: 18,
-    address: "Itaim Bibi, São Paulo",
-    icon: Sparkles,
-    image:
-      "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=800",
-    logo: "https://images.unsplash.com/photo-1507652313519-d4e9174096ed?auto=format&fit=crop&q=80&w=150",
-    description:
-      "Um oásis de tranquilidade no meio da cidade. Massagens shiatsu, pedras quentes e aromaterapia.",
-    services: [
-      { name: "Massagem Pedras", price: "R$ 180,00", duration: "1h 20m" },
-      { name: "Day Spa Completo", price: "R$ 350,00", duration: "3h" },
-    ],
-    staff: [
-      {
-        id: "s5",
-        name: "Mariana",
-        image:
-          "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&auto=format&fit=crop&q=60",
-      },
-    ],
-  },
-];
+// Note: Original MOCK_COMPANIES moved to a dynamic fetch from /api/companies
 
-// Fallback staff / availability dynamic generation based on professional
-const enhancedMockCompanies = MOCK_COMPANIES.map((company) => ({
-  ...company,
-  staff: company.staff
-    ? company.staff.map((s, i) => ({
-      ...s,
-      availability:
-        i % 2 === 0
-          ? ["08:00", "09:30", "13:00", "14:30", "16:00"]
-          : ["10:00", "11:00", "15:00", "17:30", "18:15"],
-    }))
-    : [
-      {
-        id: "f1",
-        name: "Profissional 1",
-        image:
-          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=60",
-        availability: ["08:00", "10:00", "14:00"],
-      },
-      {
-        id: "f2",
-        name: "Profissional 2",
-        image:
-          "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=60",
-        availability: ["09:00", "11:00", "15:00", "16:30"],
-      },
-    ],
-}));
+// Enhanced companies logic moved inside useEffect fetch
 
 export default function Home() {
-  const [selectedCompany, setSelectedCompany] = useState<
-    (typeof enhancedMockCompanies)[0] | null
-  >(null);
+  const [companies, setCompanies] = useState<any[]>([]);
+  const [isLoadingCompanies, setIsLoadingCompanies] = useState(true);
+  const [selectedCompany, setSelectedCompany] = useState<any | null>(null);
+
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const res = await fetch("/api/companies");
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          // Adiciona disponibilidade dinâmica se não houver no banco
+          const enhancedData = data.map(company => ({
+            ...company,
+            staff: company.staff?.length > 0 
+              ? company.staff.map((s: any, i: number) => ({
+                  ...s,
+                  availability: i % 2 === 0
+                    ? ["08:00", "09:30", "13:00", "14:30", "16:00"]
+                    : ["10:00", "11:00", "15:00", "17:30", "18:15"],
+                }))
+              : [
+                  {
+                    id: "f1",
+                    name: "Profissional 1",
+                    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=60",
+                    availability: ["08:00", "10:00", "14:00"],
+                  }
+                ]
+          }));
+          setCompanies(enhancedData);
+        }
+      } catch (err) {
+        console.error("Error fetching companies:", err);
+      } finally {
+        setIsLoadingCompanies(false);
+      }
+    };
+    fetchCompanies();
+  }, []);
 
   // Scheduling State within Modal
   const [selectedService, setSelectedService] = useState<string | null>(null);
@@ -250,7 +94,7 @@ export default function Home() {
   const searchContainerRef = useRef<HTMLDivElement>(null);
 
   // Filter Logic
-  const filteredCompanies = enhancedMockCompanies.filter((company) => {
+  const filteredCompanies = companies.filter((company: any) => {
     const matchesCategory =
       activeCategory === "Todos" || company.niche === activeCategory;
     const matchesSearch =
@@ -276,7 +120,7 @@ export default function Home() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleOpenCompany = (company: (typeof enhancedMockCompanies)[0]) => {
+  const handleOpenCompany = (company: any) => {
     setSelectedCompany(company);
     setSelectedService(null);
     setSelectedProfessional(
@@ -518,7 +362,7 @@ export default function Home() {
               </div>
 
               <span className="text-sm font-semibold text-gray-500 border border-gray-200 dark:border-gray-800 rounded-full px-3 py-1 bg-white dark:bg-gray-900">
-                {filteredCompanies.length} resultados
+                {isLoadingCompanies ? "Carregando..." : `${filteredCompanies.length} resultados`}
               </span>
             </div>
           </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -40,17 +40,32 @@ const SIDEBAR_LINKS = [
     { name: "Configurações", href: "/dashboard/config", icon: Settings },
 ];
 
-const NOTIFICATIONS = [
-    { id: 1, title: "Novo Agendamento", description: "Carlos Silva agendou Corte + Barba para às 15:00.", time: "5 min atrás", type: "success" },
-    { id: 2, title: "Estoque Baixo", description: "Pomada Modeladora Efeito Matte está com menos de 3 unidades.", time: "2 horas atrás", type: "error" },
-    { id: 3, title: "Lembrete de Pagamento", description: "A mensalidade da plataforma vence amanhã.", time: "1 dia atrás", type: "warning" },
-];
+// Notifications and Profile moved to dynamic fetch via API
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const [isCollapsed, setIsCollapsed] = useState(true);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+    
+    const [profile, setProfile] = useState<any>(null);
+    const [notifications, setNotifications] = useState<any[]>([]);
+
+    useEffect(() => {
+        // Fetch Profile
+        fetch("/api/dashboard/profile")
+            .then(res => res.json())
+            .then(data => {
+                if (!data.error) setProfile(data);
+            });
+
+        // Fetch Notifications
+        fetch("/api/dashboard/notifications")
+            .then(res => res.json())
+            .then(data => {
+                if (Array.isArray(data)) setNotifications(data);
+            });
+    }, []);
 
     return (
         <div className="flex h-screen bg-gray-50 dark:bg-[#0a0a0a] overflow-hidden">
@@ -139,8 +154,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         >
                             <Menu className="w-6 h-6" />
                         </button>
-                        <h1 className="text-xl font-bold text-gray-900 dark:text-white sm:block">
-                            Barbearia do João
+                        <h1 className="text-xl font-bold text-gray-900 dark:text-white sm:block truncate max-w-[200px] sm:max-w-none">
+                            {profile?.name || "Carregando..."}
                         </h1>
                     </div>
 
@@ -151,7 +166,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 className={`relative p-2 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 ${isNotificationsOpen ? 'text-cyan-700 dark:text-primary bg-gray-100 dark:bg-gray-800' : 'text-gray-500 dark:text-gray-400'}`}
                             >
                                 <Bell className="w-5 h-5" />
-                                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-[#111]"></span>
+                                {notifications.length > 0 && (
+                                    <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-[#111]"></span>
+                                )}
                             </button>
 
                             {/* Notifications Dropdown */}
@@ -161,22 +178,30 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                     <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 rounded-2xl shadow-2xl overflow-hidden z-20 animate-in fade-in zoom-in-95 duration-200">
                                         <div className="p-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gray-50/50 dark:bg-[#161618]">
                                             <h3 className="font-bold text-gray-900 dark:text-white">Notificações</h3>
-                                            <span className="text-[10px] font-bold bg-primary text-black px-2 py-0.5 rounded-full uppercase tracking-wider">3 Novas</span>
+                                            {notifications.length > 0 && (
+                                                <span className="text-[10px] font-bold bg-primary text-black px-2 py-0.5 rounded-full uppercase tracking-wider">{notifications.length} Novas</span>
+                                            )}
                                         </div>
                                         <div className="max-h-[70vh] overflow-y-auto">
-                                            {NOTIFICATIONS.map((notif) => (
-                                                <div key={notif.id} className="p-4 border-b border-gray-100 dark:border-gray-800 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer group">
-                                                    <div className="flex justify-between items-start mb-1">
-                                                        <span className={`text-[10px] font-bold uppercase tracking-widest ${notif.type === 'error' ? 'text-red-500' : notif.type === 'warning' ? 'text-amber-500' : 'text-cyan-600 dark:text-primary'}`}>
-                                                            {notif.title}
-                                                        </span>
-                                                        <span className="text-[10px] text-gray-400">{notif.time}</span>
+                                            {notifications.length > 0 ? (
+                                                notifications.map((notif) => (
+                                                    <div key={notif.id} className="p-4 border-b border-gray-100 dark:border-gray-800 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer group">
+                                                        <div className="flex justify-between items-start mb-1">
+                                                            <span className={`text-[10px] font-bold uppercase tracking-widest ${notif.type === 'error' ? 'text-red-500' : notif.type === 'warning' ? 'text-amber-500' : 'text-cyan-600 dark:text-primary'}`}>
+                                                                {notif.title}
+                                                            </span>
+                                                            <span className="text-[10px] text-gray-400">{notif.time}</span>
+                                                        </div>
+                                                        <p className="text-sm text-gray-600 dark:text-gray-300 leading-snug group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
+                                                            {notif.description}
+                                                        </p>
                                                     </div>
-                                                    <p className="text-sm text-gray-600 dark:text-gray-300 leading-snug group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
-                                                        {notif.description}
-                                                    </p>
+                                                ))
+                                            ) : (
+                                                <div className="p-8 text-center text-gray-500 text-sm">
+                                                    Nenhuma notificação por enquanto.
                                                 </div>
-                                            ))}
+                                            )}
                                         </div>
                                         <button
                                             onClick={() => {
@@ -193,12 +218,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         </div>
                         <div className="h-6 w-px bg-gray-200 dark:bg-gray-800"></div>
                         <ThemeToggle />
-                        <div className="flex items-center gap-2 pl-2 cursor-pointer">
-                            <div className="w-8 h-8 rounded-full border border-gray-200 dark:border-gray-700 overflow-hidden">
-                                <Image src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&auto=format&fit=crop&q=60" alt="Avatar" width={32} height={32} />
+                        <Link href="/dashboard/config" className="flex items-center gap-2 pl-2">
+                            <div className="w-8 h-8 rounded-full border border-gray-200 dark:border-gray-700 overflow-hidden bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                                {profile?.imageUrl ? (
+                                    <img src={profile.imageUrl} alt="Avatar" className="w-full h-full object-cover" />
+                                ) : (
+                                    <UserSquare2 className="w-5 h-5 text-gray-400" />
+                                )}
                             </div>
-                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300 hidden sm:block">João S.</span>
-                        </div>
+                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300 hidden sm:block">
+                                {profile?.name?.split(" ")[0] || "Carregando..."}
+                            </span>
+                        </Link>
                     </div>
                 </header>
 

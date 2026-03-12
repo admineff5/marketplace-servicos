@@ -2,15 +2,39 @@
 
 import { Calendar, Clock, MapPin, Receipt, Star, CheckCircle, Search, Filter } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // Data will be fetched from API
-const UPCOMING_APPOINTMENTS: any[] = [];
-const PAST_APPOINTMENTS: any[] = [];
+// Data will be fetched from API
 
 
 export default function ClienteDashboard() {
     const [activeTab, setActiveTab] = useState("upcoming");
+    const [upcoming, setUpcoming] = useState<any[]>([]);
+    const [past, setPast] = useState<any[]>([]);
+    const [stats, setStats] = useState({ scheduled: 0, completed: 0, totalSpent: 0 });
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const fetchData = async () => {
+        try {
+            setIsLoading(true);
+            const res = await fetch('/api/user/appointments');
+            const data = await res.json();
+            if (data.stats) {
+                setUpcoming(data.upcoming);
+                setPast(data.past);
+                setStats(data.stats);
+            }
+        } catch (error) {
+            console.error("Erro ao buscar dados:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <div className="space-y-8 animate-fade-in pb-10">
@@ -33,7 +57,7 @@ export default function ClienteDashboard() {
                     </div>
                     <div>
                         <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Agendados</p>
-                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white">2</h3>
+                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.scheduled}</h3>
                     </div>
                 </div>
                 <div className="bg-white dark:bg-[#111] border border-gray-100 dark:border-gray-800 rounded-2xl p-6 shadow-sm flex items-center gap-4">
@@ -42,7 +66,7 @@ export default function ClienteDashboard() {
                     </div>
                     <div>
                         <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Realizados</p>
-                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white">14</h3>
+                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stats.completed}</h3>
                     </div>
                 </div>
                 <div className="bg-white dark:bg-[#111] border border-gray-100 dark:border-gray-800 rounded-2xl p-6 shadow-sm flex items-center gap-4">
@@ -51,7 +75,7 @@ export default function ClienteDashboard() {
                     </div>
                     <div>
                         <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Gasto Total</p>
-                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white">R$ 890</h3>
+                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white">R$ {stats.totalSpent.toFixed(2)}</h3>
                     </div>
                 </div>
             </div>
@@ -83,7 +107,7 @@ export default function ClienteDashboard() {
             {/* List Container */}
             <div className="space-y-4">
                 {activeTab === "upcoming" ? (
-                    UPCOMING_APPOINTMENTS.map(item => (
+                    upcoming.map(item => (
                         <div key={item.id} className="bg-white dark:bg-[#111] border border-gray-100 dark:border-gray-800 rounded-2xl p-5 shadow-sm transition-all hover:shadow-md flex flex-col sm:flex-row gap-5 relative overflow-hidden group">
                             {/* Image */}
                             <div className="w-full sm:w-24 h-32 sm:h-24 rounded-xl overflow-hidden shrink-0 border border-gray-200 dark:border-gray-800">
@@ -135,7 +159,7 @@ export default function ClienteDashboard() {
                         </div>
                     ))
                 ) : (
-                    PAST_APPOINTMENTS.map(item => (
+                    past.map(item => (
                         <div key={item.id} className="bg-white dark:bg-[#111] border border-gray-100 dark:border-gray-800 rounded-2xl p-5 shadow-sm transition-all hover:shadow-md flex flex-col sm:flex-row gap-5 relative opacity-80 hover:opacity-100">
                             {/* Image */}
                             <div className="w-full sm:w-20 h-24 sm:h-20 rounded-xl overflow-hidden shrink-0 border border-gray-200 dark:border-gray-800 grayscale">

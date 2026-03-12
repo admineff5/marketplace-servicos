@@ -43,8 +43,8 @@ export default function GestaoProfissionaisPage() {
             ]);
             const profs = await profRes.json();
             const locs = await locRes.json();
-            setProfessionals(profs);
-            setLocations(locs);
+            setProfessionals(Array.isArray(profs) ? profs : []);
+            setLocations(Array.isArray(locs) ? locs : []);
         } catch (error) {
             console.error("Erro ao carregar dados:", error);
         } finally {

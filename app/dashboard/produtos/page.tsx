@@ -1,25 +1,61 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, Plus, Package, Edit2, Trash2, X, Check, Upload, AlertTriangle, TrendingUp, Image as ImageIcon, Eye, EyeOff } from "lucide-react";
 
-// Mock Data - Iniciar vazio para produção/testes reais
-const MOCK_PRODUTOS: any[] = [];
-
 export default function GestaoProdutosPage() {
-    const [produtos, setProdutos] = useState(MOCK_PRODUTOS);
+    const [produtos, setProdutos] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isPrivacyMode, setIsPrivacyMode] = useState(true);
     const [editingProduto, setEditingProduto] = useState<any>(null);
-
-    const maskValue = (val: string) => isPrivacyMode ? "****" : val;
 
     // Form State
     const [formName, setFormName] = useState("");
     const [formPrice, setFormPrice] = useState("");
     const [formStock, setFormStock] = useState("");
     const [formImage, setFormImage] = useState("");
+
+    useEffect(() => {
+        fetchData();
+        const handleClipboardPaste = (e: ClipboardEvent) => {
+            if (!isModalOpen) return;
+            const items = e.clipboardData?.items;
+            if (items) {
+                for (let i = 0; i < items.length; i++) {
+                    if (items[i].type.indexOf("image") !== -1) {
+                        const blob = items[i].getAsFile();
+                        if (blob) {
+                            const reader = new FileReader();
+                            reader.onload = (event) => {
+                                setFormImage(event.target?.result as string);
+                            };
+                            reader.readAsDataURL(blob);
+                        }
+                    }
+                }
+            }
+        };
+
+        window.addEventListener("paste", handleClipboardPaste);
+        return () => window.removeEventListener("paste", handleClipboardPaste);
+    }, [isModalOpen]);
+
+    const fetchData = async () => {
+        try {
+            setIsLoading(true);
+            const res = await fetch('/api/products');
+            const data = await res.json();
+            setProdutos(Array.isArray(data) ? data : []);
+        } catch (error) {
+            console.error("Erro ao carregar produtos:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const maskValue = (val: string) => isPrivacyMode ? "****" : val;
 
     const filteredProdutos = produtos.filter(p =>
         p.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -42,35 +78,45 @@ export default function GestaoProdutosPage() {
         setIsModalOpen(true);
     };
 
-    const handleDelete = (id: number) => {
-        if (window.confirm("Deseja excluir este produto?")) {
-            setProdutos(produtos.filter(p => p.id !== id));
+    const handleSave = async () => {
+        if (!formName || !formPrice || !formStock) return;
+
+        const payload = {
+            name: formName,
+            price: formPrice,
+            stock: formStock,
+            image: formImage
+        };
+
+        try {
+            const url = editingProduto ? `/api/products/${editingProduto.id}` : '/api/products';
+            const method = editingProduto ? 'PUT' : 'POST';
+
+            const res = await fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                setIsModalOpen(false);
+                resetForm();
+                fetchData();
+            }
+        } catch (error) {
+            console.error("Erro ao salvar produto:", error);
         }
     };
 
-    const handleSave = () => {
-        if (!formName || !formPrice || !formStock) return;
-
-        if (editingProduto) {
-            setProdutos(produtos.map(p => p.id === editingProduto.id ? {
-                ...p,
-                name: formName,
-                price: parseFloat(formPrice),
-                stock: parseInt(formStock, 10),
-                image: formImage
-            } : p));
-        } else {
-            setProdutos([{
-                id: Date.now(),
-                name: formName,
-                price: parseFloat(formPrice),
-                stock: parseInt(formStock, 10),
-                image: formImage || "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&auto=format&fit=crop&q=80" // Generic Fallback
-            }, ...produtos]);
+    const handleDelete = async (id: string) => {
+        if (window.confirm("Deseja excluir este produto?")) {
+            try {
+                const res = await fetch(`/api/products/${id}`, { method: 'DELETE' });
+                if (res.ok) fetchData();
+            } catch (error) {
+                console.error("Erro ao excluir:", error);
+            }
         }
-
-        setIsModalOpen(false);
-        resetForm();
     };
 
     const totalEmEstoque = produtos.reduce((acc, curr) => acc + curr.stock, 0);

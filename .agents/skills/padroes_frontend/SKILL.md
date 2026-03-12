@@ -9,6 +9,24 @@ Você está atuando no código do Marketplace de Agendamentos- O App AgendeJá u
 - Siga sempre o Design Pattern mobile-first com flexcols antes de quebrar para colunas md e lg.
 
 ---
+## 0. MEMÓRIA OPERACIONAL E NOTIFICAÇÕES (OBRIGATÓRIO)
+
+> [!IMPORTANT]
+> **O Antigravity DEVE seguir estas etapas de comunicação em TODA interação.**
+
+1. **Canal Live (#ao-vivo):** 
+   - Sempre que realizar QUALQUER alteração ou conclusão de tarefa, envie uma mensagem resumida.
+   - Comando: `python scripts/discord_notifier.py live "Resumo do que foi feito"`
+
+2. **Canal Changelog (#changelog):**
+   - Toda atualização de funcionalidade ou bugfix exige preencher o `CHANGELOG.md` e sincronizar.
+   - Comando: `python scripts/discord_notifier.py changelog "Conteúdo da nova versão"`
+
+3. **Canal Checklist (#checklist):**
+   - Ao atualizar a checklist de tarefas (task.md), sincronize o estado atual.
+   - Comando: `python scripts/discord_notifier.py checklist "Conteúdo da checklist atualizada"`
+
+---
 ## 5. REGRAS ESTRITAS DE ESTABILIDADE E CHANGELOG
 
 > [!CAUTION]

@@ -14,7 +14,7 @@ export function Footer() {
                         className="object-contain grayscale opacity-60 dark:opacity-40"
                     />
                     <p className="text-gray-500 dark:text-gray-400 text-xs mt-4">
-                        © {new Date().getFullYear()} AgendeJá by EFF5. Todos os direitos reservados. v0.5.2 | <a href="/termos" className="hover:text-primary transition-colors">Termos</a> | <a href="/privacidade" className="hover:text-primary transition-colors">Privacidade</a>
+                        © {new Date().getFullYear()} AgendeJá by EFF5. Todos os direitos reservados. v0.6.0 | <a href="/termos" className="hover:text-primary transition-colors">Termos</a> | <a href="/privacidade" className="hover:text-primary transition-colors">Privacidade</a>
                     </p>
                 </div>
 

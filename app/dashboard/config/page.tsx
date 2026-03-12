@@ -12,9 +12,43 @@ const TABS = [
 ];
 
 export default function ConfigPage() {
+    const [isLoading, setIsLoading] = useState(true);
+    const [isSaving, setIsSaving] = useState(false);
     const [activeTab, setActiveTab] = useState("profile");
     const [locations, setLocations] = useState<any[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [company, setCompany] = useState<any>({
+        name: "",
+        cnpj: "",
+        legalName: "",
+        imageUrl: ""
+    });
+
+    useEffect(() => {
+        fetchProfile();
+    }, []);
+
+    const fetchProfile = async () => {
+        try {
+            const res = await fetch('/api/dashboard/profile');
+            const data = await res.json();
+            if (!data.error) setCompany(data);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleDeleteLocation = async (id: string) => {
+        if (window.confirm("Tem certeza que deseja excluir esta unidade?")) {
+            try {
+                const res = await fetch(`/api/locations/${id}`, { method: 'DELETE' });
+                if (res.ok) fetchLocations();
+            } catch (error) {
+                console.error("Erro ao excluir unidade:", error);
+            }
+        }
+    };
 
     useEffect(() => {
         if (activeTab === "locations") {
@@ -35,14 +69,22 @@ export default function ConfigPage() {
         }
     };
 
-    const handleDeleteLocation = async (id: string) => {
-        if (window.confirm("Tem certeza que deseja excluir esta unidade?")) {
-            try {
-                const res = await fetch(`/api/locations/${id}`, { method: 'DELETE' });
-                if (res.ok) fetchLocations();
-            } catch (error) {
-                console.error("Erro ao excluir unidade:", error);
+    const handleSaveProfile = async () => {
+        setIsSaving(true);
+        try {
+            const res = await fetch('/api/dashboard/profile', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(company)
+            });
+            if (res.ok) {
+                alert("Configurações salvas com sucesso!");
+                // Opcional: window.location.reload() ou atualizar layout via context/events
             }
+        } catch (error) {
+            console.error("Erro ao salvar:", error);
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -58,8 +100,12 @@ export default function ConfigPage() {
                         Gerencie as preferências e opções da sua conta empresarial.
                     </p>
                 </div>
-                <button className="bg-primary hover:bg-cyan-400 text-black font-bold px-4 py-2 rounded-lg transition-colors">
-                    Salvar Alterações
+                <button 
+                    onClick={handleSaveProfile}
+                    disabled={isSaving}
+                    className="bg-primary hover:bg-cyan-400 text-black font-bold px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
+                >
+                    {isSaving ? "Salvando..." : "Salvar Alterações"}
                 </button>
             </div>
 
@@ -94,20 +140,41 @@ export default function ConfigPage() {
                                 <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Informações da Empresa</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="space-y-1">
-                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Nome da Empresa</label>
-                                        <input type="text" defaultValue="EFF5 Automação Inteligente" className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2.5 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary/50" />
+                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Nome Fantasia (Marketplace)</label>
+                                        <input 
+                                            type="text" 
+                                            value={company.name} 
+                                            onChange={(e) => setCompany({...company, name: e.target.value})}
+                                            className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2.5 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary/50" 
+                                        />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Razão Social</label>
+                                        <input 
+                                            type="text" 
+                                            value={company.legalName || ""} 
+                                            onChange={(e) => setCompany({...company, legalName: e.target.value})}
+                                            className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2.5 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary/50" 
+                                        />
                                     </div>
                                     <div className="space-y-1">
                                         <label className="text-sm font-medium text-gray-700 dark:text-gray-300">CNPJ</label>
-                                        <input type="text" defaultValue="00.000.000/0001-00" className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2.5 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary/50" />
+                                        <input 
+                                            type="text" 
+                                            value={company.cnpj || ""} 
+                                            onChange={(e) => setCompany({...company, cnpj: e.target.value})}
+                                            className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2.5 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary/50" 
+                                        />
                                     </div>
                                     <div className="space-y-1">
-                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Email de Contato</label>
-                                        <input type="email" defaultValue="contato@eff5.com" className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2.5 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary/50" />
-                                    </div>
-                                    <div className="space-y-1">
-                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Telefone / WhatsApp</label>
-                                        <input type="text" defaultValue="(27) 99266-1278" className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2.5 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary/50" />
+                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">URL da Imagem / Logo</label>
+                                        <input 
+                                            type="text" 
+                                            value={company.imageUrl || ""} 
+                                            onChange={(e) => setCompany({...company, imageUrl: e.target.value})}
+                                            placeholder="https://..."
+                                            className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2.5 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary/50" 
+                                        />
                                     </div>
                                 </div>
                             </div>

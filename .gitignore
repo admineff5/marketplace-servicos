@@ -41,3 +41,11 @@ yarn-error.log*
 next-env.d.ts
 
 /app/generated/prisma
+
+# secrets and keys
+*.key
+*.txt
+manutencao/Key_access_tmp_oci/
+manutencao/bot_config.json
+manutencao/fix_key_perms.ps1
+scripts/__pycache__/

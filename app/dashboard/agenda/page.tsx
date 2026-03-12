@@ -24,16 +24,25 @@ export default function AgendaPage() {
         try {
             setIsLoading(true);
             // Fetch professionals to populate filters
+            // Fetch professionals to populate filters
             const profRes = await fetch('/api/employees');
             const profs = await profRes.json();
-            setProfessionals(profs);
-            if (selectedPros.length === 0) setSelectedPros(profs.map((p: any) => p.name));
+            
+            if (Array.isArray(profs)) {
+                setProfessionals(profs);
+                if (selectedPros.length === 0) setSelectedPros(profs.map((p: any) => p.name));
+            }
 
             // Fetch appointments - in a real scenario we'd filter by date range based on viewMode
             const dateStr = currentDate.toISOString().split('T')[0];
             const apptRes = await fetch(`/api/appointments?date=${dateStr}`);
             const appts = await apptRes.json();
-            setAppointments(appts);
+            
+            if (Array.isArray(appts)) {
+                setAppointments(appts);
+            } else {
+                setAppointments([]);
+            }
         } catch (error) {
             console.error("Erro ao buscar dados da agenda:", error);
         } finally {
