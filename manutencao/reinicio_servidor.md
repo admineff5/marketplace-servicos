@@ -93,4 +93,15 @@ sudo systemctl start postgresql-17 && sudo systemctl restart nginx && cd /data/w
 
 ---
 
+# Subir o site com as alteracoes no GIT
+
+```bash
+cd /data/www/agendaja
+# Se der erro de conflito no git pull, use o comando abaixo para forçar a versão do GitHub:
+git fetch origin main
+git reset --hard origin/main
+npm run build
+pm2 restart agendaja
+```
+
 *Documento gerado para auxiliar na manutenção do AgendeJá Marketplace.*

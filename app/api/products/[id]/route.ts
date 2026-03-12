@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, context: { params: Promise<{ id: string }> }) {
     try {
+        const { id } = await context.params;
         const body = await request.json();
         const { name, price, stock, image, description } = body;
 
         const product = await prisma.product.update({
-            where: { id: params.id },
+            where: { id },
             data: {
                 name,
                 price: parseFloat(price),
@@ -21,10 +22,11 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, context: { params: Promise<{ id: string }> }) {
     try {
+        const { id } = await context.params;
         await prisma.product.delete({
-            where: { id: params.id }
+            where: { id }
         });
         return NextResponse.json({ success: true });
     } catch (error) {
