@@ -5,30 +5,52 @@ import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { ThemeToggle } from "../components/ThemeToggle";
 import { Footer } from "../components/Footer";
 
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
+        setIsLoading(true);
 
-        // Mock Authentication for demonstration
-        if (email === "admin@eff5.com.br" && password === "123456") {
-            router.push("/dashboard");
-        } else if (email === "cliente@eff5.com.br" && password === "123456") {
-            router.push("/cliente");
-        } else {
-            setError("Credenciais inválidas. Tente admin@eff5.com.br ou cliente@eff5.com.br, senha: 123456.");
+        try {
+            const res = await fetch("/api/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || "Erro ao realizar login");
+            }
+
+            // Sucesso! Redireciona conforme o perfil
+            if (data.user.role === "CLIENT") {
+                router.push("/cliente");
+            } else {
+                router.push("/dashboard");
+            }
+        } catch (err: any) {
+            setError(err.message);
+        } finally {
+            setIsLoading(false);
         }
     };
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col dark:bg-[#0a0a0a]">
             <div className="flex-1 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+                <div className="absolute top-6 right-6">
+                    <ThemeToggle />
+                </div>
                 <div className="sm:mx-auto sm:w-full sm:max-w-md">
                     <Link href="/">
                         <Image
@@ -113,9 +135,10 @@ export default function Login() {
                             <div>
                                 <button
                                     type="submit"
-                                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-black bg-primary hover:bg-cyan-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors transform hover:scale-[1.02]"
+                                    disabled={isLoading}
+                                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-black bg-primary hover:bg-cyan-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    Entrar
+                                    {isLoading ? "Entrando..." : "Entrar"}
                                 </button>
                             </div>
                         </form>
