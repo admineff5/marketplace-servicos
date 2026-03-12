@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect } from "react";
 import { Plus, ChevronLeft, ChevronRight, X, User, Edit2, Trash2, Mail, MoreVertical, Calendar as CalendarIcon, Clock, Menu, LayoutList } from "lucide-react";
 

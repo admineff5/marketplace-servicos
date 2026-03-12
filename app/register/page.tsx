@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { ThemeToggle } from "../components/ThemeToggle";
 
 import { Footer } from "../components/Footer";
 
@@ -17,18 +18,44 @@ export default function Register() {
         password: "",
     });
 
-    const handleRegister = (e: React.FormEvent) => {
+    const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError("");
+        setIsLoading(true);
 
-        // Lógica temporária: Se o documento ter <= 11 números, é CPF (Cliente). Senão é CNPJ (Parceiro).
-        const numbersOnly = formData.document.replace(/\D/g, "");
+        try {
+            // Lógica temporária: Se o documento ter <= 11 números, é CPF (Cliente). Senão é CNPJ (Parceiro).
+            const numbersOnly = formData.document.replace(/\D/g, "");
+            const role = numbersOnly.length <= 11 ? "CLIENT" : "BUSINESS";
 
-        if (numbersOnly.length <= 11) {
-            // Cliente
-            router.push("/cliente");
-        } else {
-            // Parceiro
-            router.push("/dashboard");
+            const res = await fetch("/api/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    ...formData,
+                    role
+                }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || "Erro ao realizar cadastro");
+            }
+
+            // Sucesso! Redireciona conforme o perfil
+            if (role === "CLIENT") {
+                router.push("/cliente");
+            } else {
+                router.push("/dashboard");
+            }
+        } catch (err: any) {
+            setError(err.message);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -39,10 +66,13 @@ export default function Register() {
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col dark:bg-[#0a0a0a]">
             <div className="flex-1 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+                <div className="absolute top-6 right-6">
+                    <ThemeToggle />
+                </div>
                 <div className="sm:mx-auto sm:w-full sm:max-w-md">
                     <Link href="/">
                         <Image
-                            src="/logo icon.png"
+                            src="/logo-icon.png"
                             alt="Logo"
                             width={48}
                             height={48}
@@ -59,6 +89,11 @@ export default function Register() {
 
                 <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                     <div className="bg-white py-8 px-4 shadow-xl sm:rounded-2xl sm:px-10 dark:bg-gray-900 border border-gray-100 dark:border-gray-800">
+                        {error && (
+                            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
+                                {error}
+                            </div>
+                        )}
                         <form className="space-y-6" onSubmit={handleRegister}>
                             <div>
                                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
@@ -157,9 +192,10 @@ export default function Register() {
                             <div>
                                 <button
                                     type="submit"
-                                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-black bg-primary hover:bg-cyan-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors transform hover:scale-[1.02]"
+                                    disabled={isLoading}
+                                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-black bg-primary hover:bg-cyan-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    Cadastrar
+                                    {isLoading ? "Processando..." : "Cadastrar"}
                                 </button>
                             </div>
                         </form>

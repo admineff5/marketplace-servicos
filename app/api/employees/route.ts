@@ -23,10 +23,6 @@ export async function POST(request: Request) {
         const employee = await prisma.employee.create({
             data: {
                 name,
-                role,
-                days,
-                hours,
-                image,
                 locationId,
                 companyId,
             },

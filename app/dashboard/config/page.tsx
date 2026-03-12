@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect } from "react";
 import { Settings, User, Building, CreditCard, Bell, Shield, Palette, MapPin, X } from "lucide-react";
 

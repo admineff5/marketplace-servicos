@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect } from "react";
 import { Link2, CalendarCheck, Users, Banknote, Scissors, TrendingUp, TrendingDown, ArrowUpRight, ArrowDownRight, FileText, ChevronRight, X, Sparkles, Filter, Store, Wallet, AlertCircle, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";

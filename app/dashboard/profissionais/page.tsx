@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect } from "react";
 import { Plus, Search, Edit2, Trash2, X, UserSquare2, Check, Clock, CalendarDays, Upload, Image as ImageIcon, MapPin } from "lucide-react";
 

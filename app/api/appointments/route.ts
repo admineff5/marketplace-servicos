@@ -5,6 +5,7 @@ export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
         const dateStr = searchParams.get("date");
+        const limitStr = searchParams.get("limit");
 
         let where: any = {};
         if (dateStr) {
@@ -25,10 +26,22 @@ export async function GET(request: Request) {
                 location: true,
                 user: true
             },
-            orderBy: { date: 'asc' }
+            orderBy: { date: 'asc' },
+            take: limitStr ? parseInt(limitStr) : undefined
         });
-        return NextResponse.json(appointments);
+
+        // Formatar para o Dashboard se necessário
+        const formatted = appointments.map((apt: any) => ({
+            ...apt,
+            start: apt.date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+            client: apt.user.name,
+            prof: apt.employee.name,
+            title: apt.service.name
+        }));
+
+        return NextResponse.json(formatted);
     } catch (error) {
+        console.error("GET Appointments Error:", error);
         return NextResponse.json({ error: "Erro ao buscar agendamentos" }, { status: 500 });
     }
 }
@@ -36,7 +49,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { employeeId, serviceId, userId, locationId, date, startTime, endTime } = body;
+        const { employeeId, serviceId, userId, locationId, date } = body;
 
         const appointment = await prisma.appointment.create({
             data: {
@@ -45,13 +58,12 @@ export async function POST(request: Request) {
                 userId,
                 locationId,
                 date: new Date(date),
-                startTime: startTime ? new Date(startTime) : null,
-                endTime: endTime ? new Date(endTime) : null,
             },
         });
 
         return NextResponse.json(appointment);
     } catch (error) {
+        console.error("POST Appointment Error:", error);
         return NextResponse.json({ error: "Erro ao criar agendamento" }, { status: 500 });
     }
 }

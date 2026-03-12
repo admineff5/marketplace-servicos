@@ -3,20 +3,17 @@ import prisma from "@/lib/prisma";
 
 export async function PUT(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const { id } = await params;
         const body = await request.json();
         const { name, role, days, hours, image, locationId } = body;
 
         const employee = await prisma.employee.update({
-            where: { id: params.id },
+            where: { id },
             data: {
                 name,
-                role,
-                days,
-                hours,
-                image,
                 locationId,
             },
         });
@@ -29,11 +26,12 @@ export async function PUT(
 
 export async function DELETE(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const { id } = await params;
         await prisma.employee.delete({
-            where: { id: params.id },
+            where: { id },
         });
         return NextResponse.json({ message: "Profissional excluído com sucesso" });
     } catch (error) {
