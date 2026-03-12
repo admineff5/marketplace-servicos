@@ -1,10 +1,20 @@
 import { PrismaClient } from "@prisma/client";
 
 const prismaClientSingleton = () => {
-    if (!process.env.DATABASE_URL) {
-        console.warn("⚠️ DATABASE_URL is not defined in the environment.");
+    const url = process.env.DATABASE_URL;
+    if (!url) {
+        console.error("❌ CRITICAL: DATABASE_URL is missing in process.env");
+    } else {
+        console.log("✅ Prisma: DATABASE_URL loaded (starting with: " + url.substring(0, 15) + "...)");
     }
-    return new PrismaClient();
+    
+    return new PrismaClient({
+        datasources: {
+            db: {
+                url: url
+            }
+        }
+    });
 };
 
 declare global {
