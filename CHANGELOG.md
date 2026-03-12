@@ -1,14 +1,27 @@
 ## [0.6.0] - 2026-03-12
-### Adicionado
-- **CRUD Real de Produtos:** Conectado ao banco de dados OCI com suporte a estoque e imagens.
-- **Upload de Imagens Inteligente:** Suporte a `Ctrl+C + Ctrl+V` para colar imagens diretamente no cadastro de produtos.
-- **CRUD Real de Serviços:** Persistência total de dados de serviços.
-- **Contadores do Cliente:** Painel do cliente agora exibe estatísticas reais de agendamentos e gastos.
-- **Validação de CPF:** Adicionada máscara e validação de 11 dígitos no cadastro de novos usuários.
+### 🚀 Adicionado (Persistência e Gestão Real)
+- **📦 Gestão de Produtos (Full CRUD):**
+  - Implementação completa de Criar, Editar e Excluir produtos vinculados à empresa.
+  - **Upload Inteligente:** Integração nativa com Clipboard (Ctrl+C + Ctrl+V) para anexar imagens de produtos instantaneamente.
+  - Controle de Estoque Dinâmico: Alertas visuais para produtos esgotados ou com baixo estoque (< 5 unidades).
+- **✂️ Gestão de Serviços (Full CRUD):**
+  - Migração de mocks para persistência real no banco de dados OCI.
+  - Interface de edição rápida de preços e durações.
+- **👤 Ecossistema do Cliente:**
+  - **Dashboard Financeiro:** Contadores de "Gasto Total", "Agendados" e "Realizados" agora buscam dados reais do histórico do usuário.
+  - **Linha do Tempo de Agendamentos:** Listagem dinâmica filtrando atendimentos futuros e passados.
+  - **Perfil do Usuário:** Nova interface de edição de dados pessoais com máscaras de CPF.
+- **📄 Documentação Técnica:**
+  - Criado `manutencao/reinicio_servidor.md` (Guia de sobrevivência para deploys e quedas).
+  - Criado `manutencao/dicionario_banco.md` (Mapeamento das tabelas Prisma/SQL).
+  - Script `fix_key_perms.ps1` para automação de permissões SSH no Windows.
 
-### Fixed
-- **Estabilização da Agenda/Profissionais:** Tratamento de erros de API ("Application error") para evitar crashes.
-- **Sincronização de Banco (Schema):** Adicionados campos de imagem e estoque ao modelo de Produto via Prisma.
+### 🛠️ Ajustado & Corrigido
+- **Estabilização de Build:** Refatoração de TODAS as rotas dinâmicas para compatibilidade com **Next.js 15 (Async Params)**, resolvendo erros de compilação no servidor.
+- **Segurança de Dados:** Implementadas verificações de nulidade na Agenda e Profissionais, eliminando o erro "Application error" em telas sem dados iniciais.
+- **Schema Prisma:** Expansão do modelo `Product` e `Company` para suportar novos metadados (Estoque, Imagem, CNPJ, Razão Social).
+- **Versionamento:** Atualização global do rodapé e metadados para v0.6.0.
+- **Infra:** Reestabelecimento bem-sucedido do túnel SSH via OCI Bastion Session para sincronização de banco remota.
 ---
 ## [0.5.2] - 2026-03-12
 ### Fixed
