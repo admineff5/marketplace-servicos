@@ -10,7 +10,11 @@ const prismaClientSingleton = () => {
     
     // Explicitly pass the URL to ensure all build workers receive the connection string
     return new PrismaClient({
-        datasourceUrl: url?.trim()
+        datasources: {
+            db: {
+                url: url?.trim()
+            }
+        }
     } as any);
 };
 
