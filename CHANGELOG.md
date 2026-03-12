@@ -1,3 +1,14 @@
+## [0.5.1] - 2026-03-12
+### Adicionado
+- **Autenticação Real:** Substituído mock data por login funcional sincronizado com o banco de dados.
+- **Dark Mode no Login:** Adicionado seletor de tema na tela de acesso.
+
+### Ajustado
+- **Estabilização Prisma (v6.2.1):** Downgrade técnico para garantir compatibilidade de build no servidor Oracle.
+- **Next.js 15 Compatibility:** Refatoração de rotas API para suportar `params` assíncronos.
+- **Sincronização de Schema:** Realinhamento das APIs de `Appointments` e `Employees` com o banco de dados.
+- **Identidade Visual:** Restauração de Logos e atualização do rodapé institucional.
+
 ## [0.5.0] - 2026-03-07
 ### Adicionado
 - **CRUD de Profissionais:** Implementada funcionalidade completa de Edição e Exclusão na gestão de equipe.
