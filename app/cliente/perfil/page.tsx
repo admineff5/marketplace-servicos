@@ -325,16 +325,34 @@ export default function PerfilCliente() {
                         <div className="space-y-4">
                             <div>
                                 <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Nome no Cartão</label>
-                                <input value={newCard.cardName} onChange={e => setNewCard({...newCard, cardName: e.target.value})} className="w-full bg-gray-50 dark:bg-black border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-3 text-sm text-center uppercase" placeholder="FULANO DE TAL" />
+                                <input 
+                                    value={newCard.cardName} 
+                                    onChange={e => setNewCard({...newCard, cardName: e.target.value})} 
+                                    className="w-full bg-gray-50 dark:bg-black border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-3 text-sm text-center uppercase" 
+                                    placeholder="Nome conforme aparece no cartão" 
+                                    autoComplete="cc-name"
+                                />
                             </div>
                             <div>
                                 <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Número do Cartão</label>
-                                <input value={newCard.cardNumber} onChange={e => setNewCard({...newCard, cardNumber: e.target.value})} className="w-full bg-gray-50 dark:bg-black border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-3 text-sm text-center" placeholder="0000 0000 0000 0000" />
+                                <input 
+                                    value={newCard.cardNumber} 
+                                    onChange={e => setNewCard({...newCard, cardNumber: e.target.value})} 
+                                    className="w-full bg-gray-50 dark:bg-black border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-3 text-sm text-center" 
+                                    placeholder="0000 0000 0000 0000" 
+                                    autoComplete="cc-number"
+                                />
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Vencimento</label>
-                                    <input value={newCard.expiry} onChange={e => setNewCard({...newCard, expiry: e.target.value})} className="w-full bg-gray-50 dark:bg-black border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-3 text-sm text-center" placeholder="MM/AA" />
+                                    <input 
+                                        value={newCard.expiry} 
+                                        onChange={e => setNewCard({...newCard, expiry: e.target.value})} 
+                                        className="w-full bg-gray-50 dark:bg-black border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-3 text-sm text-center" 
+                                        placeholder="MM/AA" 
+                                        autoComplete="cc-exp"
+                                    />
                                 </div>
                                 <div>
                                     <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Bandeira</label>

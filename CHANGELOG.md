@@ -1,3 +1,17 @@
+## [1.0.0] - 2026-03-14
+**Fase:** Estável / Lançamento  
+**Tipo de release:** Major  
+**Resumo:** Credit Card UI & Autofill — Melhoria na experiência de cadastro de cartões com suporte a preenchimento automático do navegador e refinamento de texto.
+
+### Added
+- **Browser Autofill Support:** Implementados atributos `autocomplete` (`cc-name`, `cc-number`, `cc-exp`) nos campos de cartão de crédito para permitir que o navegador sugira cartões salvos.
+- **UX Refinement:** Atualizado placeholder do nome do cartão para "Nome conforme aparece no cartão".
+
+### Changed
+- **Version Milestone:** Projeto atingiu a marca de **v1.0.0** após estabilização de autenticação, segurança e refinamentos de UI.
+
+---
+
 ## [0.9.9] - 2026-03-14
 **Fase:** Beta  
 **Tipo de release:** Patch  
