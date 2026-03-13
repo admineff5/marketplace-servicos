@@ -14,7 +14,8 @@ const MOCK_CLIENTES = [
 ];
 
 export default function GestaoClientesPage() {
-    const [clientes, setClientes] = useState(MOCK_CLIENTES);
+    const [clientes, setClientes] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -25,9 +26,35 @@ export default function GestaoClientesPage() {
     const [formName, setFormName] = useState("");
     const [formPhone, setFormPhone] = useState("");
 
-    const filteredClientes = clientes.filter(c =>
-        c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        c.phone.includes(searchTerm)
+    const maskPhone = (value: string) => {
+        if (!value) return "";
+        const val = value.replace(/\D/g, "");
+        if (val.length <= 10) {
+            return val.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, "($1) $2-$3");
+        }
+        return val.replace(/^(\d{2})(\d{5})(\d{0,4}).*/, "($1) $2-$3");
+    };
+
+    const fetchData = async () => {
+        try {
+            setIsLoading(true);
+            const res = await fetch('/api/clients');
+            const data = await res.json();
+            setClientes(Array.isArray(data) ? data : []);
+        } catch (error) {
+            console.error("Erro ao carregar clientes:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useState(() => {
+        fetchData();
+    });
+
+    const filteredClientes = (clientes || []).filter(c =>
+        c.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        c.phone?.includes(searchTerm.replace(/\D/g, ""))
     );
 
     const resetForm = () => {
@@ -35,18 +62,13 @@ export default function GestaoClientesPage() {
         setFormPhone("");
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!formName || !formPhone) return;
 
-        setClientes([{
-            id: Date.now(),
-            name: formName,
-            phone: formPhone,
-            visits: 0,
-            lastVisit: "Hoje",
-            status: "Novo"
-        }, ...clientes]);
-
+        // Por enquanto, como o sistema é baseado em User (Role.CLIENT), 
+        // a adição manual pode ser via criação de User ou apenas via Leads.
+        // O plano foca em correção de bugs e mascaramento.
+        alert("Cadastro manual em desenvolvimento. Clientes são adicionados automaticamente ao agendar.");
         setIsModalOpen(false);
         resetForm();
     };
@@ -109,7 +131,13 @@ export default function GestaoClientesPage() {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100 dark:divide-[#222]">
-                                {filteredClientes.length > 0 ? filteredClientes.map((cliente) => (
+                                {isLoading ? (
+                                    <tr>
+                                        <td colSpan={6} className="py-12 text-center text-gray-500 dark:text-gray-400">
+                                            Carregando clientes...
+                                        </td>
+                                    </tr>
+                                ) : filteredClientes.length > 0 ? filteredClientes.map((cliente) => (
                                     <tr key={cliente.id} className="hover:bg-gray-50 dark:hover:bg-[#1a1a1c] transition-colors group">
                                         <td className="py-4 px-6">
                                             <div className="flex items-center gap-3">
@@ -122,17 +150,17 @@ export default function GestaoClientesPage() {
                                         <td className="py-4 px-6">
                                             <button className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:text-green-500 dark:hover:text-green-400 transition-colors">
                                                 <MessageCircle className="w-4 h-4" />
-                                                {cliente.phone}
+                                                {maskPhone(cliente.phone)}
                                             </button>
                                         </td>
                                         <td className="py-4 px-6">
                                             <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                                                 <Clock className="w-4 h-4" />
-                                                {cliente.lastVisit}
+                                                {cliente.lastVisit ? new Date(cliente.lastVisit).toLocaleDateString('pt-BR') : "Nunca"}
                                             </div>
                                         </td>
                                         <td className="py-4 px-6">
-                                            <span className="text-sm font-bold text-gray-900 dark:text-white">{cliente.visits} {cliente.visits === 1 ? 'visita' : 'visitas'}</span>
+                                            <span className="text-sm font-bold text-gray-900 dark:text-white">{cliente.totalVisits} {cliente.totalVisits === 1 ? 'visita' : 'visitas'}</span>
                                         </td>
                                         <td className="py-4 px-6">
                                             {cliente.status === "VIP" && (
@@ -218,9 +246,13 @@ export default function GestaoClientesPage() {
                                 <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5 uppercase tracking-wider">
                                     Celular (WhatsApp) *
                                 </label>
-                                <input
+                                 <input
                                     type="text"
-                                    value={formPhone} onChange={e => setFormPhone(e.target.value)}
+                                    value={maskPhone(formPhone)} 
+                                    onChange={e => {
+                                        const val = e.target.value.replace(/\D/g, "").slice(0, 11);
+                                        setFormPhone(val);
+                                    }}
                                     placeholder="(11) 99999-9999"
                                     className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-4 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all"
                                 />

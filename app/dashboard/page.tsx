@@ -16,22 +16,30 @@ const KPIS = [
 export default function DashboardIndex() {
     const [isPrivacyMode, setIsPrivacyMode] = useState(true);
     const [recentAppointments, setRecentAppointments] = useState<any[]>([]);
+    const [kpis, setKpis] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const fetchRecent = async () => {
+        const fetchDashboardData = async () => {
             try {
                 setIsLoading(true);
-                const res = await fetch('/api/appointments?limit=3'); // Assumindo que a API suporta limit
-                const data = await res.json();
-                setRecentAppointments(data.slice(0, 3));
+                // Fetch Recent Appointments
+                const aptRes = await fetch('/api/appointments?limit=5');
+                const aptData = await aptRes.json();
+                setRecentAppointments(Array.isArray(aptData) ? aptData.slice(0, 5) : []);
+
+                // Fetch Stats
+                const statsRes = await fetch('/api/dashboard/stats');
+                const statsData = await statsRes.json();
+                setKpis(Array.isArray(statsData) ? statsData : []);
+
             } catch (error) {
-                console.error("Erro ao carregar agendamentos recentes:", error);
+                console.error("Erro ao carregar dados do dashboard:", error);
             } finally {
                 setIsLoading(false);
             }
         };
-        fetchRecent();
+        fetchDashboardData();
     }, []);
 
     const maskValue = (val: string) => isPrivacyMode ? "****" : val;
@@ -67,7 +75,14 @@ export default function DashboardIndex() {
 
             {/* FAIXA UNIFICADA 6 CARDS (Métricas Chave estilo Painel) */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-                {KPIS.map((kpi, index) => (
+                {isLoading ? (
+                    Array(6).fill(0).map((_, i) => (
+                        <div key={i} className="bg-white dark:bg-[#111] p-5 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm animate-pulse">
+                            <div className="h-3 w-16 bg-gray-200 dark:bg-gray-800 rounded mb-3"></div>
+                            <div className="h-6 w-24 bg-gray-200 dark:bg-gray-800 rounded"></div>
+                        </div>
+                    ))
+                ) : kpis.map((kpi, index) => (
                     <div key={index} className="bg-white dark:bg-[#111] p-4 sm:p-5 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col justify-between hover:shadow-md hover:border-primary/20 transition-all group">
                         <div className="flex justify-between items-start mb-2">
                             <h3 className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm font-semibold">{kpi.title}</h3>
@@ -131,8 +146,15 @@ export default function DashboardIndex() {
                                     </p>
                                 </div>
                                 <div className="shrink-0 flex items-center justify-center">
-                                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-400 text-[10px] font-bold uppercase tracking-wider">
-                                        Confirmado
+                                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider
+                                        ${apt.status === 'CONFIRMED' || apt.status === 'COMPLETED' ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-400' :
+                                          apt.status === 'PENDING' ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-400' :
+                                          'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400'}`}
+                                    >
+                                        {apt.status === 'CONFIRMED' ? 'Confirmado' : 
+                                         apt.status === 'PENDING' ? 'Pendente' : 
+                                         apt.status === 'CANCELLED' ? 'Cancelado' : 
+                                         apt.status === 'COMPLETED' ? 'Concluído' : apt.status}
                                     </span>
                                 </div>
                             </div>

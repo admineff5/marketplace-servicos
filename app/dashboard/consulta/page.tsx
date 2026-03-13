@@ -1,27 +1,20 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { Search, Download, FilterX, CalendarIcon, ChevronLeft, ChevronRight, User, Hash, SearchCheck, Filter, X, Calendar as CalendarLucide } from "lucide-react";
-
-// Mock Data local for demonstration
-const MOCK_RESULTS = [
-    { id: "AGD-1029", client: "João Silva", prof: "Rodrigo", service: "Corte Degradê", cat: "Barbearia", date: "2026-03-07", time: "10:00", value: 45.00, status: "Confirmado" },
-    { id: "AGD-1030", client: "Lucas Almeida", prof: "Thiago", service: "Corte + Barba", cat: "Barbearia", date: "2026-03-07", time: "14:30", value: 70.00, status: "Pendente" },
-    { id: "AGD-1031", client: "Marcos Oliveira", prof: "Rodrigo", service: "Barba Terapia", cat: "Barbearia", date: "2026-03-08", time: "09:00", value: 35.00, status: "Cancelado" },
-    { id: "AGD-1032", client: "Thiago Mendes", prof: "Thiago", service: "Corte Clássico", cat: "Barbearia", date: "2026-03-10", time: "16:00", value: 40.00, status: "Confirmado" },
-    { id: "AGD-1033", client: "Pedro Henrique", prof: "Rodrigo", service: "Corte Infantil", cat: "Barbearia", date: "2026-03-11", time: "10:30", value: 35.00, status: "Confirmado" },
-];
+import { useState, useMemo, useEffect } from "react";
+import { Search, Download, User, Hash, SearchCheck, Filter, X } from "lucide-react";
 
 export default function ConsultaAgendamentos() {
+    const [results, setResults] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
     // Filter States
-    const [dateStart, setDateStart] = useState("2026-03-07");
-    const [dateEnd, setDateEnd] = useState("2026-03-17");
+    const [dateStart, setDateStart] = useState("");
+    const [dateEnd, setDateEnd] = useState("");
     const [clientName, setClientName] = useState("");
     const [category, setCategory] = useState("");
     const [service, setService] = useState("");
     const [prof, setProf] = useState("");
     const [status, setStatus] = useState("");
-    const [isRecurrent, setIsRecurrent] = useState(false);
 
     // Filter Modal State
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
@@ -29,8 +22,8 @@ export default function ConsultaAgendamentos() {
     // Search Trigger
     const [isSearching, setIsSearching] = useState(false);
     const [appliedFilters, setAppliedFilters] = useState({
-        dateStart: "2026-03-07",
-        dateEnd: "2026-03-17",
+        dateStart: "",
+        dateEnd: "",
         clientName: "",
         category: "",
         service: "",
@@ -38,23 +31,32 @@ export default function ConsultaAgendamentos() {
         status: "",
     });
 
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const fetchData = async () => {
+        try {
+            setIsSearching(true);
+            const query = new URLSearchParams();
+            if (dateStart) query.append("date", dateStart);
+            
+            const res = await fetch(`/api/appointments?${query.toString()}`);
+            const data = await res.json();
+            setResults(Array.isArray(data) ? data : []);
+        } catch (error) {
+            console.error("Erro ao buscar agendamentos:", error);
+        } finally {
+            setIsSearching(false);
+            setIsLoading(false);
+        }
+    };
+
     const handleSearch = (e?: React.FormEvent) => {
         if (e) e.preventDefault();
-        setIsSearching(true);
-        setAppliedFilters({
-            dateStart,
-            dateEnd,
-            clientName,
-            category,
-            service,
-            prof,
-            status,
-        });
-
-        setTimeout(() => {
-            setIsSearching(false);
-            setIsFilterModalOpen(false);
-        }, 500);
+        setAppliedFilters({ dateStart, dateEnd, clientName, category, service, prof, status });
+        fetchData();
+        setIsFilterModalOpen(false);
     };
 
     const handleClear = () => {
@@ -65,35 +67,26 @@ export default function ConsultaAgendamentos() {
         setService("");
         setProf("");
         setStatus("");
-        setIsRecurrent(false);
-        setAppliedFilters({
-            dateStart: "",
-            dateEnd: "",
-            clientName: "",
-            category: "",
-            service: "",
-            prof: "",
-            status: "",
-        });
+        setAppliedFilters({ dateStart: "", dateEnd: "", clientName: "", category: "", service: "", prof: "", status: "" });
+        fetchData();
     };
 
-    // Lógica de Filtragem Real
     const filteredResults = useMemo(() => {
-        return MOCK_RESULTS.filter(item => {
+        return results.filter(item => {
             const matchesClient = !appliedFilters.clientName || item.client.toLowerCase().includes(appliedFilters.clientName.toLowerCase());
             const matchesProf = !appliedFilters.prof || item.prof === appliedFilters.prof;
             const matchesStatus = !appliedFilters.status || item.status === appliedFilters.status;
-            const matchesCat = !appliedFilters.category || item.cat === appliedFilters.category;
-            const matchesService = !appliedFilters.service || item.service === appliedFilters.service;
+            const matchesTitle = !appliedFilters.service || item.title.toLowerCase().includes(appliedFilters.service.toLowerCase());
 
-            const itemDate = item.date;
+            // Filtro de data range no frontend se necessário (API atual filtra por dia)
+            const itemDate = item.date.split('T')[0];
             const startLimit = appliedFilters.dateStart || "0000-00-00";
             const endLimit = appliedFilters.dateEnd || "9999-99-99";
             const matchesDate = itemDate >= startLimit && itemDate <= endLimit;
 
-            return matchesClient && matchesProf && matchesStatus && matchesCat && matchesService && matchesDate;
+            return matchesClient && matchesProf && matchesStatus && matchesTitle && matchesDate;
         });
-    }, [appliedFilters]);
+    }, [results, appliedFilters]);
 
     return (
         <div className="flex flex-col h-full gap-6">
@@ -163,19 +156,22 @@ export default function ConsultaAgendamentos() {
                                         </td>
                                         <td className="py-4 px-6 text-sm font-medium text-gray-600 dark:text-gray-300">{row.prof}</td>
                                         <td className="py-4 px-6">
-                                            <div className="text-sm font-bold text-gray-800 dark:text-gray-200">{row.service}</div>
-                                            <div className="text-[10px] font-bold text-cyan-700 dark:text-primary uppercase">{row.cat}</div>
+                                            <div className="text-sm font-bold text-gray-800 dark:text-gray-200">{row.title}</div>
+                                            <div className="text-[10px] font-bold text-cyan-700 dark:text-primary uppercase">Serviço</div>
                                         </td>
                                         <td className="py-4 px-6 text-sm font-black text-gray-900 dark:text-gray-100 text-right">
-                                            R$ {row.value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                            R$ {Number(row.value).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                                         </td>
                                         <td className="py-4 px-6 text-center">
                                             <span className={`inline-flex items-center px-3 py-1 rounded-lg text-[10px] font-black uppercase 
-                                                ${row.status === 'Confirmado' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400' :
-                                                    row.status === 'Pendente' ? 'bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400' :
+                                                ${row.status === 'CONFIRMED' || row.status === 'COMPLETED' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400' :
+                                                    row.status === 'PENDING' ? 'bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400' :
                                                         'bg-red-100 text-red-700 dark:bg-red-500/10 dark:text-red-400'}`}
                                             >
-                                                {row.status}
+                                                {row.status === 'CONFIRMED' ? 'Confirmado' : 
+                                                 row.status === 'PENDING' ? 'Pendente' : 
+                                                 row.status === 'CANCELLED' ? 'Cancelado' : 
+                                                 row.status === 'COMPLETED' ? 'Concluído' : row.status}
                                             </span>
                                         </td>
                                     </tr>
@@ -233,9 +229,9 @@ export default function ConsultaAgendamentos() {
                                 <label className="text-[10px] font-black uppercase text-gray-500">Status</label>
                                 <select value={status} onChange={e => setStatus(e.target.value)} className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl px-4 py-3 text-sm focus:ring-1 focus:ring-primary outline-none">
                                     <option value="">Todos</option>
-                                    <option value="Confirmado">Confirmado</option>
-                                    <option value="Pendente">Pendente</option>
-                                    <option value="Cancelado">Cancelado</option>
+                                    <option value="CONFIRMED">Confirmado</option>
+                                    <option value="PENDING">Pendente</option>
+                                    <option value="CANCELLED">Cancelado</option>
                                 </select>
                             </div>
                         </div>

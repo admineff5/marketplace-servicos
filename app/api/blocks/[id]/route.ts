@@ -26,23 +26,25 @@ export async function PUT(
         }
 
         const body = await request.json();
-        const { name, role, locationId, image, hours } = body;
+        const { employeeId, date, reason, situation, openTime, closeTime, isAllDay } = body;
 
-        const employee = await prisma.employee.update({
+        const block = await prisma.block.update({
             where: { id, companyId: company.id },
             data: {
-                name,
-                role,
-                locationId,
-                image,
-                hours
-            },
+                employeeId: employeeId || null,
+                date: new Date(date),
+                reason,
+                situation,
+                openTime,
+                closeTime,
+                isAllDay
+            }
         });
 
-        return NextResponse.json(employee);
+        return NextResponse.json(block);
     } catch (error) {
-        console.error("PUT Employee Error:", error);
-        return NextResponse.json({ error: "Erro ao atualizar profissional" }, { status: 500 });
+        console.error("PUT Block Error:", error);
+        return NextResponse.json({ error: "Erro ao atualizar bloqueio" }, { status: 500 });
     }
 }
 
@@ -69,13 +71,13 @@ export async function DELETE(
             return NextResponse.json({ error: "Empresa não encontrada" }, { status: 404 });
         }
 
-        await prisma.employee.delete({
-            where: { id, companyId: company.id },
+        await prisma.block.delete({
+            where: { id, companyId: company.id }
         });
 
         return NextResponse.json({ success: true });
     } catch (error) {
-        console.error("DELETE Employee Error:", error);
-        return NextResponse.json({ error: "Erro ao excluir profissional" }, { status: 500 });
+        console.error("DELETE Block Error:", error);
+        return NextResponse.json({ error: "Erro ao excluir bloqueio" }, { status: 500 });
     }
 }

@@ -2,10 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { cookies } from "next/headers";
 
-export async function PUT(
-    request: Request,
-    { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET() {
     try {
         const cookieStore = await cookies();
         const session = cookieStore.get("auth_session");
@@ -15,8 +12,39 @@ export async function PUT(
         }
 
         const { id: userId } = JSON.parse(session.value);
-        const { id } = await params;
+        const company = await prisma.company.findUnique({
+            where: { ownerId: userId }
+        });
 
+        if (!company) {
+            return NextResponse.json({ error: "Empresa não encontrada" }, { status: 404 });
+        }
+
+        const blocks = await prisma.block.findMany({
+            where: { companyId: company.id },
+            include: {
+                employee: true
+            },
+            orderBy: { date: 'asc' }
+        });
+
+        return NextResponse.json(blocks);
+    } catch (error) {
+        console.error("GET Blocks Error:", error);
+        return NextResponse.json({ error: "Erro interno" }, { status: 500 });
+    }
+}
+
+export async function POST(request: Request) {
+    try {
+        const cookieStore = await cookies();
+        const session = cookieStore.get("auth_session");
+        
+        if (!session) {
+            return NextResponse.json({ error: "Sessão expirada" }, { status: 401 });
+        }
+
+        const { id: userId } = JSON.parse(session.value);
         const company = await prisma.company.findUnique({
             where: { ownerId: userId }
         });
@@ -26,56 +54,24 @@ export async function PUT(
         }
 
         const body = await request.json();
-        const { name, role, locationId, image, hours } = body;
+        const { employeeId, date, reason, situation, openTime, closeTime, isAllDay } = body;
 
-        const employee = await prisma.employee.update({
-            where: { id, companyId: company.id },
+        const block = await prisma.block.create({
             data: {
-                name,
-                role,
-                locationId,
-                image,
-                hours
-            },
+                companyId: company.id,
+                employeeId: employeeId || null,
+                date: new Date(date),
+                reason,
+                situation: situation || "Feriado",
+                openTime,
+                closeTime,
+                isAllDay: isAllDay ?? true
+            }
         });
 
-        return NextResponse.json(employee);
+        return NextResponse.json(block);
     } catch (error) {
-        console.error("PUT Employee Error:", error);
-        return NextResponse.json({ error: "Erro ao atualizar profissional" }, { status: 500 });
-    }
-}
-
-export async function DELETE(
-    request: Request,
-    { params }: { params: Promise<{ id: string }> }
-) {
-    try {
-        const cookieStore = await cookies();
-        const session = cookieStore.get("auth_session");
-        
-        if (!session) {
-            return NextResponse.json({ error: "Sessão expirada" }, { status: 401 });
-        }
-
-        const { id: userId } = JSON.parse(session.value);
-        const { id } = await params;
-
-        const company = await prisma.company.findUnique({
-            where: { ownerId: userId }
-        });
-
-        if (!company) {
-            return NextResponse.json({ error: "Empresa não encontrada" }, { status: 404 });
-        }
-
-        await prisma.employee.delete({
-            where: { id, companyId: company.id },
-        });
-
-        return NextResponse.json({ success: true });
-    } catch (error) {
-        console.error("DELETE Employee Error:", error);
-        return NextResponse.json({ error: "Erro ao excluir profissional" }, { status: 500 });
+        console.error("POST Block Error:", error);
+        return NextResponse.json({ error: "Erro ao criar bloqueio" }, { status: 500 });
     }
 }

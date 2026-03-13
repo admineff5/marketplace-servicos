@@ -75,14 +75,22 @@ export default function GestaoServicosPage() {
         setShowSuggestions(false);
     };
 
+    const formatCurrency = (value: string) => {
+        const num = value.replace(/\D/g, "");
+        if (!num) return "";
+        const float = parseFloat(num) / 100;
+        return float.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    };
+
     const handleSave = async () => {
         if (!formName || !formPrice || !formDuration) return;
 
         const payload = {
             name: formName,
             description: formDescription,
-            price: formPrice,
-            duration: formDuration
+            price: (parseFloat(formPrice) || 0) / 100,
+            promoPrice: formPromoPrice ? (parseFloat(formPromoPrice) || 0) / 100 : null,
+            duration: parseInt(formDuration)
         };
 
         try {
@@ -120,7 +128,8 @@ export default function GestaoServicosPage() {
         setEditingService(service);
         setFormName(service.name);
         setFormDescription(service.description || "");
-        setFormPrice(service.price.toString());
+        setFormPrice(service.price ? (service.price * 100).toFixed(0) : "");
+        setFormPromoPrice(service.promoPrice ? (service.promoPrice * 100).toFixed(0) : "");
         setFormDuration(service.duration.toString());
         setIsModalOpen(true);
     };
@@ -351,9 +360,13 @@ export default function GestaoServicosPage() {
                                     <div className="relative">
                                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm font-medium">R$</span>
                                         <input
-                                            type="number" step="0.01" min="0"
-                                            value={formPrice} onChange={e => setFormPrice(e.target.value)}
-                                            placeholder="0.00"
+                                            type="text"
+                                            value={formatCurrency(formPrice)} 
+                                            onChange={e => {
+                                                const raw = e.target.value.replace(/\D/g, "").slice(0, 9);
+                                                setFormPrice(raw);
+                                            }}
+                                            placeholder="0,00"
                                             className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg pl-9 pr-3 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all"
                                         />
                                     </div>
@@ -367,9 +380,13 @@ export default function GestaoServicosPage() {
                                     <div className="relative">
                                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm font-medium">R$</span>
                                         <input
-                                            type="number" step="0.01" min="0"
-                                            value={formPromoPrice} onChange={e => setFormPromoPrice(e.target.value)}
-                                            placeholder="0.00"
+                                            type="text"
+                                            value={formatCurrency(formPromoPrice)} 
+                                            onChange={e => {
+                                                const raw = e.target.value.replace(/\D/g, "").slice(0, 9);
+                                                setFormPromoPrice(raw);
+                                            }}
+                                            placeholder="0,00"
                                             className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-green-200 dark:border-green-500/30 rounded-lg pl-9 pr-3 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
                                         />
                                     </div>

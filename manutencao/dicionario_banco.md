@@ -17,14 +17,14 @@ O banco está organizado em torno de fluxos de **Usuários**, **Empresas** e **A
 ### 2. Marketplace e Estabelecimentos
 | Tabela | Descrição | Principais Campos |
 | :--- | :--- | :--- |
-| **`Company`** | Cadastro principal da empresa/loja no marketplace. | `id`, `ownerId`, `name`, `niche`, `whatsapp`, `cnpj` [NEW], `legalName` [NEW], `imageUrl` [NEW]. |
+| **`Company`** | Cadastro principal da empresa/loja no marketplace. | `id`, `ownerId`, `name`, `niche`, `whatsapp`, `cnpj`, `legalName`, `imageUrl`. |
 | **`Location`** | Endereços físicos das unidades de atendimento. | `id`, `companyId`, `name`, `address`, `cep`. |
-| **`Employee`** | Profissionais vinculados a uma empresa e localização. | `id`, `companyId`, `locationId`, `name`. |
+| **`Employee`** | Profissionais vinculados a uma empresa e localização. | `id`, `companyId`, `locationId`, `name`, `role` [NEW], `image` [NEW], `hours` [NEW]. |
 
 ### 3. Catálogo e Operações
 | Tabela | Descrição | Principais Campos |
 | :--- | :--- | :--- |
-| **`Service`** | Serviços oferecidos (ex: Corte de Cabelo, Manicure). | `id`, `companyId`, `name`, `price`, `duration`. |
+| **`Service`** | Serviços oferecidos (ex: Corte de Cabelo, Manicure). | `id`, `companyId`, `name`, `price`, `promoPrice` [NEW], `duration`, `description` [NEW]. |
 | **`Product`** | Produtos à venda no marketplace. | `id`, `companyId`, `name`, `price`, `delivery`. |
 | **`Lead`** | Potenciais clientes interessados em serviços/produtos. | `id`, `name`, `phone`, `interest`, `converted`. |
 
@@ -32,6 +32,7 @@ O banco está organizado em torno de fluxos de **Usuários**, **Empresas** e **A
 | Tabela | Descrição | Principais Campos |
 | :--- | :--- | :--- |
 | **`Appointment`** | Registros de agendamentos realizados. | `id`, `employeeId`, `serviceId`, `date`, `status`. |
+| **`Block`** | Feriados, folgas e bloqueios de agenda. | `id`, `companyId`, `employeeId`, `date`, `situation`, `reason`. |
 | **`AuditLog`** | Log técnico de consultas e alterações no sistema. | `id`, `userId`, `query`, `timestamp`. |
 
 ---
@@ -45,4 +46,4 @@ O banco está organizado em torno de fluxos de **Usuários**, **Empresas** e **A
 *   **Triggers / Views:** Atualmente o sistema utiliza a lógica do Prisma Client para integridade e automação. Consultas complexas são feitas via código (API Routes).
 
 ---
-*Atualizado em: 12/03/2026*
+*Atualizado em: 14/03/2026*

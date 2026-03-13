@@ -1,3 +1,27 @@
+## [0.9.0] - 2026-03-14
+**Fase:** Beta  
+**Tipo de release:** Minor  
+**Resumo:** Integração total do Dashboard — Persistência real em todas as tabelas, máscaras de inputs (CNPJ, Telefone, Moeda) e KPIs em tempo real.
+
+### Added
+- **API de Estatísticas:** Novo endpoint `/api/dashboard/stats` para cálculo de receita, agendamentos e atendimentos do mês atual.
+- **Gestão de Bloqueios:** Módulo de Feriados e Ausências agora 100% funcional com CRUD real e filtro por profissional.
+- **API de Clientes:** Agregação automática de clientes a partir de agendamentos reais, informando frequência e última visita.
+
+### Changed
+- **Configurações:** CNPJ com máscara `00.000.000/0000-00` e limite de 14 caracteres. Campo redundante de Logo URL removido.
+- **Profissionais:** Removido ID fixo; agora utiliza o ID da empresa via sessão. Mapeamento correto de cargo, horários e imagem.
+- **Produtos e Serviços:** Máscaras de moeda BRL em tempo real. Persistência de `promoPrice` e `description` nos serviços.
+- **Consulta de Agendamentos:** Totalmente integrada ao banco de dados, com filtros reais e totalizadores de valores.
+- **Dashboard Overview:** KPIs (Receita, Agendamentos, etc.) agora refletem dados reais do banco.
+
+### Fixed
+- **Segurança:** Todos os endpoints agora validam a `companyId` via sessão do usuário, impedindo acesso a dados de terceiros.
+- **Padronização de Status:** Unificação dos status de agendamento (CONFIRMED, CANCELLED, etc.) entre banco, API e Frontend.
+- **Máscaras de Input:** Correção de bugs de parsing em campos de preço e telefone.
+
+---
+
 ## [0.8.1] - 2026-03-13
 **Fase:** Beta  
 **Tipo de release:** Patch  

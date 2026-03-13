@@ -106,11 +106,9 @@ export default function GestaoProfissionaisPage() {
         const payload = {
             name: formName,
             role: formRole,
-            days: formDays,
             hours: `${formTimeStart} - ${formTimeEnd}`,
             locationId: formUnitId,
             image: formAvatar || (editingProf?.image || DEFAULT_AVATARS[0]),
-            companyId: "dummy-company-id" // Deixando placeholder até ter auth real
         };
 
         try {

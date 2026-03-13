@@ -1,4 +1,4 @@
-# MASTER PROMPT - AGENDEJÁ v0.5.0 (Beta)
+# MASTER PROMPT - AGENDEJÁ v0.9.0 (Beta - Integração Total)
 
 ## Contexto do Projeto
 Você é o assistente principal de desenvolvimento do **AgendeJá**, um Marketplace de Estética e Pequenos Serviços. O sistema é uma plataforma mobile-first robusta para gestão de agendamentos e vendas.
@@ -69,5 +69,5 @@ Utilize os acessos mockados abaixo na tela de `/login`:
 - **Banco de Dados**: Scripts SQL DDL em `manutencao/banco_de_dados/` para cada nova entidade.
 - **Modo Privacidade**: Toggle de "olho" no Dashboard para mascarar valores financeiros.
 
-**VERSÃO ATUAL:** 0.5.0
-**REPLICAÇÃO:** Siga rigorosamente os códigos hexadecimais e a estrutura de pastas (`app/`, `prisma/`, `manutencao/`) para manter a integridade.
+**VERSÃO ATUAL:** 0.9.0
+**REPLICAÇÃO:** Siga rigorosamente os códigos hexadecimais e a estrutura de pastas (`app/`, `prisma/`, `manutencao/`) para manter a integridade, agora com integração total ao PostgreSQL (OCI).

@@ -53,9 +53,10 @@ export async function GET(request: Request) {
             const formatted = appointments.map((apt: any) => ({
                 id: apt.id,
                 start: apt.date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-                client: apt.user.name,
-                prof: apt.employee.name,
-                title: apt.service.name,
+                client: apt.user?.name || "Cliente",
+                prof: apt.employee?.name || "Profissional",
+                title: apt.service?.name || "Serviço",
+                value: apt.service?.price || 0,
                 status: apt.status,
                 date: apt.date,
             }));

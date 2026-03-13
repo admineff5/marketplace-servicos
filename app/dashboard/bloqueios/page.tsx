@@ -1,29 +1,116 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, Plus, CalendarOff, Edit2, Trash2, X } from "lucide-react";
 
-// Mock Data
-const MOCK_BLOCKS = [
-    { id: 1, dateStr: "15/11/2026", weekDay: "Domingo", situation: "Feriado", reason: "Proclamação da República", openTime: "-", closeTime: "-", isAllDay: true, prof: "Barbearia Inteira (Todos)" },
-    { id: 2, dateStr: "20/12/2026", weekDay: "Sexta-feira", situation: "Horário Especial", reason: "Confraternização da Loja", openTime: "08:00", closeTime: "12:00", isAllDay: false, prof: "Barbearia Inteira (Todos)" },
-    { id: 3, dateStr: "25/12/2026", weekDay: "Quarta-feira", situation: "Feriado", reason: "Natal", openTime: "-", closeTime: "-", isAllDay: true, prof: "Barbearia Inteira (Todos)" },
-    { id: 4, dateStr: "01/01/2027", weekDay: "Sexta-feira", situation: "Feriado", reason: "Ano Novo", openTime: "-", closeTime: "-", isAllDay: true, prof: "Barbearia Inteira (Todos)" },
-    { id: 5, dateStr: "08/03/2026", weekDay: "Domingo", situation: "Atestado", reason: "Licença Médica", openTime: "-", closeTime: "-", isAllDay: true, prof: "Rodrigo" },
-];
-
 export default function FeriadosBloqueiosPage() {
+    const [blocks, setBlocks] = useState<any[]>([]);
+    const [employees, setEmployees] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [dateStart, setDateStart] = useState("");
     const [dateEnd, setDateEnd] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingBlock, setEditingBlock] = useState<any>(null);
 
     // Modal Form States
     const [formDate, setFormDate] = useState("");
     const [formSituation, setFormSituation] = useState("Feriado");
     const [formReason, setFormReason] = useState("");
-    const [formProf, setFormProf] = useState("all");
+    const [formProfId, setFormProfId] = useState("all");
     const [formOpenTime, setFormOpenTime] = useState("");
     const [formCloseTime, setFormCloseTime] = useState("");
+
+    useEffect(() => {
+        fetchData();
+        fetchEmployees();
+    }, []);
+
+    const fetchData = async () => {
+        try {
+            setIsLoading(true);
+            const res = await fetch('/api/blocks');
+            const data = await res.json();
+            setBlocks(Array.isArray(data) ? data : []);
+        } catch (error) {
+            console.error("Erro ao carregar bloqueios:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const fetchEmployees = async () => {
+        try {
+            const res = await fetch('/api/employees');
+            const data = await res.json();
+            setEmployees(Array.isArray(data) ? data : []);
+        } catch (error) {
+            console.error("Erro ao carregar profissionais:", error);
+        }
+    };
+
+    const handleSave = async () => {
+        if (!formDate || !formSituation) return;
+
+        const payload = {
+            date: formDate,
+            situation: formSituation,
+            reason: formReason,
+            employeeId: formProfId === "all" ? null : formProfId,
+            openTime: formSituation === "Horário Especial" ? formOpenTime : null,
+            closeTime: formSituation === "Horário Especial" ? formCloseTime : null,
+            isAllDay: formSituation !== "Horário Especial"
+        };
+
+        try {
+            const url = editingBlock ? `/api/blocks/${editingBlock.id}` : '/api/blocks';
+            const method = editingBlock ? 'PUT' : 'POST';
+
+            const res = await fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                setIsModalOpen(false);
+                resetForm();
+                fetchData();
+            }
+        } catch (error) {
+            console.error("Erro ao salvar bloqueio:", error);
+        }
+    };
+
+    const handleDelete = async (id: string) => {
+        if (!confirm("Deseja realmente excluir este bloqueio?")) return;
+        try {
+            const res = await fetch(`/api/blocks/${id}`, { method: 'DELETE' });
+            if (res.ok) fetchData();
+        } catch (error) {
+            console.error("Erro ao excluir bloqueio:", error);
+        }
+    };
+
+    const handleEdit = (block: any) => {
+        setEditingBlock(block);
+        setFormDate(new Date(block.date).toISOString().split('T')[0]);
+        setFormSituation(block.situation);
+        setFormReason(block.reason || "");
+        setFormProfId(block.employeeId || "all");
+        setFormOpenTime(block.openTime || "");
+        setFormCloseTime(block.closeTime || "");
+        setIsModalOpen(true);
+    };
+
+    const resetForm = () => {
+        setFormDate("");
+        setFormSituation("Feriado");
+        setFormReason("");
+        setFormProfId("all");
+        setFormOpenTime("");
+        setFormCloseTime("");
+        setEditingBlock(null);
+    };
 
     return (
         <div className="flex flex-col h-full gap-6">
@@ -41,7 +128,6 @@ export default function FeriadosBloqueiosPage() {
 
             {/* Top Bar - Filter & Add */}
             <div className="bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
-
                 <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
                     <span className="text-sm font-semibold text-gray-600 dark:text-gray-400">Pesquisar de</span>
                     <input
@@ -64,7 +150,7 @@ export default function FeriadosBloqueiosPage() {
 
                 <div className="flex w-full md:w-auto justify-end">
                     <button
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={() => { resetForm(); setIsModalOpen(true); }}
                         className="w-full md:w-auto flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold text-white bg-green-600 hover:bg-green-700 dark:bg-green-600 dark:hover:bg-green-700 rounded-xl shadow-sm transition-colors shrink-0"
                     >
                         <Plus className="w-4 h-4" /> Adicionar Bloqueio
@@ -72,9 +158,8 @@ export default function FeriadosBloqueiosPage() {
                 </div>
             </div>
 
-            {/* Resultado da Tabela Estilo Legacy Convertida p/ Padrao */}
+            {/* Resultado da Tabela */}
             <div className="bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 rounded-2xl flex-1 flex flex-col overflow-hidden shadow-sm">
-
                 <div className="block w-full overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
@@ -90,19 +175,21 @@ export default function FeriadosBloqueiosPage() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100 dark:divide-gray-800/50">
-                            {MOCK_BLOCKS.map((row) => (
+                            {isLoading ? (
+                                <tr><td colSpan={8} className="py-10 text-center text-gray-500">Carregando bloqueios...</td></tr>
+                            ) : blocks.map((row) => (
                                 <tr key={row.id} className="hover:bg-gray-50 dark:hover:bg-[#161618] transition-colors">
                                     <td className="py-3 px-4 text-sm font-semibold text-gray-900 dark:text-gray-100 border-r border-gray-100 dark:border-gray-800/50">
                                         <div className="flex items-center gap-2">
                                             <CalendarOff className="w-3.5 h-3.5 text-orange-500" />
-                                            {row.dateStr}
+                                            {new Date(row.date).toLocaleDateString('pt-BR')}
                                         </div>
                                     </td>
                                     <td className="py-3 px-4 text-sm text-gray-600 dark:text-gray-300 border-r border-gray-100 dark:border-gray-800/50">
-                                        {row.weekDay}
+                                        {new Date(row.date).toLocaleDateString('pt-BR', { weekday: 'long' })}
                                     </td>
                                     <td className="py-3 px-4 text-sm font-bold text-gray-800 dark:text-gray-200 border-r border-gray-100 dark:border-gray-800/50">
-                                        {row.prof}
+                                        {row.employee?.name || "Loja Inteira"}
                                     </td>
                                     <td className="py-3 px-4 border-r border-gray-100 dark:border-gray-800/50 text-center">
                                         <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider border
@@ -114,20 +201,20 @@ export default function FeriadosBloqueiosPage() {
                                         </span>
                                     </td>
                                     <td className="py-3 px-4 text-sm font-medium text-gray-800 dark:text-gray-200 border-r border-gray-100 dark:border-gray-800/50">
-                                        {row.reason}
+                                        {row.reason || "-"}
                                     </td>
                                     <td className="py-3 px-4 text-sm font-bold text-gray-500 dark:text-gray-400 text-center border-r border-gray-100 dark:border-gray-800/50">
-                                        {row.openTime}
+                                        {row.openTime || "-"}
                                     </td>
                                     <td className="py-3 px-4 text-sm font-bold text-gray-500 dark:text-gray-400 text-center border-r border-gray-100 dark:border-gray-800/50">
-                                        {row.closeTime}
+                                        {row.closeTime || "-"}
                                     </td>
                                     <td className="py-2.5 px-4 text-center">
                                         <div className="flex items-center justify-center gap-2">
-                                            <button className="p-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-md text-gray-600 dark:text-gray-300 transition-colors" title="Editar">
+                                            <button onClick={() => handleEdit(row)} className="p-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-md text-gray-600 dark:text-gray-300 transition-colors" title="Editar">
                                                 <Edit2 className="w-3.5 h-3.5" />
                                             </button>
-                                            <button className="p-1.5 bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/40 rounded-md text-red-600 dark:text-red-400 transition-colors" title="Remover">
+                                            <button onClick={() => handleDelete(row.id)} className="p-1.5 bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/40 rounded-md text-red-600 dark:text-red-400 transition-colors" title="Remover">
                                                 <Trash2 className="w-3.5 h-3.5" />
                                             </button>
                                         </div>
@@ -136,31 +223,29 @@ export default function FeriadosBloqueiosPage() {
                             ))}
                         </tbody>
                     </table>
-                    {MOCK_BLOCKS.length === 0 && (
+                    {!isLoading && blocks.length === 0 && (
                         <div className="text-center py-10 text-gray-500 dark:text-gray-400 text-sm">
-                            Nenhum horário especial ou feriado cadastrado neste período.
+                            Nenhum horário especial ou feriado cadastrado.
                         </div>
                     )}
                 </div>
             </div>
 
-            {/* Modal de Cadastro de Bloqueio */}
+            {/* Modal de Cadastro */}
             {isModalOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
                     <div className="bg-white dark:bg-[#111] rounded-2xl shadow-xl w-full max-w-lg overflow-hidden border border-gray-200 dark:border-gray-800">
-                        {/* Header */}
                         <div className="flex justify-between items-center p-5 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/20">
                             <h2 className="text-xl font-bold flex items-center gap-2 text-gray-900 dark:text-white">
-                                <Plus className="w-5 h-5 text-cyan-700 dark:text-primary" /> Novo Bloqueio de Agenda
+                                <Plus className="w-5 h-5 text-cyan-700 dark:text-primary" /> 
+                                {editingBlock ? "Editar Bloqueio" : "Novo Bloqueio de Agenda"}
                             </h2>
                             <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
                                 <X className="w-6 h-6" />
                             </button>
                         </div>
 
-                        {/* Form Body */}
                         <div className="p-6 space-y-5">
-
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5 uppercase tracking-wider">Data do Bloqueio</label>
@@ -186,14 +271,14 @@ export default function FeriadosBloqueiosPage() {
                             <div>
                                 <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5 uppercase tracking-wider">Profissional Afetado</label>
                                 <select
-                                    value={formProf} onChange={e => setFormProf(e.target.value)}
+                                    value={formProfId} onChange={e => setFormProfId(e.target.value)}
                                     className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all appearance-none cursor-pointer"
                                 >
                                     <option value="all">Bloquear Agenda de TODOS (A loja inteira)</option>
-                                    <option value="Rodrigo">Apenas Rodrigo</option>
-                                    <option value="Thiago">Apenas Thiago</option>
+                                    {employees.map(emp => (
+                                        <option key={emp.id} value={emp.id}>Apenas {emp.name}</option>
+                                    ))}
                                 </select>
-                                <p className="text-[11px] text-gray-500 mt-1 italic">Se apenas um funcionário estiver ausente, a agenda dos demais continuará livre na página principal.</p>
                             </div>
 
                             <div>
@@ -208,35 +293,36 @@ export default function FeriadosBloqueiosPage() {
 
                             <div className="grid grid-cols-2 gap-4 p-4 rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-[#151516]">
                                 <div>
-                                    <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5 uppercase tracking-wider">Horário Abertura (se parcial)</label>
+                                    <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5 uppercase tracking-wider">Horário Abertura</label>
                                     <input
-                                        title="Horário Abertura"
                                         type="time"
                                         disabled={formSituation !== "Horário Especial"}
                                         value={formOpenTime} onChange={e => setFormOpenTime(e.target.value)}
-                                        className="w-full bg-white dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="w-full bg-white dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all disabled:opacity-50"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5 uppercase tracking-wider">Horário Fecham. (se parcial)</label>
+                                    <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5 uppercase tracking-wider">Horário Fechamento</label>
                                     <input
-                                        title="Horário Fechamento"
                                         type="time"
                                         disabled={formSituation !== "Horário Especial"}
                                         value={formCloseTime} onChange={e => setFormCloseTime(e.target.value)}
-                                        className="w-full bg-white dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="w-full bg-white dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all disabled:opacity-50"
                                     />
                                 </div>
                             </div>
                         </div>
 
-                        {/* Footer */}
                         <div className="flex gap-3 justify-end p-5 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/20">
                             <button onClick={() => setIsModalOpen(false)} className="px-5 py-2 text-sm font-semibold text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors">
                                 Cancelar
                             </button>
-                            <button onClick={() => { setIsModalOpen(false); }} className="px-6 py-2 text-sm font-bold text-black bg-primary hover:bg-cyan-400 rounded-lg shadow-sm transition-colors">
-                                Salvar Bloqueio
+                            <button 
+                                onClick={handleSave} 
+                                disabled={!formDate}
+                                className="px-6 py-2 text-sm font-bold text-black bg-primary hover:bg-cyan-400 rounded-lg shadow-sm transition-colors disabled:opacity-50"
+                            >
+                                {editingBlock ? "Atualizar Bloqueio" : "Salvar Bloqueio"}
                             </button>
                         </div>
                     </div>

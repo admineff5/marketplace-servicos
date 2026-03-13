@@ -41,6 +41,7 @@ model Company {
   products  Product[]
   services  Service[]
   locations Location[]
+  blocks    Block[]
   cnpj      String?    @unique
   legalName String?
   imageUrl  String?
@@ -69,18 +70,24 @@ model Employee {
   companyId    String
   locationId   String?
   name         String
+  role         String?
+  image        String?
+  hours        String?
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   appointments Appointment[]
   company      Company       @relation(fields: [companyId], references: [id])
   location     Location?     @relation(fields: [locationId], references: [id])
+  blocks       Block[]
 }
 
 model Service {
   id           String        @id @default(uuid())
   companyId    String
   name         String
+  description  String?
   price        Float
+  promoPrice   Float?
   duration     Int
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
@@ -181,4 +188,20 @@ model PaymentMethod {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   user         User     @relation(fields: [userId], references: [id])
+}
+
+model Block {
+  id         String   @id @default(uuid())
+  companyId  String
+  employeeId String?
+  date       DateTime
+  reason     String?
+  situation  String   @default("Feriado")
+  openTime   String?
+  closeTime  String?
+  isAllDay   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  company    Company  @relation(fields: [companyId], references: [id])
+  employee   Employee? @relation(fields: [employeeId], references: [id])
 }

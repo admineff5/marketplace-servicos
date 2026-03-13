@@ -61,6 +61,13 @@ export default function GestaoProdutosPage() {
         p.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    const formatCurrency = (value: string) => {
+        const num = value.replace(/\D/g, "");
+        if (!num) return "";
+        const float = parseFloat(num) / 100;
+        return float.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    };
+
     const resetForm = () => {
         setFormName("");
         setFormPrice("");
@@ -72,7 +79,7 @@ export default function GestaoProdutosPage() {
     const handleEdit = (produto: any) => {
         setEditingProduto(produto);
         setFormName(produto.name);
-        setFormPrice(produto.price.toString());
+        setFormPrice(produto.price.toFixed(2).replace(".", ""));
         setFormStock(produto.stock.toString());
         setFormImage(produto.image);
         setIsModalOpen(true);
@@ -83,7 +90,7 @@ export default function GestaoProdutosPage() {
 
         const payload = {
             name: formName,
-            price: formPrice,
+            price: (parseFloat(formPrice) / 100).toFixed(2),
             stock: formStock,
             image: formImage
         };
@@ -340,9 +347,13 @@ export default function GestaoProdutosPage() {
                                         Preço de Venda (R$) *
                                     </label>
                                     <input
-                                        type="number" step="0.01"
-                                        value={formPrice} onChange={e => setFormPrice(e.target.value)}
-                                        placeholder="89.90"
+                                        type="text"
+                                        value={formatCurrency(formPrice)} 
+                                        onChange={e => {
+                                            const raw = e.target.value.replace(/\D/g, "").slice(0, 9);
+                                            setFormPrice(raw);
+                                        }}
+                                        placeholder="0,00"
                                         className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-4 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all"
                                     />
                                 </div>
