@@ -1,3 +1,15 @@
+## [0.9.8] - 2026-03-14
+**Fase:** Beta  
+**Tipo de release:** Patch  
+**Resumo:** Auth Debug & UX — Normalização de e-mails (trim/lowercase), correção de mensagens de erro e melhoria na robustez do login de pessoa física.
+
+### Changed
+- **Auth API:** Implementada normalização automática de e-mails no Login e Register (evita problemas com espaços e caixa alta).
+- **Security UX:** Atualizada mensagem de erro de login para "E-mail e/ou senha inválidos" (melhorando privacidade e feedback).
+- **Bug Fix:** Resolvida inconsistência no login de PF causada por domínios ou espaços não tratados.
+
+---
+
 ## [0.9.7] - 2026-03-14
 **Fase:** Beta  
 **Tipo de release:** Patch  

@@ -6,7 +6,8 @@ import bcrypt from "bcrypt";
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { email, password } = body;
+        const { email: rawEmail, password } = body;
+        const email = rawEmail?.trim().toLowerCase();
 
         if (!email || !password) {
             return NextResponse.json({ error: "E-mail e senha são obrigatórios" }, { status: 400 });
@@ -17,7 +18,7 @@ export async function POST(request: Request) {
         });
 
         if (!user) {
-            return NextResponse.json({ error: "Credenciais inválidas" }, { status: 401 });
+            return NextResponse.json({ error: "E-mail e/ou senha inválidos" }, { status: 401 });
         }
 
         // Comparação segura com bcrypt
@@ -41,7 +42,7 @@ export async function POST(request: Request) {
         }
 
         if (!isValidPassword) {
-            return NextResponse.json({ error: "Credenciais inválidas" }, { status: 401 });
+            return NextResponse.json({ error: "E-mail e/ou senha inválidos" }, { status: 401 });
         }
 
         // Sessão segura — 7 dias, httpOnly, sameSite lax

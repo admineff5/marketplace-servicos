@@ -6,7 +6,8 @@ import bcrypt from "bcrypt";
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { name, email, password, role, cpf } = body;
+        const { name, email: rawEmail, password, role, cpf } = body;
+        const email = rawEmail?.trim().toLowerCase();
 
         if (!email || !password || !name || !cpf) {
             return NextResponse.json({ error: "Campos obrigatórios ausentes (Nome, E-mail, Senha e CPF)" }, { status: 400 });
