@@ -48,7 +48,7 @@ export default function Login() {
     return (
         <div className="min-h-screen bg-white dark:bg-[#0a0a0a] flex overflow-hidden">
             {/* Left Side: Info / Showcase */}
-            <div className="hidden lg:flex w-1/2 relative bg-black items-center justify-center p-12 overflow-hidden">
+            <div className="hidden lg:flex lg:w-[60%] relative bg-black items-center justify-center p-12 overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-full opacity-40">
                     <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 blur-[120px] rounded-full animate-pulse"></div>
                     <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '2s' }}></div>
@@ -61,7 +61,7 @@ export default function Login() {
                             alt="Logo"
                             width={180}
                             height={60}
-                            className="object-contain invert dark:invert-0"
+                            className="object-contain"
                         />
                     </Link>
                     
@@ -99,7 +99,7 @@ export default function Login() {
             </div>
 
             {/* Right Side: Login Form */}
-            <div className="flex-1 flex flex-col justify-center py-12 px-6 sm:px-12 lg:flex-none lg:w-1/2 relative">
+            <div className="flex-1 flex flex-col justify-center py-12 px-6 sm:px-12 lg:flex-none lg:w-[40%] relative">
                 <div className="absolute top-8 right-8 z-20">
                     <ThemeToggle />
                 </div>

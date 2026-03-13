@@ -1,3 +1,17 @@
+## [0.9.7] - 2026-03-14
+**Fase:** Beta  
+**Tipo de release:** Patch  
+**Resumo:** Login & Footer UX Refinement — Ajuste de layout da tela de login (split 60/40), correção da logo no login e adição de versionamento/changelog no rodapé.
+
+### Added
+- **Footer:** Adicionado link para "Notas de Versão" (Changelog) e exibição da versão atual.
+
+### Changed
+- **Login UI:** Layout alterado para split 60/40 (Info/Form) para melhor aproveitamento visual.
+- **Branding:** Removido filtro de inversão da logo na tela de login, garantindo a exibição das cores originais.
+
+---
+
 ## [0.9.6] - 2026-03-14
 **Fase:** Beta  
 **Tipo de release:** Patch  
