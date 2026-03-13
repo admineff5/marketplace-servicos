@@ -48,6 +48,16 @@ export default function Home() {
   const [companies, setCompanies] = useState<any[]>([]);
   const [isLoadingCompanies, setIsLoadingCompanies] = useState(true);
   const [selectedCompany, setSelectedCompany] = useState<any | null>(null);
+  const [session, setSession] = useState<any>(null);
+
+  useEffect(() => {
+    // Fetch Session
+    fetch("/api/auth/session")
+      .then(res => res.json())
+      .then(data => {
+        if (data.authenticated) setSession(data.user);
+      });
+  }, []);
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -55,17 +65,8 @@ export default function Home() {
         const res = await fetch("/api/companies");
         const data = await res.json();
         if (Array.isArray(data)) {
-          // Adiciona disponibilidade dinâmica se não houver no banco
-          const enhancedData = data.map(company => ({
-            ...company,
-            staff: company.staff?.map((s: any, i: number) => ({
-              ...s,
-              availability: i % 2 === 0
-                ? ["08:00", "09:30", "13:00", "14:30", "16:00"]
-                : ["10:00", "11:00", "15:00", "17:30", "18:15"],
-            })) || []
-          }));
-          setCompanies(enhancedData);
+          // Remover disponibilidade mockada e usar dados reais
+          setCompanies(data);
         }
       } catch (err) {
         console.error("Error fetching companies:", err);
@@ -126,6 +127,34 @@ export default function Home() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const generateTimeSlots = (hoursRange: string | null) => {
+    if (!hoursRange || !hoursRange.includes("-")) return ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"];
+    
+    try {
+      const [start, end] = hoursRange.split("-").map(t => t.trim());
+      const [startHour, startMin] = start.split(":").map(Number);
+      const [endHour, endMin] = end.split(":").map(Number);
+      
+      const slots = [];
+      let currentHour = startHour;
+      let currentMin = startMin;
+      
+      while (currentHour < endHour || (currentHour === endHour && currentMin < endMin)) {
+        const timeStr = `${currentHour.toString().padStart(2, '0')}:${currentMin.toString().padStart(2, '0')}`;
+        slots.push(timeStr);
+        
+        currentMin += 30; // 30 min slots
+        if (currentMin >= 60) {
+          currentHour += 1;
+          currentMin -= 60;
+        }
+      }
+      return slots;
+    } catch (e) {
+      return ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"];
+    }
+  };
+
   const handleOpenCompany = (company: any) => {
     setSelectedCompany(company);
     setSelectedServiceId(null);
@@ -141,6 +170,11 @@ export default function Home() {
 
   const handleConfirmBooking = async () => {
     if (!selectedTime || !selectedDate || !selectedServiceId || !selectedProfessional) return;
+
+    if (session?.role === "BUSINESS") {
+      alert("⚠️ Atenção: Perfil Profissional\n\nContas de empresa não podem realizar agendamentos de serviços. Por favor, utilize uma conta de Pessoa Física para esta ação.");
+      return;
+    }
 
     try {
       setIsBooking(true);
@@ -195,23 +229,14 @@ export default function Home() {
   const upcomingDays = Array.from({ length: 14 }).map((_, i) => {
     const d = new Date();
     d.setDate(d.getDate() + i);
+    const dayOfWeek = d.getDay(); // 0 = Domingo, 1 = Segunda...
     return {
       dateObj: d,
       dayNumber: d.getDate(),
-      dayName: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"][d.getDay()],
+      dayName: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"][dayOfWeek],
+      dayOfWeek, // Adicionado para lógica de bloqueio
       monthName: [
-        "Jan",
-        "Fev",
-        "Mar",
-        "Abr",
-        "Mai",
-        "Jun",
-        "Jul",
-        "Ago",
-        "Set",
-        "Out",
-        "Nov",
-        "Dez",
+        "Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"
       ][d.getMonth()],
       fullDateStr: d.toISOString().split("T")[0],
     };
@@ -258,18 +283,34 @@ export default function Home() {
           <nav className="flex items-center gap-3">
             <ThemeToggle />
             <div className="flex items-center gap-2 sm:gap-4 border-l border-gray-200 dark:border-gray-800 pl-3 sm:pl-4 ml-1 sm:ml-2">
-              <Link
-                href="/login"
-                className="text-xs sm:text-sm font-medium text-gray-700 hover:text-black dark:text-gray-200 dark:hover:text-cyan-700 dark:hover:text-primary transition-colors"
-              >
-                Login
-              </Link>
-              <Link
-                href="/register"
-                className="rounded-full bg-primary px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-black transition-transform hover:scale-105"
-              >
-                Cadastrar
-              </Link>
+              {session ? (
+                <div className="flex items-center gap-3">
+                  <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 hidden sm:block">
+                    Olá, <span className="font-bold">{session.name.split(' ')[0]}</span>
+                  </span>
+                  <Link
+                    href={session.role === "BUSINESS" ? "/dashboard" : "/cliente"}
+                    className="text-xs sm:text-sm font-bold text-cyan-700 dark:text-primary hover:underline transition-all"
+                  >
+                    {session.role === "BUSINESS" ? "Meu Painel" : "Meu Perfil"}
+                  </Link>
+                </div>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    className="text-xs sm:text-sm font-medium text-gray-700 hover:text-black dark:text-gray-200 dark:hover:text-cyan-700 dark:hover:text-primary transition-colors"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="rounded-full bg-primary px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-black transition-transform hover:scale-105"
+                  >
+                    Cadastrar
+                  </Link>
+                </>
+              )}
             </div>
           </nav>
         </div>
@@ -923,23 +964,34 @@ export default function Home() {
                             ? `O estabelecimento está fechado neste dia pelo motivo: ${currentBlock.situation}. Nenhum horário disponível.`
                             : `O profissional ${activeProfessionalData.name} não realizará atendimentos neste dia(${currentBlock.situation}).`}
                         </p>
-                      ) : activeProfessionalData.availability?.length > 0 ? (
-                        activeProfessionalData.availability.map((time: any, idx: number) => {
-                          const isSelected = selectedTime === time;
-                          return (
-                            <button
-                              key={idx}
-                              onClick={() => setSelectedTime(time)}
-                              className={`px-5 py-2.5 text-sm font-bold rounded-lg border transition-all ${isSelected ? "border-primary bg-primary text-black shadow-[0_0_15px_rgba(0,255,255,0.4)]" : "border-[#2a2a2c] bg-[#151516] text-gray-300 hover:border-gray-500 hover:text-white"} `}
-                            >
-                              {time}
-                            </button>
-                          );
-                        })
-                      ) : (
-                        <p className="text-sm text-gray-500 italic">
-                          Nenhum horário selecionável para este dia.
+                      ) : upcomingDays.find(d => d.fullDateStr === selectedDate)?.dayOfWeek === 0 ? (
+                        <p className="text-sm text-amber-500 font-bold bg-amber-50 dark:bg-amber-500/10 p-3 rounded-lg border border-amber-200 dark:border-amber-500/20 flex items-center gap-2 w-full shadow-sm">
+                          <CalendarOff className="w-5 h-5 shrink-0" />
+                          O estabelecimento não abre aos domingos. Por favor, selecione outro dia.
                         </p>
+                      ) : (
+                        (() => {
+                          const slots = generateTimeSlots(activeProfessionalData.hours);
+                          if (slots.length > 0) {
+                            return slots.map((time: any, idx: number) => {
+                              const isSelected = selectedTime === time;
+                              return (
+                                <button
+                                  key={idx}
+                                  onClick={() => setSelectedTime(time)}
+                                  className={`px-5 py-2.5 text-sm font-bold rounded-lg border transition-all ${isSelected ? "border-primary bg-primary text-black shadow-[0_0_15px_rgba(0,255,255,0.4)]" : "border-[#2a2a2c] bg-[#151516] text-gray-300 hover:border-gray-500 hover:text-white"} `}
+                                >
+                                  {time}
+                                </button>
+                              );
+                            });
+                          }
+                          return (
+                            <p className="text-sm text-gray-500 italic">
+                              Nenhum horário selecionável para este dia.
+                            </p>
+                          );
+                        })()
                       )}
                     </div>
                   )}

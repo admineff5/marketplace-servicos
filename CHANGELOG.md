@@ -1,3 +1,20 @@
+## [0.9.17] - 2026-03-14
+**Fase:** Beta  
+**Tipo de release:** Refinement & Fix  
+**Resumo:** Correções críticas na Agenda, disponibilidade real de profissionais e restrições de perfil.
+
+### Fixed
+- **Dashboard Agenda**: Resolvido erro client-side (crash) ao carregar profissionais e agendamentos.
+- **Availability Logic**: Substituída a lógica de teste por geração dinâmica de horários baseada no campo `hours` do profissional. Bloqueio automático de agendamentos aos domingos.
+- **Booking Security**: Implementada restrição que impede contas de Empresa (BUSINESS) de realizar agendamentos no marketplace.
+
+### Added
+- **Dynamic Header**: O topo do site agora identifica o usuário logado, exibindo nome e links para Perfil (PF) ou Painel (PJ).
+- **Dashboard Navigation**: Adicionado link "Voltar ao Site" na barra lateral do parceiro para facilitar a transição.
+- **Session API**: Nova rota `/api/auth/session` para fornecer dados de identidade ao frontend público.
+
+---
+
 ## [0.9.16] - 2026-03-14
 **Fase:** Beta  
 **Tipo de release:** Feature  

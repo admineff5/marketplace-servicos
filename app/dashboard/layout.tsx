@@ -23,7 +23,8 @@ import {
     SearchCheck,
     CalendarOff,
     Target,
-    FileText
+    FileText,
+    Globe
 } from "lucide-react";
 
 const SIDEBAR_LINKS = [
@@ -131,7 +132,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     })}
                 </nav>
 
-                <div className="p-4 border-t border-gray-100 dark:border-gray-800">
+                <div className="p-4 border-t border-gray-100 dark:border-gray-800 space-y-1">
+                    <Link
+                        href="/"
+                        className={`w-full flex items-center gap-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors ${isCollapsed ? 'md:justify-center md:px-0 px-3' : 'px-3'}`}
+                        title={isCollapsed ? "Voltar ao Site" : undefined}
+                    >
+                        <Globe className="w-5 h-5 shrink-0" />
+                        <span className={`${isCollapsed ? 'md:hidden' : ''}`}>Voltar ao Site</span>
+                    </Link>
                     <button
                         onClick={async () => {
                             await fetch("/api/auth/logout", { method: "POST" });

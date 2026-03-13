@@ -69,7 +69,14 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Sessão expirada" }, { status: 401 });
         }
 
-        const { id: userId } = JSON.parse(session.value);
+        const { id: userId, role } = JSON.parse(session.value);
+
+        if (role === "BUSINESS") {
+            return NextResponse.json({ 
+                error: "Contas de empresa não podem realizar agendamentos. Por favor, use uma conta de Pessoa Física." 
+            }, { status: 403 });
+        }
+
         const body = await request.json();
         const { employeeId, serviceId, locationId, companyId, date, note } = body;
 

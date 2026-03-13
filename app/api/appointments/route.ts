@@ -51,12 +51,16 @@ export async function GET(request: Request) {
             const formatted = appointments.map((apt: any) => ({
                 id: apt.id,
                 start: apt.date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+                end: new Date(apt.date.getTime() + (apt.service?.duration || 30) * 60000).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
                 client: apt.user?.name || "Cliente",
                 prof: apt.employee?.name || "Profissional",
-                title: apt.service?.name || "Serviço",
+                title: `${apt.service?.name || "Serviço"} - ${apt.user?.name || "Cliente"}`,
                 value: apt.service?.price || 0,
                 status: apt.status,
                 date: apt.date,
+                dot: "bg-cyan-500", // Default color
+                color: "text-cyan-700 dark:text-primary",
+                clientNote: apt.note || ""
             }));
 
             return NextResponse.json(formatted);

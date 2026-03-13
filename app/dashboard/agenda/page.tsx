@@ -30,7 +30,8 @@ export default function AgendaPage() {
             
             if (Array.isArray(profs)) {
                 setProfessionals(profs);
-                if (selectedPros.length === 0) setSelectedPros(profs.map((p: any) => p.name));
+                // Iniciar com todos selecionados (usando IDs para consistência)
+                if (selectedPros.length === 0) setSelectedPros(profs.map((p: any) => p.id));
             }
 
             // Fetch appointments - in a real scenario we'd filter by date range based on viewMode
@@ -198,17 +199,17 @@ export default function AgendaPage() {
                             </div>
                             <div className="space-y-3 px-2">
                                 {filteredPros.length > 0 ? filteredPros.map((p) => (
-                                    <label key={p} className="flex items-center gap-3 cursor-pointer group">
+                                    <label key={p.id} className="flex items-center gap-3 cursor-pointer group">
                                         <input
                                             type="checkbox"
-                                            checked={selectedPros.includes(p)}
+                                            checked={selectedPros.includes(p.id)}
                                             onChange={(e) => {
-                                                if (e.target.checked) setSelectedPros([...selectedPros, p]);
-                                                else setSelectedPros(selectedPros.filter(x => x !== p));
+                                                if (e.target.checked) setSelectedPros([...selectedPros, p.id]);
+                                                else setSelectedPros(selectedPros.filter(x => x !== p.id));
                                             }}
-                                            className={`rounded border-gray-400 outline-none w-4 h-4 bg-transparent ${p === 'Rodrigo' ? 'text-green-500 accent-green-600' : 'text-purple-500 accent-purple-500'}`}
+                                            className={`rounded border-gray-400 outline-none w-4 h-4 bg-transparent accent-cyan-600`}
                                         />
-                                        <span className="text-sm text-gray-700 dark:text-gray-300 group-hover:text-black dark:group-hover:text-white">{p}</span>
+                                        <span className="text-sm text-gray-700 dark:text-gray-300 group-hover:text-black dark:group-hover:text-white">{p.name}</span>
                                     </label>
                                 )) : <span className="text-xs text-gray-500">Nenhum profissional encontrado.</span>}
                             </div>
@@ -271,7 +272,7 @@ export default function AgendaPage() {
                                                         aptDate.getDate() === day.date &&
                                                         aptDate.getMonth() === month &&
                                                         aptDate.getFullYear() === year &&
-                                                        selectedPros.includes(apt.prof)
+                                                        (selectedPros.length === 0 || selectedPros.includes(apt.employeeId || apt.employee?.id))
                                                     );
                                                 });
                                                 const dayIsToday = isToday(day.date);
