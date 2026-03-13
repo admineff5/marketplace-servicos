@@ -36,6 +36,7 @@ export async function GET() {
             description: "Especialista em " + (company.niche || "serviços de qualidade"),
             services: company.services.map(s => ({
                 id: s.id,
+                companyId: company.id,
                 name: s.name,
                 price: "R$ " + s.price,
                 duration: s.duration || "30 min"

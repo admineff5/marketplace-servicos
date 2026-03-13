@@ -71,7 +71,7 @@ export async function POST(request: Request) {
 
         const { id: userId } = JSON.parse(session.value);
         const body = await request.json();
-        const { employeeId, serviceId, locationId, date, note } = body;
+        const { employeeId, serviceId, locationId, companyId, date, note } = body;
 
         // Validar dados básicos
         if (!employeeId || !serviceId || !locationId || !date) {
@@ -84,6 +84,7 @@ export async function POST(request: Request) {
                 employeeId,
                 serviceId,
                 locationId,
+                companyId, // <--- Novo campo adicionado
                 date: new Date(date),
                 status: "PENDING"
             }

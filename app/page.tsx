@@ -87,6 +87,7 @@ export default function Home() {
 
   // Scheduling State within Modal
   const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
   const [selectedServiceName, setSelectedServiceName] = useState<string | null>(null);
   const [selectedProfessional, setSelectedProfessional] = useState<
     string | null
@@ -137,6 +138,7 @@ export default function Home() {
   const handleOpenCompany = (company: any) => {
     setSelectedCompany(company);
     setSelectedServiceId(null);
+    setSelectedCompanyId(null);
     setSelectedServiceName(null);
     setSelectedProfessional(
       company.staff && company.staff.length > 0 ? company.staff[0].id : null,
@@ -161,6 +163,7 @@ export default function Home() {
           employeeId: selectedProfessional,
           serviceId: selectedServiceId,
           locationId: selectedCompany.locationId,
+          companyId: selectedCompanyId,
           date: new Date(dateTime).toISOString(),
           note: clientNote
         })
@@ -800,6 +803,7 @@ export default function Home() {
                         key={idx}
                         onClick={() => {
                           setSelectedServiceId(service.id);
+                          setSelectedCompanyId(service.companyId);
                           setSelectedServiceName(service.name);
                         }}
                         className={`group flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${isSelected ? "border-primary bg-primary/5" : "border-[#2a2a2c] bg-[#151516] hover:border-[#3a3a3c]"} `}

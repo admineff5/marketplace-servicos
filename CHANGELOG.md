@@ -1,3 +1,15 @@
+## [0.9.14] - 2026-03-14
+**Fase:** Beta  
+**Tipo de release:** Fix  
+**Resumo:** Correção final do fluxo de agendamento (companyId) e normalização de IDs na Home.
+
+### Fixed
+- **Booking Flow**: Agora o persistência do agendamento inclui o `companyId`, resolvendo o erro 400 de "Dados incompletos".
+- **Companies API**: Adicionado `companyId` em todos os serviços mapeados para facilitar o agendamento.
+- **Home UI**: Sincronização de estados de agendamento para usar IDs reais do banco de dados em vez de mocks.
+
+---
+
 ## [0.9.13] - 2026-03-14
 **Fase:** Beta  
 **Tipo de release:** Patch  

@@ -130,6 +130,7 @@ model Appointment {
   employeeId String
   serviceId  String
   locationId String
+  companyId  String
   userId     String
   date       DateTime
   status     AppointmentStatus @default(PENDING)
@@ -138,6 +139,7 @@ model Appointment {
   employee   Employee          @relation(fields: [employeeId], references: [id])
   service    Service           @relation(fields: [serviceId], references: [id])
   location   Location          @relation(fields: [locationId], references: [id])
+  company    Company           @relation(fields: [companyId], references: [id])
   user       User              @relation("UserAppointments", fields: [userId], references: [id])
 }
 
