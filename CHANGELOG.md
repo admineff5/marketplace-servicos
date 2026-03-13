@@ -1,3 +1,15 @@
+## [0.9.16] - 2026-03-14
+**Fase:** Beta  
+**Tipo de release:** Feature  
+**Resumo:** Gestão completa de Unidades (Lojas/Franquias) no Dashboard.
+
+### Added
+- **Dashboard Business**: Novo modal funcional para adicionar novas unidades físicas.
+- **API Security**: Blindagem da API de locais (`/api/locations`) com proteção cross-tenant e validação de sessão.
+- **CRUD Unidades**: Implementação total de Criação, Listagem, Atualização Inline e Exclusão de unidades.
+
+---
+
 ## [0.9.15] - 2026-03-14
 **Fase:** Beta  
 **Tipo de release:** Fix  

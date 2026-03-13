@@ -101,7 +101,7 @@ export function Footer() {
                 {/* Divider */}
                 <div className="border-t border-gray-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <p className="text-gray-500 text-xs">
-                        © {new Date().getFullYear()} AgendeJá by EFF5. Todos os direitos reservados. <span className="text-cyan-700/50 dark:text-primary/30 ml-2">v0.9.15</span>
+                        © {new Date().getFullYear()} AgendeJá by EFF5. Todos os direitos reservados. <span className="text-cyan-700/50 dark:text-primary/30 ml-2">v0.9.16</span>
                     </p>
                     <div className="flex items-center gap-4">
                         <a href="#" className="text-gray-500 hover:text-[#0A66C2] transition-colors" aria-label="LinkedIn">

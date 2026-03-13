@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Settings, User, Building, CreditCard, Bell, Shield, Palette, MapPin, X } from "lucide-react";
+import { Settings, User, Building, CreditCard, Bell, Shield, Palette, MapPin, X, Plus, Loader2 } from "lucide-react";
 
 const TABS = [
     { id: "profile", label: "Perfil da Empresa", icon: Building },
@@ -22,6 +22,20 @@ export default function ConfigPage() {
         cnpj: "",
         legalName: "",
         imageUrl: ""
+    });
+
+    // New Location Modal State
+    const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+    const [isCreatingLocation, setIsCreatingLocation] = useState(false);
+    const [newLocation, setNewLocation] = useState({
+        name: "",
+        cep: "",
+        address: "",
+        number: "",
+        neighborhood: "",
+        city: "",
+        state: "",
+        mapsLink: ""
     });
 
     const maskCNPJ = (value: string) => {
@@ -73,11 +87,66 @@ export default function ConfigPage() {
             setIsLoading(true);
             const res = await fetch('/api/locations');
             const data = await res.json();
-            setLocations(data);
+            if (!data.error) setLocations(data);
         } catch (error) {
             console.error("Erro ao buscar unidades:", error);
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const handleAddLocation = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsCreatingLocation(true);
+        try {
+            const res = await fetch('/api/locations', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newLocation)
+            });
+            
+            if (res.ok) {
+                await fetchLocations();
+                setIsLocationModalOpen(false);
+                setNewLocation({
+                    name: "",
+                    cep: "",
+                    address: "",
+                    number: "",
+                    neighborhood: "",
+                    city: "",
+                    state: "",
+                    mapsLink: ""
+                });
+            } else {
+                const data = await res.json();
+                alert(data.error || "Erro ao criar unidade");
+            }
+        } catch (error) {
+            console.error("Erro ao adicionar:", error);
+            alert("Erro de conexão");
+        } finally {
+            setIsCreatingLocation(false);
+        }
+    };
+
+    const handleUpdateLocation = async (id: string, field: string, value: string) => {
+        try {
+            // Update local state for immediate feedback
+            setLocations(prev => prev.map(loc => 
+                loc.id === id ? { ...loc, [field]: value } : loc
+            ));
+
+            const location = locations.find(l => l.id === id);
+            if (!location) return;
+
+            await fetch(`/api/locations/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ...location, [field]: value })
+            });
+        } catch (error) {
+            console.error("Erro ao atualizar campo:", error);
         }
     };
 
@@ -194,8 +263,11 @@ export default function ConfigPage() {
                                     <h2 className="text-lg font-bold text-gray-900 dark:text-white">Lojas / Franquias</h2>
                                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Gerencie os endereços físicos onde sua empresa atende.</p>
                                 </div>
-                                <button className="flex items-center gap-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors">
-                                    <MapPin className="w-4 h-4" />
+                                <button 
+                                    onClick={() => setIsLocationModalOpen(true)}
+                                    className="flex items-center gap-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
+                                >
+                                    <Plus className="w-4 h-4" />
                                     <span>Adicionar Unidade</span>
                                 </button>
                             </div>
@@ -212,7 +284,8 @@ export default function ConfigPage() {
                                                 </div>
                                                 <input
                                                     type="text"
-                                                    defaultValue={loc.name}
+                                                    value={loc.name}
+                                                    onChange={(e) => handleUpdateLocation(loc.id, "name", e.target.value)}
                                                     className="font-bold text-lg bg-transparent border-b border-transparent hover:border-gray-300 dark:hover:border-gray-600 focus:border-primary outline-none text-gray-900 dark:text-white px-1 py-0.5"
                                                 />
                                             </div>
@@ -227,23 +300,48 @@ export default function ConfigPage() {
                                         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 pl-14">
                                             <div className="space-y-1 md:col-span-1">
                                                 <label className="text-xs font-medium text-gray-500 dark:text-gray-400">CEP</label>
-                                                <input type="text" defaultValue={loc.cep} className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm text-gray-900 dark:text-white outline-none focus:ring-1 focus:ring-primary" />
+                                                <input 
+                                                    type="text" 
+                                                    value={loc.cep} 
+                                                    onChange={(e) => handleUpdateLocation(loc.id, "cep", e.target.value)}
+                                                    className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm text-gray-900 dark:text-white outline-none focus:ring-1 focus:ring-primary" 
+                                                />
                                             </div>
                                             <div className="space-y-1 md:col-span-2">
                                                 <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Rua / Avenida</label>
-                                                <input type="text" defaultValue={loc.address} className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm text-gray-900 dark:text-white outline-none focus:ring-1 focus:ring-primary" />
+                                                <input 
+                                                    type="text" 
+                                                    value={loc.address} 
+                                                    onChange={(e) => handleUpdateLocation(loc.id, "address", e.target.value)}
+                                                    className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm text-gray-900 dark:text-white outline-none focus:ring-1 focus:ring-primary" 
+                                                />
                                             </div>
                                             <div className="space-y-1 md:col-span-1">
                                                 <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Número</label>
-                                                <input type="text" defaultValue={loc.number} className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm text-gray-900 dark:text-white outline-none focus:ring-1 focus:ring-primary" />
+                                                <input 
+                                                    type="text" 
+                                                    value={loc.number} 
+                                                    onChange={(e) => handleUpdateLocation(loc.id, "number", e.target.value)}
+                                                    className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm text-gray-900 dark:text-white outline-none focus:ring-1 focus:ring-primary" 
+                                                />
                                             </div>
                                             <div className="space-y-1 md:col-span-2">
                                                 <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Bairro</label>
-                                                <input type="text" defaultValue={loc.neighborhood} className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm text-gray-900 dark:text-white outline-none focus:ring-1 focus:ring-primary" />
+                                                <input 
+                                                    type="text" 
+                                                    value={loc.neighborhood} 
+                                                    onChange={(e) => handleUpdateLocation(loc.id, "neighborhood", e.target.value)}
+                                                    className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm text-gray-900 dark:text-white outline-none focus:ring-1 focus:ring-primary" 
+                                                />
                                             </div>
                                             <div className="space-y-1 md:col-span-2">
                                                 <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Link Google Maps (Como chegar)</label>
-                                                <input type="url" defaultValue={loc.mapsLink} className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm text-blue-500 outline-none focus:ring-1 focus:ring-primary" />
+                                                <input 
+                                                    type="url" 
+                                                    value={loc.mapsLink} 
+                                                    onChange={(e) => handleUpdateLocation(loc.id, "mapsLink", e.target.value)}
+                                                    className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm text-blue-500 outline-none focus:ring-1 focus:ring-primary" 
+                                                />
                                             </div>
                                         </div>
                                     </div>
@@ -299,6 +397,117 @@ export default function ConfigPage() {
                     )}
                 </div>
             </div>
+
+            {/* Modal de Adicionar Unidade */}
+            {isLocationModalOpen && (
+                <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+                    <div className="bg-white dark:bg-gray-900 w-full max-w-lg rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 overflow-hidden animate-in zoom-in-95 duration-300">
+                        <div className="p-6 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gray-50/50 dark:bg-gray-800/50">
+                            <h3 className="font-bold text-lg text-gray-900 dark:text-white flex items-center gap-2">
+                                <MapPin className="w-5 h-5 text-primary" />
+                                Nova Unidade
+                            </h3>
+                            <button onClick={() => setIsLocationModalOpen(false)} className="text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors">
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+                        
+                        <form onSubmit={handleAddLocation} className="p-6 space-y-4">
+                            <div className="space-y-1">
+                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Nome da Unidade (Ex: Matriz, Loja Centro)</label>
+                                <input 
+                                    required
+                                    type="text" 
+                                    value={newLocation.name}
+                                    onChange={(e) => setNewLocation({...newLocation, name: e.target.value})}
+                                    className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 outline-none" 
+                                    placeholder="Ex: Unidade Paulista"
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-1">
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">CEP</label>
+                                    <input 
+                                        required
+                                        type="text" 
+                                        value={newLocation.cep}
+                                        onChange={(e) => setNewLocation({...newLocation, cep: e.target.value})}
+                                        className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 outline-none" 
+                                        placeholder="00000-000"
+                                    />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Número</label>
+                                    <input 
+                                        type="text" 
+                                        value={newLocation.number}
+                                        onChange={(e) => setNewLocation({...newLocation, number: e.target.value})}
+                                        className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 outline-none" 
+                                        placeholder="123"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-1">
+                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Logradouro (Rua/Av)</label>
+                                <input 
+                                    required
+                                    type="text" 
+                                    value={newLocation.address}
+                                    onChange={(e) => setNewLocation({...newLocation, address: e.target.value})}
+                                    className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 outline-none" 
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-1">
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Bairro</label>
+                                    <input 
+                                        type="text" 
+                                        value={newLocation.neighborhood}
+                                        onChange={(e) => setNewLocation({...newLocation, neighborhood: e.target.value})}
+                                        className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 outline-none" 
+                                    />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Cidade</label>
+                                    <input 
+                                        type="text" 
+                                        value={newLocation.city}
+                                        onChange={(e) => setNewLocation({...newLocation, city: e.target.value})}
+                                        className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 outline-none" 
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="p-4 bg-gray-900 dark:bg-black rounded-xl flex items-center justify-between mt-6">
+                                <button 
+                                    type="button"
+                                    onClick={() => setIsLocationModalOpen(false)}
+                                    className="text-white hover:text-gray-300 px-4 py-2 text-sm font-bold"
+                                >
+                                    Cancelar
+                                </button>
+                                <button 
+                                    type="submit"
+                                    disabled={isCreatingLocation}
+                                    className="bg-primary hover:bg-cyan-400 text-black px-6 py-2 rounded-lg text-sm font-bold flex items-center gap-2 translate-all disabled:opacity-50"
+                                >
+                                    {isCreatingLocation ? (
+                                        <>
+                                            <Loader2 className="w-4 h-4 animate-spin" />
+                                            Salvando...
+                                        </>
+                                    ) : (
+                                        'Criar Unidade'
+                                    )}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
 
             {/* Toast Premium Notification */}
             {showToast && (
