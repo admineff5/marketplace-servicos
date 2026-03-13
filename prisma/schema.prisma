@@ -45,6 +45,7 @@ model Company {
   cnpj      String?    @unique
   legalName String?
   imageUrl  String?
+  appointments Appointment[]
 }
 
 model Location {
