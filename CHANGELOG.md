@@ -1,3 +1,14 @@
+## [0.9.13] - 2026-03-14
+**Fase:** Beta  
+**Tipo de release:** Patch  
+**Resumo:** Correção crítica no fluxo de agendamento e atualização de versão no rodapé.
+
+### Fixed
+- **Appointment API**: Corrigido erro de "Dados incompletos" garantindo que IDs reais de funcionários e localizações sejam enviados.
+- **Footer UI**: Versão atualizada para v0.9.13 para refletir o estado real do site em produção.
+
+---
+
 ## [0.9.12] - 2026-03-14
 **Fase:** Beta  
 **Tipo de release:** Patch  
