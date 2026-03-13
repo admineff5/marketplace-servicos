@@ -1,3 +1,19 @@
+## [0.9.12] - 2026-03-14
+**Fase:** Beta  
+**Tipo de release:** Patch  
+**Resumo:** Fluxo de Agendamento Real — Implementação da lógica de persistência de agendamentos no banco de dados e feedback visual de sucesso.
+
+### Added
+- **Functional Booking Flow:** O botão "Confirmar Agendamento" agora envia os dados para a API e salva o registro no banco de dados.
+- **Success Feedback:** Adicionado um overlay de sucesso com animação e confirmação após o agendamento.
+- **REST API:** Novo endpoint `POST /api/user/appointments` para criação de agendamentos.
+
+### Changed
+- **Home Page:** Atualizada lógica do modal de agendamento para lidar com IDs reais de serviços e profissionais.
+- **RBAC & Auth:** Implementado redirecionamento inteligente para login caso o usuário tente agendar sem estar autenticado.
+
+---
+
 ## [0.9.11] - 2026-03-14
 **Fase:** Beta  
 **Tipo de release:** Patch  

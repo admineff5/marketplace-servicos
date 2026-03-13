@@ -10,11 +10,11 @@ export async function GET() {
                 niche: true,
                 imageUrl: true,
                 locations: {
-                    select: { address: true },
+                    select: { id: true, address: true },
                     take: 1,
                 },
                 services: {
-                    select: { name: true, price: true, duration: true },
+                    select: { id: true, name: true, price: true, duration: true },
                 },
                 employees: {
                     select: { id: true, name: true },
@@ -30,10 +30,12 @@ export async function GET() {
             rating: "5.0",
             reviews: Math.floor(Math.random() * 100),
             address: company.locations[0]?.address || "Endereço não informado",
+            locationId: company.locations[0]?.id,
             image: company.imageUrl || "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&q=80&w=800",
             logo: company.imageUrl || "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?auto=format&fit=crop&q=80&w=150",
             description: "Especialista em " + (company.niche || "serviços de qualidade"),
             services: company.services.map(s => ({
+                id: s.id,
                 name: s.name,
                 price: "R$ " + s.price,
                 duration: s.duration || "30 min"

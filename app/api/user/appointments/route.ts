@@ -60,6 +60,45 @@ export async function GET() {
     }
 }
 
+export async function POST(request: Request) {
+    try {
+        const cookieStore = await cookies();
+        const session = cookieStore.get("auth_session");
+        
+        if (!session) {
+            return NextResponse.json({ error: "Sessão expirada" }, { status: 401 });
+        }
+
+        const { id: userId } = JSON.parse(session.value);
+        const body = await request.json();
+        const { employeeId, serviceId, locationId, date, note } = body;
+
+        // Validar dados básicos
+        if (!employeeId || !serviceId || !locationId || !date) {
+            return NextResponse.json({ error: "Dados incompletos" }, { status: 400 });
+        }
+
+        const appointment = await prisma.appointment.create({
+            data: {
+                userId,
+                employeeId,
+                serviceId,
+                locationId,
+                date: new Date(date),
+                status: "PENDING"
+            }
+        });
+
+        // Se houver nota, poderíamos salvar em uma tabela de comentários ou campo extra no futuro
+        // Por enquanto, apenas confirmamos o agendamento
+        
+        return NextResponse.json({ success: true, id: appointment.id });
+    } catch (error) {
+        console.error("POST User Appointment Error:", error);
+        return NextResponse.json({ error: "Erro interno ao agendar" }, { status: 500 });
+    }
+}
+
 function formatApt(apt: any) {
     return {
         id: apt.id,

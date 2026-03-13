@@ -86,13 +86,16 @@ export default function Home() {
   }, []);
 
   // Scheduling State within Modal
-  const [selectedService, setSelectedService] = useState<string | null>(null);
+  const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
+  const [selectedServiceName, setSelectedServiceName] = useState<string | null>(null);
   const [selectedProfessional, setSelectedProfessional] = useState<
     string | null
   >(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [clientNote, setClientNote] = useState<string>("");
+  const [isBooking, setIsBooking] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   // App State
   const [activeCategory, setActiveCategory] = useState("Todos");
@@ -133,13 +136,59 @@ export default function Home() {
 
   const handleOpenCompany = (company: any) => {
     setSelectedCompany(company);
-    setSelectedService(null);
+    setSelectedServiceId(null);
+    setSelectedServiceName(null);
     setSelectedProfessional(
       company.staff && company.staff.length > 0 ? company.staff[0].id : null,
     );
     setSelectedDate(null);
     setSelectedTime(null);
     setClientNote("");
+  };
+
+  const handleConfirmBooking = async () => {
+    if (!selectedTime || !selectedDate || !selectedServiceId || !selectedProfessional) return;
+
+    try {
+      setIsBooking(true);
+      // Combinar data e hora: YYYY-MM-DD + HH:mm
+      const dateTime = `${selectedDate}T${selectedTime}:00`;
+      
+      const res = await fetch("/api/user/appointments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          employeeId: selectedProfessional,
+          serviceId: selectedServiceId,
+          locationId: selectedCompany.locationId,
+          date: new Date(dateTime).toISOString(),
+          note: clientNote
+        })
+      });
+
+      if (res.status === 401) {
+        // Redirecionar para login se não estiver logado
+        window.location.href = `/login?redirect=booking&service=${selectedServiceId}`;
+        return;
+      }
+
+      const data = await res.json();
+      if (data.success) {
+        setShowSuccess(true);
+        setTimeout(() => {
+          setShowSuccess(false);
+          closeModal();
+          // Opcional: Redirecionar para o perfil após alguns segundos
+        }, 3000);
+      } else {
+        alert(data.error || "Erro ao agendar");
+      }
+    } catch (err) {
+      console.error("Erro no agendamento:", err);
+      alert("Falha na conexão com o servidor.");
+    } finally {
+      setIsBooking(false);
+    }
   };
 
   const closeModal = () => setSelectedCompany(null);
@@ -673,7 +722,7 @@ export default function Home() {
                       ? "80%"
                       : selectedProfessional
                         ? "50%"
-                        : selectedService
+                        : selectedServiceId
                           ? "20%"
                           : "0%",
                 }}
@@ -745,11 +794,14 @@ export default function Home() {
                 </h3>
                 <div className="space-y-3 mb-8">
                   {selectedCompany.services.map((service: any, idx: number) => {
-                    const isSelected = selectedService === service.name;
+                    const isSelected = selectedServiceId === service.id;
                     return (
                       <div
                         key={idx}
-                        onClick={() => setSelectedService(service.name)}
+                        onClick={() => {
+                          setSelectedServiceId(service.id);
+                          setSelectedServiceName(service.name);
+                        }}
                         className={`group flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${isSelected ? "border-primary bg-primary/5" : "border-[#2a2a2c] bg-[#151516] hover:border-[#3a3a3c]"} `}
                       >
                         <div className="flex items-center gap-4">
@@ -783,7 +835,7 @@ export default function Home() {
 
                 {/* 2. Professional Selection-Only show if Service is selected */}
                 <div
-                  className={`transition-all duration-500 ease -in -out ${selectedService ? "opacity-100 max-h-[500px]" : "opacity-50 max-h-40 overflow-hidden pointer-events-none"} `}
+                  className={`transition-all duration-500 ease -in -out ${selectedServiceId ? "opacity-100 max-h-[500px]" : "opacity-50 max-h-40 overflow-hidden pointer-events-none"} `}
                 >
                   <h3 className="text-lg font-bold text-white mb-3">
                     2. Profissional
@@ -915,20 +967,49 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Checkout Button */}
+                 {/* Checkout Button */}
                 <div
                   className={`sticky bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#0a0a0b] via-[#0a0a0b] to-transparent transition-all duration-500 ${selectedTime ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"} `}
                 >
-                  <Link href="/register" className="w-full block">
-                    <button className="w-full bg-primary text-black font-bold py-4 rounded-xl shadow-[0_0_20px_rgba(0,255,255,0.3)] hover:bg-cyan-400 transition-colors text-lg flex items-center justify-center gap-2">
-                      Confirmar Agendamento{" "}
-                      <span className="opacity-70 text-sm font-normal">
-                        ({selectedTime})
-                      </span>
-                    </button>
-                  </Link>
+                  <button 
+                    onClick={handleConfirmBooking}
+                    disabled={isBooking}
+                    className="w-full bg-primary text-black font-bold py-4 rounded-xl shadow-[0_0_20px_rgba(0,255,255,0.3)] hover:bg-cyan-400 transition-colors text-lg flex items-center justify-center gap-2"
+                  >
+                    {isBooking ? (
+                      "Processando..."
+                    ) : (
+                      <>
+                        Confirmar Agendamento{" "}
+                        <span className="opacity-70 text-sm font-normal">
+                          ({selectedTime})
+                        </span>
+                      </>
+                    )}
+                  </button>
                 </div>
               </div>
+
+              {/* Success Overlay */}
+              {showSuccess && (
+                <div className="absolute inset-0 z-[60] flex flex-col items-center justify-center bg-black/90 backdrop-blur-md animate-in fade-in zoom-in duration-300">
+                  <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mb-6 border border-primary/50">
+                    <CheckCircle2 className="w-10 h-10 text-primary animate-bounce" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-2">Agendado com Sucesso!</h3>
+                  <p className="text-gray-400 text-center px-8">Seu horário para {selectedServiceName} foi reservado. Você pode acompanhá-lo no seu perfil.</p>
+                  <button 
+                    onClick={() => {
+                      setShowSuccess(false);
+                      closeModal();
+                      window.location.href = "/cliente";
+                    }}
+                    className="mt-8 text-primary font-bold hover:underline"
+                  >
+                    Ver meu perfil
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
