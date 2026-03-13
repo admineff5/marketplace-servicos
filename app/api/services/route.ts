@@ -52,6 +52,7 @@ export async function POST(request: Request) {
         const service = await prisma.service.create({
             data: {
                 name,
+                description,
                 price: parseFloat(price),
                 duration: parseInt(duration),
                 companyId: company.id

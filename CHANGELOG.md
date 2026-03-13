@@ -1,4 +1,20 @@
-## [0.9.1] - 2026-03-14
+## [0.9.3] - 2026-03-14
+**Fase:** Beta  
+**Tipo de release:** Minor  
+**Resumo:** UI/UX Reborn — Refatoração do catálogo de serviços, redesign completo da tela de login, landing page com fotos reais e melhoria de acessibilidade cromática no Modo Light.
+
+### Added
+- **Catálogo Hierárquico:** A escolha de serviços agora é feita em dois passos (Categoria -> Serviço), reduzindo a poluição visual.
+- **Showcase Real:** Substituição de placeholders por screenshots reais do sistema (Dashboard, Agenda e Estoque).
+- **Novo Login Premium:** Layout moderno de duas colunas com área informativa à esquerda e formulário à direita.
+
+### Changed
+- **Acessibilidade Light Mode:** Os tons de azul e ciano foram escurecidos nas interfaces claras para garantir melhor leitura e nitidez.
+- **Navegação Auth:** Rodapé removido das telas de Login e Registro para foco total na conversão.
+
+---
+
+## [0.9.2] - 2026-03-14
 **Fase:** Beta  
 **Tipo de release:** Patch  
 **Resumo:** Resiliência de Backend e Correção de Dashboard — Implementada auto-inicialização (self-healing) de empresas para evitar erros 404 e restauração visual de KPIs.

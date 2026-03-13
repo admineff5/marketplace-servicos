@@ -15,6 +15,7 @@ export default function ConfigPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [activeTab, setActiveTab] = useState("profile");
+    const [showToast, setShowToast] = useState(false);
     const [locations, setLocations] = useState<any[]>([]);
     const [company, setCompany] = useState<any>({
         name: "",
@@ -89,8 +90,8 @@ export default function ConfigPage() {
                 body: JSON.stringify(company)
             });
             if (res.ok) {
-                alert("Configurações salvas com sucesso!");
-                // Opcional: window.location.reload() ou atualizar layout via context/events
+                setShowToast(true);
+                setTimeout(() => setShowToast(false), 3000);
             }
         } catch (error) {
             console.error("Erro ao salvar:", error);
@@ -298,6 +299,24 @@ export default function ConfigPage() {
                     )}
                 </div>
             </div>
+
+            {/* Toast Premium Notification */}
+            {showToast && (
+                <div className="fixed bottom-8 right-8 z-[100] animate-in fade-in slide-in-from-right-10 duration-500">
+                    <div className="bg-gray-900 dark:bg-primary text-white dark:text-gray-900 px-6 py-4 rounded-2xl shadow-2xl border border-white/10 dark:border-black/10 flex items-center gap-4">
+                        <div className="w-8 h-8 rounded-full bg-primary/20 dark:bg-black/20 flex items-center justify-center">
+                            <Settings className="w-4 h-4 text-primary dark:text-gray-900" />
+                        </div>
+                        <div>
+                            <p className="font-bold text-sm">Configurações Salvas</p>
+                            <p className="text-xs opacity-80">As alterações foram aplicadas com sucesso.</p>
+                        </div>
+                        <button onClick={() => setShowToast(false)} className="ml-4 hover:opacity-50">
+                            <X className="w-4 h-4" />
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

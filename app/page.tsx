@@ -247,7 +247,7 @@ export default function Home() {
               priority
             />
             <h1 className="mx-auto max-w-3xl text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-              O que você quer <span className="text-cyan-700 dark:text-primary">agendar</span>{" "}
+              O que você quer <span className="text-primary">agendar</span>{" "}
               hoje?
             </h1>
 
@@ -258,7 +258,7 @@ export default function Home() {
               {/* Search Input Large */}
               <div className="relative w-full max-w-4xl mx-auto mb-8">
                 <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
-                  <Sparkles className="h-6 w-6 text-cyan-700 dark:text-primary animate-pulse" />
+                  <Sparkles className="h-6 w-6 text-primary animate-pulse" />
                 </div>
                 <input
                   type="text"
@@ -280,12 +280,12 @@ export default function Home() {
                     key={cat.name}
                     onClick={() => setActiveCategory(cat.name)}
                     className={`flex-shrink-0 flex items-center gap-2.5 px-6 py-3 rounded-full border transition-all ${activeCategory === cat.name
-                        ? "bg-primary/20 border-primary text-cyan-700 dark:text-primary shadow-[0_0_10px_rgba(0,255,255,0.2)]"
+                        ? "bg-primary/20 border-primary text-blue-700 dark:text-primary shadow-[0_0_10px_rgba(0,255,255,0.2)]"
                         : "bg-transparent border-white/10 text-gray-300 hover:border-white/30 hover:bg-white/5 hover:text-white"
                       } `}
                   >
                     <cat.icon
-                      className={`w-5 h-5 ${activeCategory === cat.name ? "opacity-100" : "opacity-70 text-cyan-700 dark:text-primary"} `}
+                      className={`w-5 h-5 ${activeCategory === cat.name ? "opacity-100" : "opacity-70 text-primary"} `}
                     />
                     <span className="text-sm font-semibold tracking-wide">
                       {cat.name}
@@ -309,7 +309,7 @@ export default function Home() {
               {/* Magic AI Search Bar-Compact */}
               <div className="relative w-full lg:w-1/3 min-w-[320px]">
                 <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-                  <Sparkles className="h-4 w-4 text-cyan-700 dark:text-primary animate-pulse" />
+                  <Sparkles className="h-4 w-4 text-primary animate-pulse" />
                 </div>
                 <input
                   type="text"
@@ -327,12 +327,12 @@ export default function Home() {
                     key={cat.name}
                     onClick={() => setActiveCategory(cat.name)}
                     className={`flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full border transition-all ${activeCategory === cat.name
-                        ? "bg-primary/20 border-primary text-cyan-700 dark:text-primary"
+                        ? "bg-primary/20 border-primary text-blue-700 dark:text-primary"
                         : "bg-transparent border-white/10 text-gray-300 hover:bg-white/5 hover:text-white"
                       } `}
                   >
                     <cat.icon
-                      className={`w-3.5 h-3.5 ${activeCategory === cat.name ? "opacity-100" : "opacity-70 text-cyan-700 dark:text-primary"} `}
+                      className={`w-3.5 h-3.5 ${activeCategory === cat.name ? "opacity-100" : "opacity-70 text-primary"} `}
                     />
                     <span className="text-xs font-semibold tracking-wide">
                       {cat.name}
@@ -358,14 +358,14 @@ export default function Home() {
               <div className="flex items-center gap-1 bg-gray-200 dark:bg-gray-800 p-1 rounded-lg">
                 <button
                   onClick={() => setLayoutMode("grid")}
-                  className={`p-2 rounded-md transition-colors ${layoutMode === "grid" ? "bg-white dark:bg-black shadow-sm text-cyan-700 dark:text-primary" : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"} `}
+                  className={`p-2 rounded-md transition-colors ${layoutMode === "grid" ? "bg-white dark:bg-black shadow-sm text-blue-700 dark:text-primary" : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"} `}
                   title="Visualização em Grade"
                 >
                   <LayoutGrid className="w-5 h-5" />
                 </button>
                 <button
                   onClick={() => setLayoutMode("list")}
-                  className={`p-2 rounded-md transition-colors ${layoutMode === "list" ? "bg-white dark:bg-black shadow-sm text-cyan-700 dark:text-primary" : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"} `}
+                  className={`p-2 rounded-md transition-colors ${layoutMode === "list" ? "bg-white dark:bg-black shadow-sm text-blue-700 dark:text-primary" : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"} `}
                   title="Visualização em Lista"
                 >
                   <List className="w-5 h-5" />
@@ -432,7 +432,7 @@ export default function Home() {
                     className={`flex flex-col flex-1 p-6 ${layoutMode === "grid" ? "pt-10" : ""} `}
                   >
                     <div className="flex items-center gap-2 mb-1">
-                      <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-cyan-700 dark:hover:text-primary transition-colors line-clamp-1">
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-700 dark:hover:text-primary transition-colors line-clamp-1">
                         {company.name}
                       </h3>
                     </div>
@@ -559,7 +559,7 @@ export default function Home() {
                 </div>
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-tight mb-6">
                   Você é empresário?{" "}
-                  <span className="text-cyan-700 dark:text-primary">Chegou no local certo.</span>
+                  <span className="text-blue-700 dark:text-primary">Chegou no local certo.</span>
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400 text-base sm:text-lg leading-relaxed mb-8">
                   Precisa de um sistema com <strong className="text-gray-900 dark:text-white">Dashboard completo</strong>, controle de funcionários, de estoque, de finanças? Faça seu cadastro gratuito e faça parte da nossa comunidade de prestadores de serviço.
@@ -644,7 +644,7 @@ export default function Home() {
               <p className="text-gray-500 dark:text-gray-400 text-lg">
                 Se você é <strong className="text-gray-900 dark:text-white">empresário</strong> ou alguém que esteja{" "}
                 <strong className="text-gray-900 dark:text-white">procurando um serviço</strong>,{" "}
-                <span className="text-cyan-700 dark:text-primary font-bold">chegou no local certo.</span>
+                <span className="text-blue-700 dark:text-primary font-bold">chegou no local certo.</span>
               </p>
             </div>
           </div>

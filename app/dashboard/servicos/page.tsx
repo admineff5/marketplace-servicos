@@ -38,6 +38,7 @@ export default function GestaoServicosPage() {
     const [searchTerm, setSearchTerm] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showSuggestions, setShowSuggestions] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [editingService, setEditingService] = useState<any>(null);
 
     useEffect(() => {
@@ -141,6 +142,7 @@ export default function GestaoServicosPage() {
         setFormPromoPrice("");
         setFormDuration("");
         setShowSuggestions(false);
+        setSelectedCategory(null);
         setEditingService(null);
     };
 
@@ -297,7 +299,9 @@ export default function GestaoServicosPage() {
                                             placeholder="Ex: Corte Degrade, Banho Premium..."
                                             value={formName}
                                             onChange={e => setFormName(e.target.value)}
-                                            onFocus={() => setShowSuggestions(true)}
+                                            onFocus={() => {
+                                                if (formName === "") setShowSuggestions(true);
+                                            }}
                                             className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all"
                                         />
                                     </div>
@@ -311,28 +315,64 @@ export default function GestaoServicosPage() {
                                     </button>
                                 </div>
 
-                                {/* Dropdown de Sugestões absolutas */}
+                                {/* Dropdown de Sugestões Categorizado */}
                                 {showSuggestions && (
                                     <>
                                         {/* Backdrop invisivel para fechar clicando fora */}
-                                        <div className="fixed inset-0 z-40" onClick={() => setShowSuggestions(false)}></div>
-                                        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#151516] border border-gray-200 dark:border-[#2a2a2c] rounded-xl shadow-2xl z-50 max-h-60 overflow-y-auto custom-scrollbar">
-                                            <div className="p-2 sticky top-0 bg-white dark:bg-[#151516] border-b border-gray-100 dark:border-[#2a2a2c] flex items-center gap-2 text-xs text-cyan-700 dark:text-primary font-bold px-4 py-3">
-                                                <Info className="w-4 h-4" /> Escolha no catálogo base do sistema para preencher automaticamente:
-                                            </div>
-                                            {SUGGESTED_SERVICES.map((cat, idx) => (
-                                                <div
-                                                    key={idx}
-                                                    onClick={() => applySuggestion(cat)}
-                                                    className="p-3 border-b border-gray-50 dark:border-[#1a1a1c]/50 hover:bg-gray-50 dark:hover:bg-[#1a1a1c] cursor-pointer transition-colors group"
-                                                >
-                                                    <div className="flex items-center gap-2 mb-1">
-                                                        <span className="text-[10px] uppercase font-bold text-gray-400 bg-gray-100 dark:bg-[#222] px-1.5 py-0.5 rounded">{cat.category}</span>
-                                                        <span className="font-semibold text-sm text-gray-900 dark:text-white group-hover:text-cyan-700 dark:hover:text-primary transition-colors">{cat.name}</span>
-                                                    </div>
-                                                    <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">{cat.description}</p>
+                                        <div className="fixed inset-0 z-40" onClick={() => {
+                                            setShowSuggestions(false);
+                                            setSelectedCategory(null);
+                                        }}></div>
+                                        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#151516] border border-gray-200 dark:border-[#2a2a2c] rounded-xl shadow-2xl z-50 overflow-hidden flex flex-col">
+                                            
+                                            <div className="p-3 bg-white dark:bg-[#151516] border-b border-gray-100 dark:border-[#2a2a2c] flex items-center justify-between text-xs text-cyan-700 dark:text-primary font-bold px-4">
+                                                <div className="flex items-center gap-2">
+                                                    <LayoutList className="w-4 h-4" /> 
+                                                    {selectedCategory ? (
+                                                        <button 
+                                                            onClick={() => setSelectedCategory(null)}
+                                                            className="hover:underline flex items-center gap-1"
+                                                        >
+                                                            Categorias <ChevronDown className="w-3 h-3 rotate-90" /> {selectedCategory}
+                                                        </button>
+                                                    ) : "Catálogo de Serviços"}
                                                 </div>
-                                            ))}
+                                                {selectedCategory && (
+                                                    <button onClick={() => setSelectedCategory(null)} className="text-gray-400 hover:text-white transition-colors">Voltar</button>
+                                                )}
+                                            </div>
+
+                                            <div className="max-h-64 overflow-y-auto custom-scrollbar">
+                                                {!selectedCategory ? (
+                                                    /* LISTA DE CATEGORIAS */
+                                                    <div className="p-2 grid grid-cols-1 gap-1">
+                                                        {Array.from(new Set(SUGGESTED_SERVICES.map(s => s.category))).map((cat) => (
+                                                            <button
+                                                                key={cat}
+                                                                onClick={() => setSelectedCategory(cat)}
+                                                                className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-[#1a1a1c] transition-colors text-left group"
+                                                            >
+                                                                <span className="text-sm font-semibold text-gray-700 dark:text-gray-200 group-hover:text-primary">{cat}</span>
+                                                                <ChevronDown className="w-4 h-4 text-gray-400 -rotate-90" />
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                ) : (
+                                                    /* LISTA DE SERVIÇOS DA CATEGORIA */
+                                                    <div className="p-2">
+                                                        {SUGGESTED_SERVICES.filter(s => s.category === selectedCategory).map((srv, idx) => (
+                                                            <div
+                                                                key={idx}
+                                                                onClick={() => applySuggestion(srv)}
+                                                                className="p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-[#1a1a1c] cursor-pointer transition-colors group"
+                                                            >
+                                                                <div className="font-semibold text-sm text-gray-900 dark:text-white group-hover:text-cyan-700 dark:hover:text-primary transition-colors">{srv.name}</div>
+                                                                <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">{srv.description}</p>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
                                     </>
                                 )}
