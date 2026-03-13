@@ -1,3 +1,15 @@
+## [0.9.15] - 2026-03-14
+**Fase:** Beta  
+**Tipo de release:** Fix  
+**Resumo:** Limpeza de dados viciados (mocks) e melhoria no diagnóstico de erros.
+
+### Fixed
+- **Home UI**: Removido o mock "Profissional 1" que mascarava a ausência de funcionários reais no banco de dados.
+- **Appointments API**: Mensagens de erro mais específicas (ex: "Escolha um profissional") em vez de um genérico "Dados incompletos".
+- **Companies API**: Fallback para `locationId` e melhoria na integridade da resposta para evitar campos `undefined`.
+
+---
+
 ## [0.9.14] - 2026-03-14
 **Fase:** Beta  
 **Tipo de release:** Fix  

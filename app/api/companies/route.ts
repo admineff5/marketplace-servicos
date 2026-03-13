@@ -30,7 +30,7 @@ export async function GET() {
             rating: "5.0",
             reviews: Math.floor(Math.random() * 100),
             address: company.locations[0]?.address || "Endereço não informado",
-            locationId: company.locations[0]?.id,
+            locationId: company.locations[0]?.id || "main-location",
             image: company.imageUrl || "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&q=80&w=800",
             logo: company.imageUrl || "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?auto=format&fit=crop&q=80&w=150",
             description: "Especialista em " + (company.niche || "serviços de qualidade"),
@@ -41,11 +41,13 @@ export async function GET() {
                 price: "R$ " + s.price,
                 duration: s.duration || "30 min"
             })),
-            staff: company.employees.map(e => ({
-                id: e.id,
-                name: e.name,
-                image: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&auto=format&fit=crop&q=60"
-            }))
+            staff: company.employees.length > 0 
+                ? company.employees.map(e => ({
+                    id: e.id,
+                    name: e.name,
+                    image: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&auto=format&fit=crop&q=60"
+                }))
+                : []
         }));
 
         return NextResponse.json(transformedCompanies);

@@ -58,21 +58,12 @@ export default function Home() {
           // Adiciona disponibilidade dinâmica se não houver no banco
           const enhancedData = data.map(company => ({
             ...company,
-            staff: company.staff?.length > 0 
-              ? company.staff.map((s: any, i: number) => ({
-                  ...s,
-                  availability: i % 2 === 0
-                    ? ["08:00", "09:30", "13:00", "14:30", "16:00"]
-                    : ["10:00", "11:00", "15:00", "17:30", "18:15"],
-                }))
-              : [
-                  {
-                    id: "f1",
-                    name: "Profissional 1",
-                    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=60",
-                    availability: ["08:00", "10:00", "14:00"],
-                  }
-                ]
+            staff: company.staff?.map((s: any, i: number) => ({
+              ...s,
+              availability: i % 2 === 0
+                ? ["08:00", "09:30", "13:00", "14:30", "16:00"]
+                : ["10:00", "11:00", "15:00", "17:30", "18:15"],
+            })) || []
           }));
           setCompanies(enhancedData);
         }

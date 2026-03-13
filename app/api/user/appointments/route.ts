@@ -74,9 +74,10 @@ export async function POST(request: Request) {
         const { employeeId, serviceId, locationId, companyId, date, note } = body;
 
         // Validar dados básicos
-        if (!employeeId || !serviceId || !locationId || !date) {
-            return NextResponse.json({ error: "Dados incompletos" }, { status: 400 });
-        }
+        if (!employeeId) return NextResponse.json({ error: "Escolha um profissional" }, { status: 400 });
+        if (!serviceId) return NextResponse.json({ error: "Escolha um serviço" }, { status: 400 });
+        if (!locationId) return NextResponse.json({ error: "Localização não identificada" }, { status: 400 });
+        if (!date) return NextResponse.json({ error: "Escolha uma data e horário" }, { status: 400 });
 
         const appointment = await prisma.appointment.create({
             data: {
