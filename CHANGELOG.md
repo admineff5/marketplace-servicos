@@ -6,6 +6,7 @@
 ### Fixed
 - **Booking Flow**: Agora o persistência do agendamento inclui o `companyId`, resolvendo o erro 400 de "Dados incompletos".
 - **Companies API**: Adicionado `companyId` em todos os serviços mapeados para facilitar o agendamento.
+- **Global Appointments API**: Corrigido erro de build TypeScript harmonizando o `POST` genérico com o novo schema.
 - **Home UI**: Sincronização de estados de agendamento para usar IDs reais do banco de dados em vez de mocks.
 
 ---

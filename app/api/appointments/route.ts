@@ -100,7 +100,7 @@ export async function POST(request: Request) {
 
         const { id: userId } = JSON.parse(session.value);
         const body = await request.json();
-        const { employeeId, serviceId, locationId, date } = body;
+        const { employeeId, serviceId, locationId, companyId, date } = body;
 
         if (!employeeId || !serviceId || !locationId || !date) {
             return NextResponse.json({ error: "Campos obrigatórios: employeeId, serviceId, locationId, date" }, { status: 400 });
@@ -112,6 +112,7 @@ export async function POST(request: Request) {
                 serviceId,
                 userId, // ← Usar userId da SESSÃO, não do body (segurança)
                 locationId,
+                companyId,
                 date: new Date(date),
             },
         });
