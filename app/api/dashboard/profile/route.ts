@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import prisma, { getCompanyByUserId } from "@/lib/prisma";
 import { cookies } from "next/headers";
 
 export async function GET() {
@@ -13,17 +13,7 @@ export async function GET() {
 
         const { id: userId } = JSON.parse(session.value);
 
-        const company = await prisma.company.findUnique({
-            where: { ownerId: userId },
-            select: {
-                id: true,
-                name: true,
-                niche: true,
-                imageUrl: true,
-                cnpj: true,
-                legalName: true,
-            }
-        });
+        const company = await getCompanyByUserId(userId);
 
         if (!company) {
             return NextResponse.json({ error: "Empresa não encontrada" }, { status: 404 });
@@ -46,6 +36,12 @@ export async function PUT(request: Request) {
         }
 
         const { id: userId } = JSON.parse(session.value);
+        const company = await getCompanyByUserId(userId);
+
+        if (!company) {
+            return NextResponse.json({ error: "Empresa não encontrada" }, { status: 404 });
+        }
+
         const body = await request.json();
         const { name, cnpj, legalName, imageUrl } = body;
 

@@ -65,9 +65,10 @@ Utilize os acessos mockados abaixo na tela de `/login`:
 ---
 
 ## 🛠️ Regras Técnicas e Skills
-- **Skill `padroes_frontend`**: Priorizar `lucide-react`, mobile-first, não quebrar componentes core e manter o sincronismo entre `CHANGELOG.md` e a versão do Footer (`v0.5.0`).
+- **Skill `padroes_frontend`**: Priorizar `lucide-react`, mobile-first, não quebrar componentes core e manter o sincronismo entre `CHANGELOG.md` e a versão do Footer.
+- **Auto-Inicialização (Self-Healing)**: APIs de dashboard utilizam o helper `getCompanyByUserId` em `lib/prisma.ts` para garantir que um registro de Empresa exista para usuários `BUSINESS`, evitando erros 404 por falta de dados.
 - **Banco de Dados**: Scripts SQL DDL em `manutencao/banco_de_dados/` para cada nova entidade.
 - **Modo Privacidade**: Toggle de "olho" no Dashboard para mascarar valores financeiros.
 
-**VERSÃO ATUAL:** 0.9.0
+**VERSÃO ATUAL:** 0.9.1
 **REPLICAÇÃO:** Siga rigorosamente os códigos hexadecimais e a estrutura de pastas (`app/`, `prisma/`, `manutencao/`) para manter a integridade, agora com integração total ao PostgreSQL (OCI).

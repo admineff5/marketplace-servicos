@@ -88,10 +88,7 @@ export default function DashboardIndex() {
                             <h3 className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm font-semibold">{kpi.title}</h3>
                         </div>
                         <div>
-                            <p className={`text-lg sm:text-xl font-black ${kpi.title === 'Resultado' ? 'text-cyan-700 dark:text-primary' :
-                                kpi.title === 'Despesa' ? 'text-red-500' :
-                                    'text-gray-900 dark:text-white'
-                                }`}>
+                            <p className="text-lg sm:text-xl font-black text-gray-900 dark:text-white">
                                 {maskValue(kpi.value)}
                             </p>
 

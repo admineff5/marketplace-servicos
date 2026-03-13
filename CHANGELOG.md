@@ -1,3 +1,20 @@
+## [0.9.1] - 2026-03-14
+**Fase:** Beta  
+**Tipo de release:** Patch  
+**Resumo:** Resiliência de Backend e Correção de Dashboard — Implementada auto-inicialização (self-healing) de empresas para evitar erros 404 e restauração visual de KPIs.
+
+### Added
+- **Self-Healing de Empresa:** Novo helper `getCompanyByUserId` garante que usuários BUSINESS sempre tenham uma Empresa vinculada ao acessar o sistema.
+- **Auto-criação no Registro:** Cadastro de parceiros agora cria automaticamente o perfil básico da empresa.
+
+### Fixed
+- **API 404:** Resolvido bug onde usuários sem dados iniciais recebiam 404 em rotas de Serviços, Produtos e Estatísticas.
+- **Build Error:** Corrigido erro de "Invalid URL" no build de produção da Gestão de Clientes.
+- **Dashboard KPIs:** Valores dos cards restaurados para a cor branca (conforme solicitado pelo usuário).
+- **Save Buttons:** Botoes de "Salvar" em Serviços e Produtos restaurados via correção de lookup de empresa.
+
+---
+
 ## [0.9.0] - 2026-03-14
 **Fase:** Beta  
 **Tipo de release:** Minor  

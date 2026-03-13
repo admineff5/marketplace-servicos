@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import prisma, { getCompanyByUserId } from "@/lib/prisma";
 import { cookies } from "next/headers";
 
 export async function GET(request: Request) {
@@ -15,9 +15,7 @@ export async function GET(request: Request) {
 
         // BUSINESS: buscar agendamentos da empresa do dono
         if (role === "BUSINESS") {
-            const company = await prisma.company.findUnique({
-                where: { ownerId: userId }
-            });
+            const company = await getCompanyByUserId(userId);
 
             if (!company) {
                 return NextResponse.json([]);

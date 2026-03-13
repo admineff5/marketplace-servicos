@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, Plus, Users, MessageCircle, Clock, Star, X, Check, ShieldAlert, History } from "lucide-react";
 
 // Mock Data para Simular Base de Clientes Reais
@@ -48,9 +48,9 @@ export default function GestaoClientesPage() {
         }
     };
 
-    useState(() => {
+    useEffect(() => {
         fetchData();
-    });
+    }, []);
 
     const filteredClientes = (clientes || []).filter(c =>
         c.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||

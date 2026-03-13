@@ -41,6 +41,18 @@ export async function POST(request: Request) {
             },
         });
 
+        // Se for BUSINESS, cria automaticamente o registro da Empresa
+        if (user.role === "BUSINESS") {
+            await prisma.company.create({
+                data: {
+                    ownerId: user.id,
+                    name: `Empresa de ${user.name.split(' ')[0]}`,
+                    niche: "Serviços",
+                }
+            });
+            console.log(`[SYSTEM] Empresa auto-criada para novo usuário BUSINESS: ${user.id}`);
+        }
+
         // Sessão segura — 7 dias, httpOnly, sameSite lax
         const cookieStore = await cookies();
         cookieStore.set("auth_session", JSON.stringify({ id: user.id, role: user.role }), {
