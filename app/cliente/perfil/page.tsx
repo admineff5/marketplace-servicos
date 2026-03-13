@@ -84,7 +84,21 @@ export default function PerfilCliente() {
     const handleAddCard = async () => {
         setIsSaving(true);
         try {
-            const lastDigits = newCard.cardNumber.slice(-4);
+            const cleanNumber = newCard.cardNumber.replace(/\D/g, "");
+            if (cleanNumber.length < 13 || cleanNumber.length > 16) {
+                throw new Error("O número do cartão deve ter entre 13 e 16 dígitos.");
+            }
+
+            if (!/^\d{2}\/\d{2}$/.test(newCard.expiry)) {
+                throw new Error("Formato de vencimento inválido (MM/AA).");
+            }
+
+            const [month] = newCard.expiry.split("/");
+            if (parseInt(month) > 12 || parseInt(month) < 1) {
+                throw new Error("Mês de vencimento inválido (01-12).");
+            }
+
+            const lastDigits = cleanNumber.slice(-4);
             const res = await fetch("/api/user/payment-methods", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -337,7 +351,11 @@ export default function PerfilCliente() {
                                 <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Número do Cartão</label>
                                 <input 
                                     value={newCard.cardNumber} 
-                                    onChange={e => setNewCard({...newCard, cardNumber: e.target.value})} 
+                                    onChange={e => {
+                                        const val = e.target.value.replace(/\D/g, '').substring(0, 16);
+                                        const masked = val.replace(/(\d{4})(?=\d)/g, '$1 ');
+                                        setNewCard({...newCard, cardNumber: masked});
+                                    }} 
                                     className="w-full bg-gray-50 dark:bg-black border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-3 text-sm text-center" 
                                     placeholder="0000 0000 0000 0000" 
                                     autoComplete="cc-number"
@@ -348,7 +366,11 @@ export default function PerfilCliente() {
                                     <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Vencimento</label>
                                     <input 
                                         value={newCard.expiry} 
-                                        onChange={e => setNewCard({...newCard, expiry: e.target.value})} 
+                                        onChange={e => {
+                                            const val = e.target.value.replace(/\D/g, '').substring(0, 4);
+                                            const masked = val.replace(/(\d{2})(?=\d)/, '$1/');
+                                            setNewCard({...newCard, expiry: masked});
+                                        }} 
                                         className="w-full bg-gray-50 dark:bg-black border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-3 text-sm text-center" 
                                         placeholder="MM/AA" 
                                         autoComplete="cc-exp"

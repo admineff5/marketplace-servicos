@@ -1,3 +1,15 @@
+## [0.9.11] - 2026-03-14
+**Fase:** Beta  
+**Tipo de release:** Patch  
+**Resumo:** Card Validation & Masking — Implementação de máscaras de entrada e validação rigorosa para o cadastro de cartões de crédito.
+
+### Added
+- **Input Masks:** Adicionada formatação automática (máscara) para número do cartão (espaços a cada 4 dígitos) e vencimento (MM/AA).
+- **Input Constraints:** Bloqueio de entrada para caracteres não numéricos e limite estrito de caracteres (16 dígitos para cartão, 4 para vencimento).
+- **Logical Validation:** O sistema agora impede o salvamento de cartões com números incompletos ou datas de vencimento inválidas.
+
+---
+
 ## [0.9.10] - 2026-03-14
 **Fase:** Beta  
 **Tipo de release:** Patch  
