@@ -208,7 +208,7 @@ export default function Home() {
               className="object-contain"
             />
             <span className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-              Agende<span className="text-[#0066FF] dark:text-primary">Já</span>
+              Agende<span className="text-cyan-700 dark:text-primary">Já</span>
             </span>
           </div>
 
@@ -247,7 +247,7 @@ export default function Home() {
               priority
             />
             <h1 className="mx-auto max-w-3xl text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-              O que você quer <span className="text-[#0066FF] dark:text-primary">agendar</span>{" "}
+              O que você quer <span className="text-cyan-700 dark:text-primary">agendar</span>{" "}
               hoje?
             </h1>
 
@@ -285,7 +285,7 @@ export default function Home() {
                       } `}
                   >
                     <cat.icon
-                      className={`w-5 h-5 ${activeCategory === cat.name ? "opacity-100" : "opacity-70 text-[#0066FF] dark:text-primary"} `}
+                      className={`w-5 h-5 ${activeCategory === cat.name ? "opacity-100" : "opacity-70 text-cyan-700 dark:text-primary"} `}
                     />
                     <span className="text-sm font-semibold tracking-wide">
                       {cat.name}
@@ -332,7 +332,7 @@ export default function Home() {
                       } `}
                   >
                     <cat.icon
-                      className={`w-3.5 h-3.5 ${activeCategory === cat.name ? "opacity-100" : "opacity-70 text-[#0066FF] dark:text-primary"} `}
+                      className={`w-3.5 h-3.5 ${activeCategory === cat.name ? "opacity-100" : "opacity-70 text-cyan-700 dark:text-primary"} `}
                     />
                     <span className="text-xs font-semibold tracking-wide">
                       {cat.name}
@@ -508,9 +508,9 @@ export default function Home() {
               {/* Passo 1 */}
               <div className="group relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0d1117] p-8 text-center transition-all hover:border-primary/40 hover:shadow-[0_0_30px_rgba(0,255,255,0.06)]">
                 <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
-                  <Search className="h-7 w-7 text-[#0066FF] dark:text-primary" />
+                  <Search className="h-7 w-7 text-cyan-700 dark:text-primary" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#0066FF] dark:text-primary mb-2 block">Passo 01</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-700 dark:text-primary mb-2 block">Passo 01</span>
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Encontre</h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
                   Busque profissionais e empresas na sua região por categoria ou nome.
@@ -520,9 +520,9 @@ export default function Home() {
               {/* Passo 2 */}
               <div className="group relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0d1117] p-8 text-center transition-all hover:border-primary/40 hover:shadow-[0_0_30px_rgba(0,255,255,0.06)]">
                 <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
-                  <CalendarDays className="h-7 w-7 text-[#0066FF] dark:text-primary" />
+                  <CalendarDays className="h-7 w-7 text-cyan-700 dark:text-primary" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#0066FF] dark:text-primary mb-2 block">Passo 02</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-700 dark:text-primary mb-2 block">Passo 02</span>
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Escolha</h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
                   Compare avaliações, preços e horários disponíveis em tempo real.
@@ -532,9 +532,9 @@ export default function Home() {
               {/* Passo 3 */}
               <div className="group relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0d1117] p-8 text-center transition-all hover:border-primary/40 hover:shadow-[0_0_30px_rgba(0,255,255,0.06)]">
                 <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
-                  <CheckCircle2 className="h-7 w-7 text-[#0066FF] dark:text-primary" />
+                  <CheckCircle2 className="h-7 w-7 text-cyan-700 dark:text-primary" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#0066FF] dark:text-primary mb-2 block">Passo 03</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-700 dark:text-primary mb-2 block">Passo 03</span>
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Agende</h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
                   Confirme seu horário com um clique. Receba lembretes automáticos.
@@ -559,7 +559,7 @@ export default function Home() {
                 </div>
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-tight mb-6">
                   Você é empresário?{" "}
-                  <span className="text-[#0066FF] dark:text-primary">Chegou no local certo.</span>
+                  <span className="text-cyan-700 dark:text-primary">Chegou no local certo.</span>
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400 text-base sm:text-lg leading-relaxed mb-8">
                   Precisa de um sistema com <strong className="text-gray-900 dark:text-white">Dashboard completo</strong>, controle de funcionários, de estoque, de finanças? Faça seu cadastro gratuito e faça parte da nossa comunidade de prestadores de serviço.
@@ -644,7 +644,7 @@ export default function Home() {
               <p className="text-gray-500 dark:text-gray-400 text-lg">
                 Se você é <strong className="text-gray-900 dark:text-white">empresário</strong> ou alguém que esteja{" "}
                 <strong className="text-gray-900 dark:text-white">procurando um serviço</strong>,{" "}
-                <span className="text-[#0066FF] dark:text-primary font-bold">chegou no local certo.</span>
+                <span className="text-cyan-700 dark:text-primary font-bold">chegou no local certo.</span>
               </p>
             </div>
           </div>

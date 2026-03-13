@@ -18,7 +18,7 @@ export function Footer() {
                                 className="rounded-full"
                             />
                             <span className="text-lg font-bold text-gray-900 dark:text-white tracking-tight">
-                                Agende<span className="text-[#0066FF] dark:text-primary">Já</span>
+                                Agende<span className="text-cyan-700 dark:text-primary">Já</span>
                             </span>
                         </div>
                         <p className="text-sm text-gray-400 leading-relaxed max-w-[240px]">

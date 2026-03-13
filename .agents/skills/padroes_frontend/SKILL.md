@@ -52,8 +52,11 @@ _Se o usuário pedir algo que conflite diretamente com as cores dessa folha ou a
 - Valide o código (`npm run build`) para revisar possíveis quebras em cascata de design (ex: um margin que quebrou a responsividade de um header).
 
 ## 2. Paleta de Cores & Temas (Light e Dark Mode)
-- **Modo Padrão:** O site deve iniciar em **Light Mode** para todos os usuários (`defaultTheme="light"` no ThemeProvider).
-- As cores base são gerenciadas via Tailwind: Modos escuros prefixados por `dark:` (ex: `dark:bg-[#111]`). E modo claro sem prefixo. Conserve **sempre** os dois esquemas suportados.
+- As cores base são gerenciadas via Tailwind: Modos escuros prefixados por `dark:` (ex: `dark:bg-[#111]`). E modo claro sem prefixo.
+- **Regra de Cores de Destaque:**
+    - **Modo Dark:** Utilizar o ciano neon (`text-primary` / `bg-primary`).
+    - **Modo Light:** Utilizar o azul "Petróleo" (`text-cyan-700` / `bg-cyan-700` / `#0e7490`) em substituição ao ciano neon para garantir legibilidade e sofisticação.
+- Conserve **sempre** os dois esquemas suportados.
 
 ## 3. A Regra do Contraste (Botão Azul = Texto Preto Negrito)
 Sempre que você usar a cor primária (`bg-primary`), é **estritamente PROIBIDO** o uso de fontes brancas, cinzas ou de baixos pesos, pois destrói a acessibilidade.

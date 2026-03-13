@@ -1,3 +1,16 @@
+## [0.9.5] - 2026-03-14
+**Fase:** Beta  
+**Tipo de release:** Patch  
+**Resumo:** Petrol Branding & Skill Integration — Refinamento da cor de destaque para Modo Light (Cyan-700) e integração da regra na Skill de Padrões.
+
+### Added
+- **Skill de Design:** Atualização do manual `padroes_frontend` com a regra de cores: Ciano (Dark) vs Petróleo (Light).
+
+### Changed
+- **Branding Refined:** Substituição do azul vibrante pelo tom "Petróleo" (Cyan-700 / #0e7490) em toda a Landing Page para harmonia com o Dashboard.
+
+---
+
 ## [0.9.4] - 2026-03-14
 **Fase:** Beta  
 **Tipo de release:** Patch  
