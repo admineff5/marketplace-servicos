@@ -1,3 +1,15 @@
+## [0.9.9] - 2026-03-14
+**Fase:** Beta  
+**Tipo de release:** Patch  
+**Resumo:** PF Profile Refinement & Security — Ajustes de contraste (Cyan-700) na tela de perfil do cliente e validação de segurança de dados de pagamento.
+
+### Changed
+- **UI Refinement (PF):** Aplicado o tom **Petróleo (Cyan-700)** nos ícones, botões e badges da tela de perfil em modo Light, resolvendo problemas de legibilidade.
+- **Security:** Validada e documentada a proteção de dados de pagamento (masking de cartão).
+- **Branding:** Sincronização da paleta cromática entre dashboard e área do cliente.
+
+---
+
 ## [0.9.8] - 2026-03-14
 **Fase:** Beta  
 **Tipo de release:** Patch  

@@ -142,11 +142,11 @@ export default function PerfilCliente() {
                 <div className="lg:col-span-1 space-y-6">
                     <div className="bg-white dark:bg-[#111] border border-gray-100 dark:border-gray-800 rounded-3xl p-6 shadow-sm">
                         <div className="flex flex-col items-center text-center mb-6">
-                            <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4 border border-primary/20">
-                                <User className="w-10 h-10 text-primary" />
+                            <div className="w-20 h-20 bg-cyan-100 dark:bg-primary/10 rounded-full flex items-center justify-center mb-4 border border-cyan-200 dark:border-primary/20">
+                                <User className="w-10 h-10 text-cyan-700 dark:text-primary" />
                             </div>
                             <h2 className="font-bold text-lg dark:text-white">{user?.name}</h2>
-                            <span className="text-xs text-primary font-bold uppercase tracking-widest">{user?.role}</span>
+                            <span className="text-xs text-cyan-700 dark:text-primary font-bold uppercase tracking-widest">{user?.role}</span>
                         </div>
 
                         <div className="space-y-4">
@@ -172,12 +172,12 @@ export default function PerfilCliente() {
                     <section className="bg-white dark:bg-[#111] border border-gray-100 dark:border-gray-800 rounded-3xl p-6 shadow-sm">
                         <div className="flex items-center justify-between mb-6">
                             <h3 className="text-lg font-bold dark:text-white flex items-center gap-2">
-                                <MapPin className="w-5 h-5 text-primary" />
+                                <MapPin className="w-5 h-5 text-cyan-700 dark:text-primary" />
                                 Meus Endereços
                             </h3>
                             <button 
                                 onClick={() => setShowAddressModal(true)}
-                                className="text-xs font-bold text-primary hover:underline flex items-center gap-1"
+                                className="text-xs font-bold text-cyan-700 dark:text-primary hover:underline flex items-center gap-1"
                             >
                                 <Plus className="w-3 h-3" /> ADICIONAR
                             </button>
@@ -187,13 +187,13 @@ export default function PerfilCliente() {
                             {addresses.length > 0 ? addresses.map((addr) => (
                                 <div key={addr.id} className="group p-4 bg-gray-50 dark:bg-[#050505] border border-gray-100 dark:border-gray-800 rounded-2xl flex items-start justify-between hover:border-primary/50 transition-all">
                                     <div className="flex gap-4">
-                                        <div className={`mt-1 h-8 w-8 rounded-full flex items-center justify-center ${addr.isDefault ? 'bg-primary text-black' : 'bg-gray-200 dark:bg-gray-800 text-gray-400'}`}>
+                                        <div className={`mt-1 h-8 w-8 rounded-full flex items-center justify-center ${addr.isDefault ? 'bg-cyan-700 dark:bg-primary text-white dark:text-black' : 'bg-gray-200 dark:bg-gray-800 text-gray-400'}`}>
                                             <Home className="w-4 h-4" />
                                         </div>
                                         <div>
                                             <div className="flex items-center gap-2 mb-1">
                                                 <p className="font-bold text-sm dark:text-white">{addr.street}, {addr.number}</p>
-                                                {addr.isDefault && <span className="text-[10px] bg-primary/20 text-primary px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter">Padrão</span>}
+                                                {addr.isDefault && <span className="text-[10px] bg-cyan-100 dark:bg-primary/20 text-cyan-700 dark:text-primary px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter">Padrão</span>}
                                             </div>
                                             <p className="text-xs text-gray-500">{addr.neighborhood}, {addr.city} - {addr.state}</p>
                                             <p className="text-[10px] text-gray-400 mt-1 uppercase">CEP: {addr.cep}</p>
@@ -219,12 +219,12 @@ export default function PerfilCliente() {
                     <section className="bg-white dark:bg-[#111] border border-gray-100 dark:border-gray-800 rounded-3xl p-6 shadow-sm">
                         <div className="flex items-center justify-between mb-6">
                             <h3 className="text-lg font-bold dark:text-white flex items-center gap-2">
-                                <CreditCard className="w-5 h-5 text-primary" />
+                                <CreditCard className="w-5 h-5 text-cyan-700 dark:text-primary" />
                                 Formas de Pagamento
                             </h3>
                             <button 
                                 onClick={() => setShowCardModal(true)}
-                                className="text-xs font-bold text-primary hover:underline flex items-center gap-1"
+                                className="text-xs font-bold text-cyan-700 dark:text-primary hover:underline flex items-center gap-1"
                             >
                                 <Plus className="w-3 h-3" /> ADICIONAR
                             </button>
@@ -250,7 +250,7 @@ export default function PerfilCliente() {
                                             <p className="text-[10px] text-gray-400 uppercase tracking-tighter">Vencimento</p>
                                             <p className="text-xs dark:text-gray-300">{card.expiry}</p>
                                         </div>
-                                        {card.isFavorite && <Star className="w-4 h-4 text-primary fill-primary" />}
+                                        {card.isFavorite && <Star className="w-4 h-4 text-cyan-700 dark:text-primary fill-cyan-700 dark:fill-primary" />}
                                     </div>
                                 </div>
                             )) : (
