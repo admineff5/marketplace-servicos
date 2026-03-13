@@ -1,6 +1,6 @@
 {
   "name": "marketplace",
-  "version": "0.9.17",
+  "version": "0.9.18.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -27,7 +27,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.1.6",
+    "eslint-config-next": "15.1.7",
     "prisma": "6.2.1",
     "tailwindcss": "^4",
     "typescript": "^5"
