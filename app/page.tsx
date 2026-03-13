@@ -17,6 +17,16 @@ import {
   List,
   UserSquare2,
   CalendarOff,
+  Search,
+  CalendarDays,
+  CheckCircle2,
+  ArrowRight,
+  Building2,
+  BarChart3,
+  Package,
+  Users,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { ThemeToggle } from "./components/ThemeToggle";
@@ -89,6 +99,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isSticky, setIsSticky] = useState(false);
   const [layoutMode, setLayoutMode] = useState<"grid" | "list">("grid");
+  const [showcaseIndex, setShowcaseIndex] = useState(0);
 
   // References for sticky scroll logic
   const searchContainerRef = useRef<HTMLDivElement>(null);
@@ -476,6 +487,167 @@ export default function Home() {
               </button>
             </div>
           )}
+        </section>
+
+        {/* ============================================= */}
+        {/* COMO FUNCIONA — 3 passos */}
+        {/* ============================================= */}
+        <section className="relative w-full bg-[#060810] py-20 sm:py-24 overflow-hidden">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[400px] w-[600px] rounded-full bg-primary/5 blur-[120px]" />
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="text-center mb-14">
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">
+                Como Funciona
+              </h2>
+              <p className="mt-3 text-gray-500 dark:text-gray-400 text-base sm:text-lg max-w-xl mx-auto">
+                Agendar seus serviços favoritos é simples e rápido
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+              {/* Passo 1 */}
+              <div className="group relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0d1117] p-8 text-center transition-all hover:border-primary/40 hover:shadow-[0_0_30px_rgba(0,255,255,0.06)]">
+                <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
+                  <Search className="h-7 w-7 text-primary" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary mb-2 block">Passo 01</span>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Encontre</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                  Busque profissionais e empresas na sua região por categoria ou nome.
+                </p>
+              </div>
+
+              {/* Passo 2 */}
+              <div className="group relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0d1117] p-8 text-center transition-all hover:border-primary/40 hover:shadow-[0_0_30px_rgba(0,255,255,0.06)]">
+                <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
+                  <CalendarDays className="h-7 w-7 text-primary" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary mb-2 block">Passo 02</span>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Escolha</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                  Compare avaliações, preços e horários disponíveis em tempo real.
+                </p>
+              </div>
+
+              {/* Passo 3 */}
+              <div className="group relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0d1117] p-8 text-center transition-all hover:border-primary/40 hover:shadow-[0_0_30px_rgba(0,255,255,0.06)]">
+                <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
+                  <CheckCircle2 className="h-7 w-7 text-primary" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary mb-2 block">Passo 03</span>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Agende</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                  Confirme seu horário com um clique. Receba lembretes automáticos.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ============================================= */}
+        {/* CTA PARA EMPRESÁRIOS — Showcase do Dashboard */}
+        {/* ============================================= */}
+        <section className="relative w-full bg-gray-50 dark:bg-[#0a0a0a] py-20 sm:py-28 overflow-hidden">
+          <div className="absolute bottom-0 right-0 h-[500px] w-[500px] rounded-full bg-primary/5 blur-[150px]" />
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              {/* Texto */}
+              <div>
+                <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
+                  <Building2 className="w-4 h-4" />
+                  Para Empresários
+                </div>
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-tight mb-6">
+                  Você é empresário?{" "}
+                  <span className="text-cyan-700 dark:text-primary">Chegou no local certo.</span>
+                </h2>
+                <p className="text-gray-600 dark:text-gray-400 text-base sm:text-lg leading-relaxed mb-8">
+                  Precisa de um sistema com <strong className="text-gray-900 dark:text-white">Dashboard completo</strong>, controle de funcionários, de estoque, de finanças? Faça seu cadastro gratuito e faça parte da nossa comunidade de prestadores de serviço.
+                </p>
+
+                <div className="space-y-4 mb-10">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 shrink-0">
+                      <BarChart3 className="h-4 w-4 text-primary" />
+                    </div>
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Dashboard com métricas em tempo real e relatórios completos</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 shrink-0">
+                      <Users className="h-4 w-4 text-primary" />
+                    </div>
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Gestão de profissionais, clientes e agenda integrada</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 shrink-0">
+                      <Package className="h-4 w-4 text-primary" />
+                    </div>
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Controle de estoque com alertas de reposição automáticos</span>
+                  </div>
+                </div>
+
+                <Link href="/register">
+                  <button className="bg-primary text-black font-bold py-4 px-8 rounded-xl shadow-[0_4px_20px_rgba(0,255,255,0.25)] hover:bg-cyan-400 transition-all text-base flex items-center gap-2 group">
+                    Cadastrar minha Empresa
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                </Link>
+                <p className="mt-3 text-xs text-gray-400">100% gratuito • Sem cartão de crédito • Cadastro em 2 minutos</p>
+              </div>
+
+              {/* Dashboard Showcase — Carousel de imagens */}
+              <div className="relative">
+                <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#111] p-2 shadow-2xl overflow-hidden">
+                  <div className="relative aspect-[16/10] rounded-xl overflow-hidden bg-[#0a0a0a]">
+                    <Image
+                      src={['/showcase-dashboard.png', '/showcase-calendario.png', '/showcase-estoque.png'][showcaseIndex]}
+                      alt={['Dashboard Principal', 'Calendário de Agendamentos', 'Controle de Estoque'][showcaseIndex]}
+                      fill
+                      className="object-cover object-top transition-opacity duration-500"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
+                  </div>
+                </div>
+                {/* Image navigation dots + arrows */}
+                <div className="flex items-center justify-center gap-4 mt-4">
+                  <button onClick={() => setShowcaseIndex((showcaseIndex + 2) % 3)} className="p-2 rounded-full bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors">
+                    <ChevronLeft className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                  </button>
+                  <div className="flex items-center gap-2">
+                    {['Dashboard', 'Agenda', 'Estoque'].map((label, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setShowcaseIndex(i)}
+                        className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-all ${
+                          showcaseIndex === i
+                            ? 'bg-primary text-black'
+                            : 'bg-gray-200 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-700'
+                        }`}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                  <button onClick={() => setShowcaseIndex((showcaseIndex + 1) % 3)} className="p-2 rounded-full bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors">
+                    <ChevronRight className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                  </button>
+                </div>
+                {/* Floating badge */}
+                <div className="absolute -top-3 -right-3 bg-primary text-black text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg">
+                  Grátis
+                </div>
+              </div>
+            </div>
+
+            {/* Para quem busca serviço */}
+            <div className="mt-20 text-center">
+              <p className="text-gray-500 dark:text-gray-400 text-lg">
+                Se você é <strong className="text-gray-900 dark:text-white">empresário</strong> ou alguém que esteja{" "}
+                <strong className="text-gray-900 dark:text-white">procurando um serviço</strong>,{" "}
+                <span className="text-cyan-700 dark:text-primary font-bold">chegou no local certo.</span>
+              </p>
+            </div>
+          </div>
         </section>
       </main>
 

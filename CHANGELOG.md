@@ -1,4 +1,18 @@
-## [0.8.0] - 2026-03-13
+## [0.8.1] - 2026-03-13
+**Fase:** Beta  
+**Tipo de release:** Patch  
+**Resumo:** Upgrade visual da Homepage — novas seções "Como Funciona", CTA para empresários com showcase do dashboard, e Footer profissional multi-coluna.
+
+### Added
+- **Seção "Como Funciona":** 3 passos (Encontre, Escolha, Agende) com ícones animados e cards dark premium.
+- **CTA para Empresários:** Seção completa com texto persuasivo, lista de funcionalidades e carousel de 3 imagens do dashboard (Dashboard Principal, Calendário, Estoque).
+- **Dashboard Showcase Images:** 3 imagens geradas mostrando o sistema preenchido com dados de demonstração.
+- **Frase de Impacto:** "Se você é empresário ou alguém procurando um serviço, chegou no local certo."
+
+### Changed
+- **Footer:** Refatorado para layout multi-coluna profissional (Branding, Plataforma, Empresa, Legal) com fundo dark (#060810).
+---
+
 **Fase:** Beta  
 **Tipo de release:** Minor  
 **Resumo:** Hardening de Segurança — Auditoria completa baseada no OWASP Top 10, correção de 10 vulnerabilidades críticas e altas.
