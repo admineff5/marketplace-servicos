@@ -99,7 +99,10 @@ export default function Login() {
             </div>
 
             {/* Right Side: Login Form */}
-            <div className="flex-1 flex flex-col justify-center py-12 px-6 sm:px-12 lg:flex-none lg:w-[40%] relative">
+            <div className="flex-1 flex flex-col justify-center py-12 px-6 sm:px-12 lg:flex-none lg:w-[40%] relative bg-white dark:bg-[#0a0a0a]">
+                {/* Smooth Gradient Divider */}
+                <div className="hidden lg:block absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-black to-transparent -translate-x-full pointer-events-none z-20"></div>
+                
                 <div className="absolute top-8 right-8 z-20">
                     <ThemeToggle />
                 </div>
@@ -138,7 +141,7 @@ export default function Login() {
                             )}
                             <div>
                                 <label htmlFor="email" className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">
-                                    E-mail corporativo
+                                    E-mail
                                 </label>
                                 <input
                                     id="email"
@@ -146,7 +149,7 @@ export default function Login() {
                                     required
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="exemplo@suaempresa.com"
+                                    placeholder="exemplo@email.com"
                                     className="block w-full px-4 py-3.5 bg-gray-50 dark:bg-[#151516] border border-gray-200 dark:border-[#222] rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all text-sm"
                                 />
                             </div>

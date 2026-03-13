@@ -1,4 +1,17 @@
-## [0.9.17] - 2026-03-14
+## [0.9.18] - 2026-03-13
+### Adicionado
+- Opção "Final de semana" em bloqueios de agenda.
+- Cards individuais por Unidade/Localização na Home.
+
+### Corrigido
+- Exibição do nome real do usuário no cabeçalho ("Olá, Rodrigo").
+- Sincronização de bloqueios reais (Feriado/Atestado) com os slots de agendamento.
+- Exibição de fotos reais e únicas dos funcionários.
+- Filtro da Agenda no Dashboard que aparecia vazia.
+- UI do Login: degradê suave e labels simplificados.
+- Trava automática para agendamentos aos Domingos.
+
+## [0.9.17] - 2026-03-13
 **Fase:** Beta  
 **Tipo de release:** Refinement & Fix  
 **Resumo:** Correções críticas na Agenda, disponibilidade real de profissionais e restrições de perfil.

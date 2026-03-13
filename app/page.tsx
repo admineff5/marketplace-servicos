@@ -127,7 +127,7 @@ export default function Home() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const generateTimeSlots = (hoursRange: string | null) => {
+  const generateTimeSlots = (hoursRange: string | null, date: string | null, staffId: string | null, companyBlocks: any[] = []) => {
     if (!hoursRange || !hoursRange.includes("-")) return ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"];
     
     try {
@@ -141,7 +141,18 @@ export default function Home() {
       
       while (currentHour < endHour || (currentHour === endHour && currentMin < endMin)) {
         const timeStr = `${currentHour.toString().padStart(2, '0')}:${currentMin.toString().padStart(2, '0')}`;
-        slots.push(timeStr);
+        
+        // Verificar se este slot específico está bloqueado por um "Fechamento Parcial"
+        const isTimeBlocked = companyBlocks?.some(b => 
+          b.date.startsWith(date) && 
+          (b.employeeId === null || b.employeeId === staffId) &&
+          !b.isAllDay &&
+          timeStr >= (b.openTime || "") && timeStr <= (b.closeTime || "")
+        );
+
+        if (!isTimeBlocked) {
+          slots.push(timeStr);
+        }
         
         currentMin += 30; // 30 min slots
         if (currentMin >= 60) {
@@ -158,7 +169,7 @@ export default function Home() {
   const handleOpenCompany = (company: any) => {
     setSelectedCompany(company);
     setSelectedServiceId(null);
-    setSelectedCompanyId(null);
+    setSelectedCompanyId(company.companyId);
     setSelectedServiceName(null);
     setSelectedProfessional(
       company.staff && company.staff.length > 0 ? company.staff[0].id : null,
@@ -242,25 +253,17 @@ export default function Home() {
     };
   });
 
-  // MOCK DE BLOQUEIOS DA LOJA/PROFISSIONAL
-  const MOCK_ACTIVE_BLOCKS = [
-    {
-      dateStr: upcomingDays[1]?.fullDateStr,
-      prof: "Rodrigo",
-      situation: "Atestado Médico / Licença",
-    },
-    {
-      dateStr: upcomingDays[5]?.fullDateStr,
-      prof: "all",
-      situation: "Feriado Nacional",
-    },
-  ];
-
-  const currentBlock = MOCK_ACTIVE_BLOCKS.find(
-    (b) =>
-      b.dateStr === selectedDate &&
-      (b.prof === "all" || b.prof === activeProfessionalData?.name),
+  // BLOQUEIOS REAIS DA LOJA/PROFISSIONAL
+  const currentBlock = selectedCompany?.blocks?.find(
+    (b: any) =>
+      b.date.startsWith(selectedDate) &&
+      (b.employeeId === null || b.employeeId === selectedProfessional) &&
+      b.isAllDay
   );
+
+  // Verificação de Final de Semana (Domingo bloqueado pela regra geral)
+  const selectedDateObj = upcomingDays.find(d => d.fullDateStr === selectedDate);
+  const isWeekendBlock = selectedDateObj?.dayOfWeek === 0;
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-[#0a0a0a]">
@@ -971,20 +974,30 @@ export default function Home() {
                         </p>
                       ) : (
                         (() => {
-                          const slots = generateTimeSlots(activeProfessionalData.hours);
+                          const slots = generateTimeSlots(
+                            activeProfessionalData?.hours,
+                            selectedDate,
+                            selectedProfessional,
+                            selectedCompany?.blocks
+                          );
                           if (slots.length > 0) {
-                            return slots.map((time: any, idx: number) => {
-                              const isSelected = selectedTime === time;
-                              return (
-                                <button
-                                  key={idx}
-                                  onClick={() => setSelectedTime(time)}
-                                  className={`px-5 py-2.5 text-sm font-bold rounded-lg border transition-all ${isSelected ? "border-primary bg-primary text-black shadow-[0_0_15px_rgba(0,255,255,0.4)]" : "border-[#2a2a2c] bg-[#151516] text-gray-300 hover:border-gray-500 hover:text-white"} `}
-                                >
-                                  {time}
-                                </button>
-                              );
-                            });
+                            return (
+                              <div className="flex flex-wrap gap-2">
+                                {slots.map((time) => (
+                                  <button
+                                    key={time}
+                                    onClick={() => setSelectedTime(time)}
+                                    className={`px-4 py-2 rounded-lg text-sm font-bold border transition-all ${
+                                      selectedTime === time
+                                        ? "bg-primary border-primary text-black"
+                                        : "bg-gray-50 dark:bg-black border-gray-100 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:border-primary/50"
+                                    }`}
+                                  >
+                                    {time}
+                                  </button>
+                                ))}
+                              </div>
+                            );
                           }
                           return (
                             <p className="text-sm text-gray-500 italic">

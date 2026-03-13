@@ -194,6 +194,7 @@ export default function FeriadosBloqueiosPage() {
                                     <td className="py-3 px-4 border-r border-gray-100 dark:border-gray-800/50 text-center">
                                         <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider border
                                             ${row.situation === 'Feriado' ? 'bg-red-50 text-red-600 border-red-200 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20' :
+                                                row.situation === 'Final de semana' ? 'bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20' :
                                                 row.situation === 'Atestado' ? 'bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-500/10 dark:text-orange-400 dark:border-orange-500/20' :
                                                     'bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-500/10 dark:text-yellow-400 dark:border-yellow-500/20'}`}
                                         >
@@ -261,7 +262,8 @@ export default function FeriadosBloqueiosPage() {
                                         value={formSituation} onChange={e => setFormSituation(e.target.value)}
                                         className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all appearance-none"
                                     >
-                                        <option value="Feriado">Feriado Total</option>
+                                        <option value="Feriado">Feriado</option>
+                                        <option value="Final de semana">Final de semana</option>
                                         <option value="Atestado">Atestado / Licença</option>
                                         <option value="Horário Especial">Fechamento Parcial (Horário Especial)</option>
                                     </select>

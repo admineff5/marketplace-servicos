@@ -26,13 +26,16 @@ export async function GET(request: Request) {
             const limitStr = searchParams.get("limit");
 
             let whereClause: any = {
-                service: { companyId: company.id }
+                companyId: company.id
             };
-
+            
             if (dateStr) {
-                const date = new Date(dateStr);
-                const startOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
-                const endOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
+                // Forçar meio-dia para evitar problemas de fuso ao extrair o dia
+                const date = new Date(dateStr + 'T12:00:00');
+                const startOfDay = new Date(date);
+                startOfDay.setHours(0, 0, 0, 0);
+                const endOfDay = new Date(date);
+                endOfDay.setHours(23, 59, 59, 999);
                 whereClause.date = { gte: startOfDay, lte: endOfDay };
             }
 

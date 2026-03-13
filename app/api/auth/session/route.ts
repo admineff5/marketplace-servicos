@@ -10,15 +10,23 @@ export async function GET() {
             return NextResponse.json({ authenticated: false });
         }
 
-        const userData = JSON.parse(session.value);
+        const { id } = JSON.parse(session.value);
+        const user = await prisma.user.findUnique({
+            where: { id },
+            select: { id: true, name: true, email: true, role: true }
+        });
+
+        if (!user) {
+            return NextResponse.json({ authenticated: false });
+        }
         
         return NextResponse.json({
             authenticated: true,
             user: {
-                id: userData.id,
-                name: userData.name,
-                email: userData.email,
-                role: userData.role
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role
             }
         });
     } catch (error) {
