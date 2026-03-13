@@ -286,13 +286,13 @@ export default function Home() {
               {session ? (
                 <div className="flex items-center gap-3">
                   <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 hidden sm:block">
-                    Olá, <span className="font-bold">{session.name.split(' ')[0]}</span>
+                    Olá, <span className="font-bold">{(session?.name || "Usuário").split(' ')[0]}</span>
                   </span>
                   <Link
-                    href={session.role === "BUSINESS" ? "/dashboard" : "/cliente"}
+                    href={session?.role === "BUSINESS" ? "/dashboard" : "/cliente"}
                     className="text-xs sm:text-sm font-bold text-cyan-700 dark:text-primary hover:underline transition-all"
                   >
-                    {session.role === "BUSINESS" ? "Meu Painel" : "Meu Perfil"}
+                    {session?.role === "BUSINESS" ? "Meu Painel" : "Meu Perfil"}
                   </Link>
                 </div>
               ) : (
@@ -337,7 +337,7 @@ export default function Home() {
 
             <div
               ref={searchContainerRef}
-              className={`mt-10 mx-auto w-full max-w-7xl transition-all duration-500 ease -in -out ${isSticky ? "opacity-0 scale-95 pointer-events-none" : "opacity-100 scale-100"} `}
+              className={`mt-10 mx-auto w-full max-w-7xl transition-all duration-500 ease-in-out ${isSticky ? "opacity-0 scale-95 pointer-events-none" : "opacity-100 scale-100"} `}
             >
               {/* Search Input Large */}
               <div className="relative w-full max-w-4xl mx-auto mb-8">
@@ -383,7 +383,7 @@ export default function Home() {
 
         {/* The Sticky Search Bar (Only appears when scrolling past hero) */}
         <div
-          className={`fixed top-16 left-0 right-0 z-30 w-full bg-[#050505] border-b border-white / 10 shadow-2xl py-3 transform transition-all duration-300 ease -in -out ${isSticky
+          className={`fixed top-16 left-0 right-0 z-30 w-full bg-[#050505] border-b border-white/10 shadow-2xl py-3 transform transition-all duration-300 ease-in-out ${isSticky
               ? "translate-y-0 opacity-100"
               : "-translate-y-full opacity-0 pointer-events-none"
             } `}
@@ -530,7 +530,7 @@ export default function Home() {
                           {company.description}
                         </p>
                         <div className="flex flex-wrap gap-2 mt-3">
-                          {company.services.slice(0, 3).map((s: any, idx: number) => (
+                          {company.services?.slice(0, 3).map((s: any, idx: number) => (
                             <span
                               key={idx}
                               className="text-xs font-semibold bg-gray-100 dark:bg-gray-800/60 text-gray-600 dark:text-gray-300 px-2.5 py-1 rounded-md border border-gray-200 dark:border-gray-700/50"
@@ -910,7 +910,7 @@ export default function Home() {
 
                 {/* 3. Date Selection-Only show if Professional is selected */}
                 <div
-                  className={`transition-all duration-500 ease -in -out ${selectedProfessional ? "opacity-100 max-h-[500px]" : "opacity-0 max-h-0 overflow-hidden pointer-events-none"} `}
+                  className={`transition-all duration-500 ease-in-out ${selectedProfessional ? "opacity-100 max-h-[500px]" : "opacity-0 max-h-0 overflow-hidden pointer-events-none"} `}
                 >
                   <h3 className="text-lg font-bold text-white mb-3">
                     3. Escolha o Dia
@@ -949,7 +949,7 @@ export default function Home() {
 
                 {/* 4. Time Slots-Only show if Date is selected */}
                 <div
-                  className={`transition-all duration-500 ease -in -out ${selectedDate ? "opacity-100 max-h-[500px]" : "opacity-0 max-h-0 overflow-hidden pointer-events-none"} `}
+                  className={`transition-all duration-500 ease-in-out ${selectedDate ? "opacity-100 max-h-[500px]" : "opacity-0 max-h-0 overflow-hidden pointer-events-none"} `}
                 >
                   <h3 className="text-lg font-bold text-white mb-3">
                     4. Horários Livres
@@ -999,7 +999,7 @@ export default function Home() {
 
                 {/* 5. Client Note / Dúvidas */}
                 <div
-                  className={`transition-all duration-500 ease -in -out ${selectedTime ? "opacity-100 max-h-[500px]" : "opacity-0 max-h-0 overflow-hidden pointer-events-none"} `}
+                  className={`transition-all duration-500 ease-in-out ${selectedTime ? "opacity-100 max-h-[500px]" : "opacity-0 max-h-0 overflow-hidden pointer-events-none"} `}
                 >
                   <h3 className="text-lg font-bold text-white mb-3">
                     5. Alguma dúvida ou observação?
