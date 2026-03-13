@@ -1,6 +1,6 @@
-## [1.0.0] - 2026-03-14
-**Fase:** Estável / Lançamento  
-**Tipo de release:** Major  
+## [0.9.10] - 2026-03-14
+**Fase:** Beta  
+**Tipo de release:** Patch  
 **Resumo:** Credit Card UI & Autofill — Melhoria na experiência de cadastro de cartões com suporte a preenchimento automático do navegador e refinamento de texto.
 
 ### Added
@@ -8,7 +8,7 @@
 - **UX Refinement:** Atualizado placeholder do nome do cartão para "Nome conforme aparece no cartão".
 
 ### Changed
-- **Version Milestone:** Projeto atingiu a marca de **v1.0.0** após estabilização de autenticação, segurança e refinamentos de UI.
+- **Versioning:** Ajustado versionamento para seguir ciclo beta antes do lançamento oficial.
 
 ---
 
