@@ -2,6 +2,14 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { cookies } from "next/headers";
 
+// Helper: Mascarar CPF — retorna ***.***. ***-XX
+function maskCPF(cpf: string | null): string | null {
+    if (!cpf) return null;
+    const clean = cpf.replace(/\D/g, "");
+    if (clean.length !== 11) return "***.***.***-**";
+    return `***.***. ***-${clean.slice(-2)}`;
+}
+
 export async function GET() {
     try {
         const cookieStore = await cookies();
@@ -21,8 +29,7 @@ export async function GET() {
                 email: true,
                 cpf: true,
                 address: true,
-                // phone não existe no User mas talvez no Profile ou Lead? No feedback ele pediu no cadastro.
-                // Vou adicionar phone ao User se não houver. 
+                phone: true,
             }
         });
 
@@ -30,7 +37,11 @@ export async function GET() {
             return NextResponse.json({ error: "Usuário não encontrado" }, { status: 404 });
         }
 
-        return NextResponse.json(user);
+        // Retornar CPF mascarado (LGPD compliance)
+        return NextResponse.json({
+            ...user,
+            cpf: maskCPF(user.cpf),
+        });
     } catch (error) {
         console.error("Profile GET Error:", error);
         return NextResponse.json({ error: "Erro ao buscar perfil" }, { status: 500 });
@@ -48,11 +59,28 @@ export async function PUT(request: Request) {
 
         const { id } = JSON.parse(session.value);
         const body = await request.json();
-        const { address } = body; // CPF e Email não podem ser alterados segundo o feedback
+        const { name, address, phone } = body;
+
+        // Construir objeto de atualização apenas com campos permitidos
+        const updateData: Record<string, string> = {};
+        if (name) updateData.name = name;
+        if (address) updateData.address = address;
+        if (phone) updateData.phone = phone;
+
+        if (Object.keys(updateData).length === 0) {
+            return NextResponse.json({ error: "Nenhum campo válido para atualizar" }, { status: 400 });
+        }
 
         const updated = await prisma.user.update({
             where: { id },
-            data: { address }
+            data: updateData,
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                address: true,
+                phone: true,
+            }
         });
 
         return NextResponse.json({ success: true, user: updated });

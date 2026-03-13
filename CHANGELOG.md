@@ -1,4 +1,29 @@
-## [0.7.0] - 2026-03-12
+## [0.8.0] - 2026-03-13
+**Fase:** Beta  
+**Tipo de release:** Minor  
+**Resumo:** Hardening de Segurança — Auditoria completa baseada no OWASP Top 10, correção de 10 vulnerabilidades críticas e altas.
+
+### Added
+- **Bcrypt:** Implementação de hash de senhas com bcrypt (cost 12) no registro e login.
+- **Migração Automática:** Senhas legadas em texto puro são automaticamente convertidas para bcrypt no primeiro login.
+- **Security Headers:** 6 headers HTTP de segurança adicionados (X-Frame-Options, X-Content-Type-Options, X-XSS-Protection, HSTS, Referrer-Policy, Permissions-Policy).
+- **RBAC no Middleware:** Enforcement de papéis — CLIENT bloqueado do `/dashboard`, BUSINESS bloqueado do `/cliente`.
+- **Validação de Senha:** Mínimo de 6 caracteres exigido no cadastro.
+
+### Changed
+- **Cookies:** Adicionado `sameSite: "lax"` em todos os pontos de criação de cookie (login, register, middleware).
+- **Sessão Consistente:** Register agora usa 7 dias (antes eram 15 minutos inconsistentes).
+- **CPF Mascarado:** API `/user/profile` agora retorna CPF no formato `***.***. ***-XX` (compliance LGPD).
+- **Appointments Auth:** Rota `/api/appointments` agora exige autenticação e aplica RBAC (BUSINESS vê da empresa, CLIENT vê os próprios).
+- **Produtos POST:** Campos `stock`, `image`, `delivery` agora são salvos corretamente.
+- **Companies API:** Substituído `include` por `select` para expor apenas dados públicos necessários.
+
+### Fixed
+- **Cookie Corrompido:** Middleware agora limpa cookies corrompidos ao invés de falhar silenciosamente.
+- **Appointments POST:** userId agora vem da sessão, não do body (impede spoofing).
+- **Profile PUT:** Hardened para aceitar apenas campos permitidos e nunca vazar hash de senha.
+---
+
 **Fase:** Beta  
 **Tipo de release:** Minor  
 **Resumo:** Refatoração de Segurança e Gestão do Cliente: Logout funcional, proteção de rotas e gestão complexa de endereços/pagamentos.

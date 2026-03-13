@@ -4,23 +4,34 @@ import prisma from "@/lib/prisma";
 export async function GET() {
     try {
         const companies = await prisma.company.findMany({
-            include: {
-                services: true,
-                employees: true,
-                locations: true,
+            select: {
+                id: true,
+                name: true,
+                niche: true,
+                imageUrl: true,
+                locations: {
+                    select: { address: true },
+                    take: 1,
+                },
+                services: {
+                    select: { name: true, price: true, duration: true },
+                },
+                employees: {
+                    select: { id: true, name: true },
+                },
             },
         });
 
-        // Transformar para o formato esperado pelo layout (com ratings mockados por enquanto se não houver tabela de reviews)
+        // Transformar para o formato esperado pelo layout
         const transformedCompanies = companies.map(company => ({
             id: company.id,
             name: company.name,
             niche: company.niche || "Serviços",
-            rating: "5.0", // Mock por enquanto
-            reviews: Math.floor(Math.random() * 100), // Mock por enquanto
+            rating: "5.0",
+            reviews: Math.floor(Math.random() * 100),
             address: company.locations[0]?.address || "Endereço não informado",
-            image: (company as any).imageUrl || "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&q=80&w=800",
-            logo: (company as any).imageUrl || "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?auto=format&fit=crop&q=80&w=150",
+            image: company.imageUrl || "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&q=80&w=800",
+            logo: company.imageUrl || "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?auto=format&fit=crop&q=80&w=150",
             description: "Especialista em " + (company.niche || "serviços de qualidade"),
             services: company.services.map(s => ({
                 name: s.name,

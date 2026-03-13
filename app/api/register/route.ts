@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { cookies } from "next/headers";
+import bcrypt from "bcrypt";
 
 export async function POST(request: Request) {
     try {
@@ -17,27 +18,36 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "CPF inválido. Deve conter 11 dígitos." }, { status: 400 });
         }
 
+        // Validação mínima de senha
+        if (password.length < 6) {
+            return NextResponse.json({ error: "A senha deve ter no mínimo 6 caracteres." }, { status: 400 });
+        }
+
         const existing = await prisma.user.findUnique({ where: { email } });
         if (existing) {
             return NextResponse.json({ error: "E-mail já cadastrado" }, { status: 400 });
         }
 
+        // Hash da senha com bcrypt (cost factor 12)
+        const hashedPassword = await bcrypt.hash(password, 12);
+
         const user = await prisma.user.create({
             data: {
                 name,
                 email,
-                password,
+                password: hashedPassword,
                 role: role || "CLIENT",
                 cpf: cleanCPF,
             },
         });
 
-        // Criar Sessão (Expires em 15 min)
+        // Sessão segura — 7 dias, httpOnly, sameSite lax
         const cookieStore = await cookies();
         cookieStore.set("auth_session", JSON.stringify({ id: user.id, role: user.role }), {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            maxAge: 15 * 60, // 15 minutos
+            sameSite: "lax",
+            maxAge: 7 * 24 * 60 * 60, // 7 dias
             path: "/",
         });
 

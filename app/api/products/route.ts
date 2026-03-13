@@ -51,19 +51,21 @@ export async function POST(request: Request) {
         }
 
         const body = await request.json();
-        const { name, price, stock, image, description } = body;
+        const { name, price, stock, image, description, delivery } = body;
+
+        if (!name || !price) {
+            return NextResponse.json({ error: "Nome e preço são obrigatórios" }, { status: 400 });
+        }
 
         const product = await prisma.product.create({
             data: {
                 name,
                 price: parseFloat(price),
-                // O schema não tem stock! Vou adicionar no próximo passo ou usar description por enquanto?
-                // Verificando schema.prisma... model Product { id, companyId, name, description, price, delivery, createdAt, updatedAt }
-                // O schema NOVO tem stock? Deixa eu ver...
-                description: description || `Estoque: ${stock}`,
+                stock: stock ? parseInt(stock) : 0,
+                image: image || null,
+                description: description || null,
+                delivery: delivery || false,
                 companyId: company.id,
-                // O schema também não tem imagem para produtos no model Product. 
-                // Vou ter que adicionar 'image' ao model Product no schema.prisma.
             }
         });
 

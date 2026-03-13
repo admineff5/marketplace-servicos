@@ -5,14 +5,17 @@ export function middleware(request: NextRequest) {
     const session = request.cookies.get('auth_session');
     const { pathname } = request.nextUrl;
 
-    // Se o usuário está logado e tenta acessar login/register, manda para o dashboard/cliente
+    // Se o usuário está logado e tenta acessar login/register, redireciona para sua área
     if (session && (pathname === '/login' || pathname === '/register')) {
         try {
             const userData = JSON.parse(session.value);
             const redirectUrl = userData.role === 'CLIENT' ? '/cliente' : '/dashboard';
             return NextResponse.redirect(new URL(redirectUrl, request.url));
         } catch (e) {
-            // Se o cookie estiver corrompido, deixa passar para o login
+            // Cookie corrompido — limpar e deixar passar para o login
+            const response = NextResponse.redirect(new URL('/login', request.url));
+            response.cookies.delete('auth_session');
+            return response;
         }
     }
 
@@ -21,13 +24,34 @@ export function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL('/login', request.url));
     }
 
-    // Atualiza a expiração do cookie (Autologoff por inatividade de 15min)
+    // RBAC — Verificar papéis corretos por rota
     if (session) {
+        try {
+            const { role } = JSON.parse(session.value);
+
+            // BUSINESS tentando acessar área de CLIENT
+            if (pathname.startsWith('/cliente') && role === 'BUSINESS') {
+                return NextResponse.redirect(new URL('/dashboard', request.url));
+            }
+
+            // CLIENT tentando acessar área de BUSINESS
+            if (pathname.startsWith('/dashboard') && role === 'CLIENT') {
+                return NextResponse.redirect(new URL('/cliente', request.url));
+            }
+        } catch (e) {
+            // Cookie corrompido — limpar e redirecionar para login
+            const response = NextResponse.redirect(new URL('/login', request.url));
+            response.cookies.delete('auth_session');
+            return response;
+        }
+
+        // Renovar cookie com sameSite e flags de segurança
         const response = NextResponse.next();
         response.cookies.set('auth_session', session.value, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            maxAge: 7 * 24 * 60 * 60, // 7 dias de persistência
+            sameSite: "lax",
+            maxAge: 7 * 24 * 60 * 60, // 7 dias
             path: "/",
         });
         return response;
