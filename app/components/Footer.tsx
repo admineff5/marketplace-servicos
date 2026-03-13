@@ -31,17 +31,17 @@ export function Footer() {
                         <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-wider">Plataforma</h4>
                         <ul className="space-y-3">
                             <li>
-                                <Link href="/" className="text-sm text-gray-400 hover:text-primary transition-colors">
+                                <Link href="/" className="text-sm text-gray-400 hover:text-cyan-700 dark:hover:text-primary transition-colors">
                                     Buscar Serviços
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/register" className="text-sm text-gray-400 hover:text-primary transition-colors">
+                                <Link href="/register" className="text-sm text-gray-400 hover:text-cyan-700 dark:hover:text-primary transition-colors">
                                     Cadastrar Empresa
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/login" className="text-sm text-gray-400 hover:text-primary transition-colors">
+                                <Link href="/login" className="text-sm text-gray-400 hover:text-cyan-700 dark:hover:text-primary transition-colors">
                                     Login
                                 </Link>
                             </li>
@@ -53,17 +53,17 @@ export function Footer() {
                         <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-wider">Empresa</h4>
                         <ul className="space-y-3">
                             <li>
-                                <Link href="/fale-conosco" className="text-sm text-gray-400 hover:text-primary transition-colors">
+                                <Link href="/fale-conosco" className="text-sm text-gray-400 hover:text-cyan-700 dark:hover:text-primary transition-colors">
                                     Sobre
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/fale-conosco" className="text-sm text-gray-400 hover:text-primary transition-colors">
+                                <Link href="/fale-conosco" className="text-sm text-gray-400 hover:text-cyan-700 dark:hover:text-primary transition-colors">
                                     Blog
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/fale-conosco" className="text-sm text-gray-400 hover:text-primary transition-colors">
+                                <Link href="/fale-conosco" className="text-sm text-gray-400 hover:text-cyan-700 dark:hover:text-primary transition-colors">
                                     Contato
                                 </Link>
                             </li>
@@ -75,17 +75,17 @@ export function Footer() {
                         <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-wider">Legal</h4>
                         <ul className="space-y-3">
                             <li>
-                                <Link href="/termos" className="text-sm text-gray-400 hover:text-primary transition-colors">
+                                <Link href="/termos" className="text-sm text-gray-400 hover:text-cyan-700 dark:hover:text-primary transition-colors">
                                     Termos de Uso
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/privacidade" className="text-sm text-gray-400 hover:text-primary transition-colors">
+                                <Link href="/privacidade" className="text-sm text-gray-400 hover:text-cyan-700 dark:hover:text-primary transition-colors">
                                     Privacidade
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/privacidade" className="text-sm text-gray-400 hover:text-primary transition-colors">
+                                <Link href="/privacidade" className="text-sm text-gray-400 hover:text-cyan-700 dark:hover:text-primary transition-colors">
                                     LGPD
                                 </Link>
                             </li>

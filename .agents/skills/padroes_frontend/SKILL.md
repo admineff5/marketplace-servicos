@@ -56,6 +56,8 @@ _Se o usuário pedir algo que conflite diretamente com as cores dessa folha ou a
 - **Regra de Cores de Destaque:**
     - **Modo Dark:** Utilizar o ciano neon (`text-primary` / `bg-primary`).
     - **Modo Light:** Utilizar o azul "Petróleo" (`text-cyan-700` / `bg-cyan-700` / `#0e7490`) em substituição ao ciano neon para garantir legibilidade e sofisticação.
+- **Interatividade (Hover/Active):**
+    - No **Modo Light**, estados de `hover:` ou `active:` em fundos claros **devem** utilizar o tom Petróleo (`hover:text-cyan-700`) em vez do ciano neon para evitar cegueira visual e manter o contraste.
 - Conserve **sempre** os dois esquemas suportados.
 
 ## 3. A Regra do Contraste (Botão Azul = Texto Preto Negrito)

@@ -1,3 +1,17 @@
+## [0.9.6] - 2026-03-14
+**Fase:** Beta  
+**Tipo de release:** Patch  
+**Resumo:** Light Mode Contrast Refinement — Uniformização de hovers e ícones interativos no modo Light usando o tom "Petróleo" (Cyan-700).
+
+### Added
+- **Skill de Design:** Adicionada regra de interatividade para Modo Light (Hovers e Ativos nunca usam ciano neon em fundos claros).
+
+### Changed
+- **UI Contrast:** Atualização dos hovers das categorias e links do footer para Cyan-700 em Light Mode.
+- **Branding Sync:** Seção "Para Empresários" agora utiliza Cyan-700 nos ícones e métricas para harmonia com o Dashboard.
+
+---
+
 ## [0.9.5] - 2026-03-14
 **Fase:** Beta  
 **Tipo de release:** Patch  
