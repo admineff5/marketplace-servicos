@@ -10,11 +10,15 @@ export function Footer() {
                     {/* Coluna 1 — Branding */}
                     <div>
                         <div className="flex items-center gap-2.5 mb-4">
-                            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-black font-extrabold text-sm">
-                                A
-                            </div>
+                            <Image
+                                src="/logo icon.png"
+                                alt="EFF5 Logo"
+                                width={36}
+                                height={36}
+                                className="rounded-full"
+                            />
                             <span className="text-lg font-bold text-gray-900 dark:text-white tracking-tight">
-                                Agende<span className="text-primary">Já</span>
+                                Agende<span className="text-[#0066FF] dark:text-primary">Já</span>
                             </span>
                         </div>
                         <p className="text-sm text-gray-400 leading-relaxed max-w-[240px]">

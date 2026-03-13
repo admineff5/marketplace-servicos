@@ -208,7 +208,7 @@ export default function Home() {
               className="object-contain"
             />
             <span className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-              AgendeJá
+              Agende<span className="text-[#0066FF] dark:text-primary">Já</span>
             </span>
           </div>
 
@@ -247,7 +247,7 @@ export default function Home() {
               priority
             />
             <h1 className="mx-auto max-w-3xl text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-              O que você quer <span className="text-primary">agendar</span>{" "}
+              O que você quer <span className="text-[#0066FF] dark:text-primary">agendar</span>{" "}
               hoje?
             </h1>
 
@@ -280,12 +280,12 @@ export default function Home() {
                     key={cat.name}
                     onClick={() => setActiveCategory(cat.name)}
                     className={`flex-shrink-0 flex items-center gap-2.5 px-6 py-3 rounded-full border transition-all ${activeCategory === cat.name
-                        ? "bg-primary/20 border-primary text-blue-700 dark:text-primary shadow-[0_0_10px_rgba(0,255,255,0.2)]"
+                        ? "bg-primary/20 border-primary text-white dark:text-primary shadow-[0_0_10px_rgba(0,255,255,0.2)]"
                         : "bg-transparent border-white/10 text-gray-300 hover:border-white/30 hover:bg-white/5 hover:text-white"
                       } `}
                   >
                     <cat.icon
-                      className={`w-5 h-5 ${activeCategory === cat.name ? "opacity-100" : "opacity-70 text-primary"} `}
+                      className={`w-5 h-5 ${activeCategory === cat.name ? "opacity-100" : "opacity-70 text-[#0066FF] dark:text-primary"} `}
                     />
                     <span className="text-sm font-semibold tracking-wide">
                       {cat.name}
@@ -327,12 +327,12 @@ export default function Home() {
                     key={cat.name}
                     onClick={() => setActiveCategory(cat.name)}
                     className={`flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full border transition-all ${activeCategory === cat.name
-                        ? "bg-primary/20 border-primary text-blue-700 dark:text-primary"
+                        ? "bg-primary/20 border-primary text-white dark:text-primary"
                         : "bg-transparent border-white/10 text-gray-300 hover:bg-white/5 hover:text-white"
                       } `}
                   >
                     <cat.icon
-                      className={`w-3.5 h-3.5 ${activeCategory === cat.name ? "opacity-100" : "opacity-70 text-primary"} `}
+                      className={`w-3.5 h-3.5 ${activeCategory === cat.name ? "opacity-100" : "opacity-70 text-[#0066FF] dark:text-primary"} `}
                     />
                     <span className="text-xs font-semibold tracking-wide">
                       {cat.name}
@@ -508,9 +508,9 @@ export default function Home() {
               {/* Passo 1 */}
               <div className="group relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0d1117] p-8 text-center transition-all hover:border-primary/40 hover:shadow-[0_0_30px_rgba(0,255,255,0.06)]">
                 <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
-                  <Search className="h-7 w-7 text-primary" />
+                  <Search className="h-7 w-7 text-[#0066FF] dark:text-primary" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary mb-2 block">Passo 01</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#0066FF] dark:text-primary mb-2 block">Passo 01</span>
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Encontre</h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
                   Busque profissionais e empresas na sua região por categoria ou nome.
@@ -520,9 +520,9 @@ export default function Home() {
               {/* Passo 2 */}
               <div className="group relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0d1117] p-8 text-center transition-all hover:border-primary/40 hover:shadow-[0_0_30px_rgba(0,255,255,0.06)]">
                 <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
-                  <CalendarDays className="h-7 w-7 text-primary" />
+                  <CalendarDays className="h-7 w-7 text-[#0066FF] dark:text-primary" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary mb-2 block">Passo 02</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#0066FF] dark:text-primary mb-2 block">Passo 02</span>
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Escolha</h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
                   Compare avaliações, preços e horários disponíveis em tempo real.
@@ -532,9 +532,9 @@ export default function Home() {
               {/* Passo 3 */}
               <div className="group relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0d1117] p-8 text-center transition-all hover:border-primary/40 hover:shadow-[0_0_30px_rgba(0,255,255,0.06)]">
                 <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
-                  <CheckCircle2 className="h-7 w-7 text-primary" />
+                  <CheckCircle2 className="h-7 w-7 text-[#0066FF] dark:text-primary" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary mb-2 block">Passo 03</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#0066FF] dark:text-primary mb-2 block">Passo 03</span>
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Agende</h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
                   Confirme seu horário com um clique. Receba lembretes automáticos.
@@ -553,13 +553,13 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
               {/* Texto */}
               <div>
-                <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
+                <div className="inline-flex items-center gap-2 bg-primary/10 text-[#0066FF] dark:text-primary text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
                   <Building2 className="w-4 h-4" />
                   Para Empresários
                 </div>
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-tight mb-6">
                   Você é empresário?{" "}
-                  <span className="text-blue-700 dark:text-primary">Chegou no local certo.</span>
+                  <span className="text-[#0066FF] dark:text-primary">Chegou no local certo.</span>
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400 text-base sm:text-lg leading-relaxed mb-8">
                   Precisa de um sistema com <strong className="text-gray-900 dark:text-white">Dashboard completo</strong>, controle de funcionários, de estoque, de finanças? Faça seu cadastro gratuito e faça parte da nossa comunidade de prestadores de serviço.
@@ -568,19 +568,19 @@ export default function Home() {
                 <div className="space-y-4 mb-10">
                   <div className="flex items-center gap-3">
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 shrink-0">
-                      <BarChart3 className="h-4 w-4 text-primary" />
+                      <BarChart3 className="h-4 w-4 text-[#0066FF] dark:text-primary" />
                     </div>
                     <span className="text-sm text-gray-700 dark:text-gray-300">Dashboard com métricas em tempo real e relatórios completos</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 shrink-0">
-                      <Users className="h-4 w-4 text-primary" />
+                      <Users className="h-4 w-4 text-[#0066FF] dark:text-primary" />
                     </div>
                     <span className="text-sm text-gray-700 dark:text-gray-300">Gestão de profissionais, clientes e agenda integrada</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 shrink-0">
-                      <Package className="h-4 w-4 text-primary" />
+                      <Package className="h-4 w-4 text-[#0066FF] dark:text-primary" />
                     </div>
                     <span className="text-sm text-gray-700 dark:text-gray-300">Controle de estoque com alertas de reposição automáticos</span>
                   </div>
@@ -644,7 +644,7 @@ export default function Home() {
               <p className="text-gray-500 dark:text-gray-400 text-lg">
                 Se você é <strong className="text-gray-900 dark:text-white">empresário</strong> ou alguém que esteja{" "}
                 <strong className="text-gray-900 dark:text-white">procurando um serviço</strong>,{" "}
-                <span className="text-blue-700 dark:text-primary font-bold">chegou no local certo.</span>
+                <span className="text-[#0066FF] dark:text-primary font-bold">chegou no local certo.</span>
               </p>
             </div>
           </div>

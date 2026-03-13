@@ -1,3 +1,17 @@
+## [0.9.4] - 2026-03-14
+**Fase:** Beta  
+**Tipo de release:** Patch  
+**Resumo:** Branding & Contrast Polish — Implementação da identidade visual EFF5, correção de contraste cromático nos modos Light/Dark e sincronização de screenshots reais.
+
+### Added
+- **Identidade EFF5:** Substituição de placeholders pela logo oficial EFF5 no rodapé e padronização do azul vibrante (#0066FF) no branding "AgendeJá".
+- **Visual Evidence:** Galeria da Landing Page agora utiliza 100% de capturas reais do sistema.
+
+### Changed
+- **Acessibilidade Cromática:** Ícones do "Como Funciona" escurecidos para azul marinho em Modo Light; texto das pílulas de categoria mantido em alto contraste no Dark Mode.
+
+---
+
 ## [0.9.3] - 2026-03-14
 **Fase:** Beta  
 **Tipo de release:** Minor  
