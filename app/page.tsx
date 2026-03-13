@@ -345,7 +345,7 @@ export default function Home() {
         </div>
 
         {/* Featured Companies Section */}
-        <section className="container mx-auto px-4 py-16 sm:px-6 lg:px-8 min-h-screen">
+        <section className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
               {activeCategory === "Todos"
@@ -492,7 +492,7 @@ export default function Home() {
         {/* ============================================= */}
         {/* COMO FUNCIONA — 3 passos */}
         {/* ============================================= */}
-        <section className="relative w-full bg-[#060810] py-20 sm:py-24 overflow-hidden">
+        <section className="relative w-full bg-gray-100 dark:bg-[#0a0a0a] py-16 sm:py-20 overflow-hidden border-t border-gray-200 dark:border-gray-800">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[400px] w-[600px] rounded-full bg-primary/5 blur-[120px]" />
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="text-center mb-14">

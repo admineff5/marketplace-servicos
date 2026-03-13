@@ -104,5 +104,13 @@ npx prisma generate
 npm run build
 pm2 restart agendaja
 ```
+```bash
+cd /caminho/do/projeto
+git pull
+npm install          # ← importante para instalar o bcrypt
+npx prisma generate
+npm run build
+pm2 restart all
+```
 
 *Documento gerado para auxiliar na manutenção do AgendeJá Marketplace.*

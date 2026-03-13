@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export function Footer() {
     return (
-        <footer className="w-full bg-[#060810] border-t border-gray-800 py-12 px-4 sm:px-6 lg:px-8 transition-colors mt-auto shrink-0 z-10 relative">
+        <footer className="w-full bg-gray-100 dark:bg-[#0a0a0a] border-t border-gray-200 dark:border-gray-800 py-12 px-4 sm:px-6 lg:px-8 transition-colors mt-auto shrink-0 z-10 relative">
             <div className="container mx-auto">
                 {/* Grid principal */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-16 mb-10">
@@ -13,7 +13,7 @@ export function Footer() {
                             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-black font-extrabold text-sm">
                                 A
                             </div>
-                            <span className="text-lg font-bold text-white tracking-tight">
+                            <span className="text-lg font-bold text-gray-900 dark:text-white tracking-tight">
                                 Agende<span className="text-primary">Já</span>
                             </span>
                         </div>
@@ -24,7 +24,7 @@ export function Footer() {
 
                     {/* Coluna 2 — Plataforma */}
                     <div>
-                        <h4 className="text-sm font-bold text-white mb-4 uppercase tracking-wider">Plataforma</h4>
+                        <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-wider">Plataforma</h4>
                         <ul className="space-y-3">
                             <li>
                                 <Link href="/" className="text-sm text-gray-400 hover:text-primary transition-colors">
@@ -46,7 +46,7 @@ export function Footer() {
 
                     {/* Coluna 3 — Empresa */}
                     <div>
-                        <h4 className="text-sm font-bold text-white mb-4 uppercase tracking-wider">Empresa</h4>
+                        <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-wider">Empresa</h4>
                         <ul className="space-y-3">
                             <li>
                                 <Link href="/fale-conosco" className="text-sm text-gray-400 hover:text-primary transition-colors">
@@ -68,7 +68,7 @@ export function Footer() {
 
                     {/* Coluna 4 — Legal */}
                     <div>
-                        <h4 className="text-sm font-bold text-white mb-4 uppercase tracking-wider">Legal</h4>
+                        <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-wider">Legal</h4>
                         <ul className="space-y-3">
                             <li>
                                 <Link href="/termos" className="text-sm text-gray-400 hover:text-primary transition-colors">
