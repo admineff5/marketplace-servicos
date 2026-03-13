@@ -1,4 +1,4 @@
-## [0.9.18] - 2026-03-13
+## [0.9.19] - 2026-03-13
 ### Adicionado
 - Opção "Final de semana" em bloqueios de agenda.
 - Cards individuais por Unidade/Localização na Home.
