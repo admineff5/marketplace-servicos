@@ -182,11 +182,11 @@ export default function FeriadosBloqueiosPage() {
                                     <td className="py-3 px-4 text-sm font-semibold text-gray-900 dark:text-gray-100 border-r border-gray-100 dark:border-gray-800/50">
                                         <div className="flex items-center gap-2">
                                             <CalendarOff className="w-3.5 h-3.5 text-orange-500" />
-                                            {new Date(row.date).toLocaleDateString('pt-BR')}
+                                            {new Date(row.date).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}
                                         </div>
                                     </td>
                                     <td className="py-3 px-4 text-sm text-gray-600 dark:text-gray-300 border-r border-gray-100 dark:border-gray-800/50">
-                                        {new Date(row.date).toLocaleDateString('pt-BR', { weekday: 'long' })}
+                                        {new Date(row.date).toLocaleDateString('pt-BR', { weekday: 'long', timeZone: 'UTC' })}
                                     </td>
                                     <td className="py-3 px-4 text-sm font-bold text-gray-800 dark:text-gray-200 border-r border-gray-100 dark:border-gray-800/50">
                                         {row.employee?.name || "Loja Inteira"}

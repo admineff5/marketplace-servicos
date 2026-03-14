@@ -69,9 +69,13 @@ export async function DELETE(
             return NextResponse.json({ error: "Empresa não encontrada" }, { status: 404 });
         }
 
-        await prisma.employee.delete({
-            where: { id, companyId: company.id },
-        });
+        await prisma.$transaction([
+            prisma.appointment.deleteMany({ where: { employeeId: id } }),
+            prisma.block.deleteMany({ where: { employeeId: id } }),
+            prisma.employee.delete({
+                where: { id, companyId: company.id }
+            })
+        ]);
 
         return NextResponse.json({ success: true });
     } catch (error) {
