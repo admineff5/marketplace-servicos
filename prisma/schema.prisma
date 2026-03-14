@@ -24,6 +24,7 @@ model User {
   addresses       Address[]
   paymentMethods  PaymentMethod[]
   imageUrl        String?
+  balance         Float         @default(0)
 }
 
 model Company {

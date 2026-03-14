@@ -54,6 +54,26 @@ export default function ClienteDashboard() {
         }
     };
 
+    const handleCancel = async (appointmentId: string) => {
+        if (!confirm("Tem certeza que deseja cancelar este agendamento? O valor será creditado em sua carteira.")) return;
+        
+        try {
+            const res = await fetch('/api/user/appointments', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ appointmentId, action: "cancel" })
+            });
+            if (res.ok) {
+                // Refresh data to update balance and lists
+                fetchData();
+            } else {
+                alert("Erro ao cancelar agendamento.");
+            }
+        } catch (error) {
+            console.error("Erro ao cancelar:", error);
+        }
+    };
+
     const handleRebook = (item: any) => {
         const params = new URLSearchParams({
             rebook: 'true',
@@ -79,7 +99,7 @@ export default function ClienteDashboard() {
             </div>
 
             {/* Stats row */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                 <div className="bg-white dark:bg-[#111] border border-gray-100 dark:border-gray-800 rounded-2xl p-6 shadow-sm flex items-center gap-4">
                     <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
                         <Calendar className="w-6 h-6 text-cyan-700 dark:text-primary" />
@@ -105,6 +125,15 @@ export default function ClienteDashboard() {
                     <div>
                         <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Gasto Total</p>
                         <h3 className="text-2xl font-bold text-gray-900 dark:text-white">R$ {stats.totalSpent.toFixed(2)}</h3>
+                    </div>
+                </div>
+                <div className="bg-white dark:bg-primary/5 border border-primary/20 rounded-2xl p-6 shadow-sm flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
+                        <Star className="w-6 h-6 text-cyan-700 dark:text-primary fill-current" />
+                    </div>
+                    <div>
+                        <p className="text-sm font-bold text-cyan-700 dark:text-primary">Saldo Carteira</p>
+                        <h3 className="text-2xl font-black text-gray-900 dark:text-white">R$ {(stats as any).balance?.toFixed(2) || "0.00"}</h3>
                     </div>
                 </div>
             </div>
@@ -181,6 +210,12 @@ export default function ClienteDashboard() {
                             <div className="flex flex-col justify-between sm:items-end border-t sm:border-t-0 sm:border-l border-gray-100 dark:border-gray-800 pt-4 sm:pt-0 sm:pl-5">
                                 <p className="text-lg font-bold text-gray-900 dark:text-white">{item.price}</p>
                                 <div className="flex gap-2 mt-4 sm:mt-0">
+                                    <button 
+                                        onClick={() => handleCancel(item.id)}
+                                        className="px-4 py-2 border border-red-200 dark:border-red-900/40 bg-red-50/50 dark:bg-red-950/20 rounded-lg text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors w-full sm:w-auto"
+                                    >
+                                        Cancelar
+                                    </button>
                                     <button 
                                         onClick={() => handleRebook(item)}
                                         className="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors w-full sm:w-auto"

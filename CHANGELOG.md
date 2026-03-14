@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.9.36] - 2026-03-14
+### Adicionado
+- Funcionalidade de Cancelamento de agendamento pelo cliente.
+- Sistema de **Créditos/Saldo Virtual** (`balance`) no perfil do usuário.
+- Transação segura (`$transaction`) para cancelar e creditar dinheiro na carteira em uma única operação atômica.
+- Novo card de **"Saldo Carteira"** nas estatísticas do cliente.
+
+
 ## [0.9.35] - 2026-03-14
 ### Adicionado
 - Implementação real de upload de fotos: Drag and Drop (arrastar e soltar) e seleção via explorador de arquivos.

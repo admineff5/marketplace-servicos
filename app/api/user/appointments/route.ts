@@ -44,6 +44,12 @@ export async function GET() {
             orderBy: { date: 'desc' }
         });
 
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            select: { balance: true }
+        });
+
+
         const now = new Date();
         const upcoming = appointments.filter((a: any) => new Date(a.date) > now && a.status !== 'CANCELLED');
         const past = appointments.filter((a: any) => new Date(a.date) <= now || a.status === 'CANCELLED' || a.status === 'COMPLETED');
@@ -53,7 +59,8 @@ export async function GET() {
             completed: appointments.filter((a: any) => a.status === 'COMPLETED' || (new Date(a.date) <= now && a.status !== 'CANCELLED')).length,
             totalSpent: appointments
                 .filter((a: any) => a.status === 'COMPLETED' || (new Date(a.date) <= now && a.status !== 'CANCELLED'))
-                .reduce((acc: number, curr: any) => acc + curr.service.price, 0)
+                .reduce((acc: number, curr: any) => acc + curr.service.price, 0),
+            balance: user?.balance || 0
         };
 
         return NextResponse.json({
@@ -125,7 +132,38 @@ export async function PATCH(request: Request) {
         }
 
         const { id: userId } = JSON.parse(session.value);
-        const { appointmentId, rating, comment } = await request.json();
+        const { appointmentId, rating, comment, action } = await request.json();
+
+        if (action === "cancel") {
+            if (!appointmentId) return NextResponse.json({ error: "ID Inválido" }, { status: 400 });
+
+            // Transação: Cancela e soma saldo
+            const result = await prisma.$transaction(async (tx) => {
+                const apt = await (tx.appointment as any).findFirst({
+                    where: { id: appointmentId, userId: userId },
+                    include: { service: { select: { price: true } } }
+                });
+
+                if (!apt) throw new Error("Agendamento não encontrado");
+                if (apt.status === "CANCELLED") throw new Error("Já está cancelado");
+
+                // 1. Atualiza agendamento
+                await (tx.appointment as any).update({
+                    where: { id: appointmentId },
+                    data: { status: "CANCELLED" }
+                });
+
+                // 2. Incrementa saldo
+                await tx.user.update({
+                    where: { id: userId },
+                    data: { balance: { increment: apt.service.price } }
+                });
+
+                return { success: true };
+            });
+
+            return NextResponse.json(result);
+        }
 
         if (!appointmentId || !rating) {
             return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
