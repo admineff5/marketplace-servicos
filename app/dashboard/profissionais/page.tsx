@@ -98,9 +98,15 @@ export default function GestaoProfissionaisPage() {
         if (window.confirm("Tem certeza que deseja excluir este profissional?")) {
             try {
                 const res = await fetch(`/api/employees/${id}`, { method: 'DELETE' });
-                if (res.ok) fetchData();
+                if (res.ok) {
+                    fetchData();
+                } else {
+                    const data = await res.json();
+                    alert(data.error || "Não foi possível excluir o profissional. Ele pode possuir agendamentos vinculados. Caso queira tirá-lo do ar, edite o perfil dele.");
+                }
             } catch (error) {
                 console.error("Erro ao excluir:", error);
+                alert("Erro de conexão ao excluir.");
             }
         }
     };
@@ -207,10 +213,10 @@ export default function GestaoProfissionaisPage() {
                             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4 border border-gray-200 dark:border-gray-700">
                                 <MapPin className="w-3 h-3" />
                                 {locations.find(l => l.id === prof.locationId)?.name}
-                            </div>
-
-                            {(() => {
-                                const [savedDays, savedHours] = (prof.hours || "Segunda a Sexta | 09:00 - 18:00").split(" | ");
+                            </div>                             {(() => {
+                                const containsPipe = prof.hours && prof.hours.includes(" | ");
+                                const savedDays = containsPipe ? prof.hours.split(" | ")[0] : "Segunda a Sexta";
+                                const savedHours = containsPipe ? prof.hours.split(" | ")[1] : (prof.hours || "09:00 - 18:00");
                                 return (
                                     <div className="w-full flex flex-col gap-2 mt-auto">
                                         <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-[#1a1a1c] px-3 py-2 rounded-lg border border-gray-100 dark:border-[#2a2a2c]">
@@ -219,7 +225,7 @@ export default function GestaoProfissionaisPage() {
                                         </div>
                                         <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-[#1a1a1c] px-3 py-2 rounded-lg border border-gray-100 dark:border-[#2a2a2c]">
                                             <Clock className="w-3.5 h-3.5 text-gray-400" />
-                                            <span className="truncate">{savedHours || prof.hours}</span>
+                                            <span className="truncate">{savedHours}</span>
                                         </div>
                                     </div>
                                 );
