@@ -31,6 +31,7 @@ import {
 import { useState, useEffect, useRef } from "react";
 import { ThemeToggle } from "./components/ThemeToggle";
 import { Footer } from "./components/Footer";
+import { useTheme } from "next-themes";
 
 const CATEGORIES = [
   { name: "Todos", icon: Grid },
@@ -49,6 +50,12 @@ export default function Home() {
   const [isLoadingCompanies, setIsLoadingCompanies] = useState(true);
   const [selectedCompany, setSelectedCompany] = useState<any | null>(null);
   const [session, setSession] = useState<any>(null);
+  const { theme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     // Fetch Session
@@ -718,11 +725,16 @@ export default function Home() {
                 <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#111] p-2 shadow-2xl overflow-hidden">
                   <div className="relative aspect-[16/10] rounded-xl overflow-hidden bg-[#0a0a0a]">
                     <Image
-                      src={['/showcase-dashboard-v27.png', '/showcase-agenda-v27.png', '/showcase-estoque-v27.png'][showcaseIndex]}
+                      src={
+                        (!mounted || (resolvedTheme === 'dark'))
+                          ? ['/showcase-dashboard-dark-v28.png', '/showcase-agenda-dark-v28.png', '/showcase-estoque-dark-v28.png'][showcaseIndex]
+                          : ['/showcase-dashboard-light-v28.png', '/showcase-agenda-light-v28.png', '/showcase-estoque-light-v28.png'][showcaseIndex]
+                      }
                       alt={['Dashboard Principal', 'Calendário de Agendamentos', 'Controle de Estoque'][showcaseIndex]}
                       fill
-                      className="object-cover object-top transition-opacity duration-500"
+                      className="object-cover object-top transition-all duration-500"
                       sizes="(max-width: 768px) 100vw, 50vw"
+                      priority={showcaseIndex === 0}
                     />
                   </div>
                 </div>

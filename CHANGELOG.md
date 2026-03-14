@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.9.28] - 2026-03-14
+### Adicionado
+- Implementado Showcase Dinâmico que alterna automaticamente entre os modos Claro (Light) e Escuro (Dark) baseado no tema do sistema.
+- Adicionados 6 prints reais oficiais (3 Light, 3 Dark) para o showcase.
+- Atualizada versão global para v0.9.28.
+
+## [0.9.27.1] - 2026-03-14
+### Corrigido
+- Corregido problema onde as imagens de showcase não foram incluídas no commit anterior.
+- Atualizada versão global para v0.9.27.1.
+
 ## [0.9.27] - 2026-03-14
 ### Alterado
 - Finalizada substituição de imagens de showcase (Dashboard, Agenda e Estoque) com prints reais oficiais.
