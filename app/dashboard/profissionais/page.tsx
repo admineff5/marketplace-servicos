@@ -80,10 +80,15 @@ export default function GestaoProfissionaisPage() {
         setEditingProf(prof);
         setFormName(prof.name);
         setFormRole(prof.role || "");
-        setFormDays(prof.days || "Segunda a Sexta");
-        const [start, end] = (prof.hours || "09:00 - 18:00").split(" - ");
+        
+        // Parse "Dias | Horário"
+        const [savedDays, savedHours] = (prof.hours || "Segunda a Sexta | 09:00 - 18:00").split(" | ");
+        setFormDays(savedDays || "Segunda a Sexta");
+        
+        const [start, end] = (savedHours || "09:00 - 18:00").split(" - ");
         setFormTimeStart(start);
         setFormTimeEnd(end);
+        
         setFormAvatar(prof.image || "");
         setFormUnitId(prof.locationId || "");
         setIsModalOpen(true);
@@ -106,7 +111,7 @@ export default function GestaoProfissionaisPage() {
         const payload = {
             name: formName,
             role: formRole,
-            hours: `${formTimeStart} - ${formTimeEnd}`,
+            hours: `${formDays} | ${formTimeStart} - ${formTimeEnd}`,
             locationId: formUnitId,
             image: formAvatar || (editingProf?.image || DEFAULT_AVATARS[0]),
         };
@@ -204,16 +209,21 @@ export default function GestaoProfissionaisPage() {
                                 {locations.find(l => l.id === prof.locationId)?.name}
                             </div>
 
-                            <div className="w-full flex flex-col gap-2 mt-auto">
-                                <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-[#1a1a1c] px-3 py-2 rounded-lg border border-gray-100 dark:border-[#2a2a2c]">
-                                    <CalendarDays className="w-3.5 h-3.5 text-gray-400" />
-                                    <span className="truncate">{prof.days}</span>
-                                </div>
-                                <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-[#1a1a1c] px-3 py-2 rounded-lg border border-gray-100 dark:border-[#2a2a2c]">
-                                    <Clock className="w-3.5 h-3.5 text-gray-400" />
-                                    <span className="truncate">{prof.hours}</span>
-                                </div>
-                            </div>
+                            {(() => {
+                                const [savedDays, savedHours] = (prof.hours || "Segunda a Sexta | 09:00 - 18:00").split(" | ");
+                                return (
+                                    <div className="w-full flex flex-col gap-2 mt-auto">
+                                        <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-[#1a1a1c] px-3 py-2 rounded-lg border border-gray-100 dark:border-[#2a2a2c]">
+                                            <CalendarDays className="w-3.5 h-3.5 text-gray-400" />
+                                            <span className="truncate">{savedDays}</span>
+                                        </div>
+                                        <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-[#1a1a1c] px-3 py-2 rounded-lg border border-gray-100 dark:border-[#2a2a2c]">
+                                            <Clock className="w-3.5 h-3.5 text-gray-400" />
+                                            <span className="truncate">{savedHours || prof.hours}</span>
+                                        </div>
+                                    </div>
+                                );
+                            })()}
 
                             {/* Hover Actions */}
                             <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">

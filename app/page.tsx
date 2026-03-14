@@ -165,11 +165,27 @@ export default function Home() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const isDayAllowed = (hoursRange: string | null, dayOfWeek: number) => {
+    if (!hoursRange || !hoursRange.includes(" | ")) return dayOfWeek !== 0; // Default: Fechado Domingo
+    const savedDays = hoursRange.split(" | ")[0];
+
+    if (savedDays === "Segunda a Sexta") return dayOfWeek >= 1 && dayOfWeek <= 5;
+    if (savedDays === "Segunda a Sábado") return dayOfWeek >= 1 && dayOfWeek <= 6;
+    if (savedDays === "Terça a Sábado") return dayOfWeek >= 2 && dayOfWeek <= 6;
+    if (savedDays === "Sábado e Domingo") return dayOfWeek === 6 || dayOfWeek === 0;
+    
+    return dayOfWeek !== 0;
+  };
+
   const generateTimeSlots = (hoursRange: string | null, date: string | null, staffId: string | null, companyBlocks: any[] = []) => {
-    if (!hoursRange || !hoursRange.includes("-")) return ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"];
+    if (!hoursRange) return ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"];
     
     try {
-      const [start, end] = hoursRange.split("-").map(t => t.trim());
+      // Extrair apenas o intervalo de HORÁRIO da String
+      const actualHours = hoursRange.includes(" | ") ? hoursRange.split(" | ")[1] : hoursRange;
+      if (!actualHours.includes("-")) return ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"];
+
+      const [start, end] = actualHours.split("-").map(t => t.trim());
       const [startHour, startMin] = start.split(":").map(Number);
       const [endHour, endMin] = end.split(":").map(Number);
       
@@ -299,9 +315,9 @@ export default function Home() {
       b.isAllDay
   );
 
-  // Verificação de Final de Semana (Domingo bloqueado pela regra geral)
+  // Verificação de Folga do Profissional (Dias da semana cadastrados)
   const selectedDateObj = upcomingDays.find(d => d.fullDateStr === selectedDate);
-  const isWeekendBlock = selectedDateObj?.dayOfWeek === 0;
+  const isWeekendBlock = selectedDateObj ? !isDayAllowed(activeProfessionalData?.hours, selectedDateObj.dayOfWeek) : false;
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-[#0a0a0a]">
@@ -1008,12 +1024,12 @@ export default function Home() {
                           <CalendarOff className="w-5 h-5 shrink-0" />
                           {currentBlock.prof === "all"
                             ? `O estabelecimento está fechado neste dia pelo motivo: ${currentBlock.situation}. Nenhum horário disponível.`
-                            : `O profissional ${activeProfessionalData.name} não realizará atendimentos neste dia(${currentBlock.situation}).`}
+                            : `O profissional ${activeProfessionalData.name} não realizará atendimentos neste dia (${currentBlock.situation}).`}
                         </p>
-                      ) : upcomingDays.find(d => d.fullDateStr === selectedDate)?.dayOfWeek === 0 ? (
+                      ) : isWeekendBlock ? (
                         <p className="text-sm text-amber-500 font-bold bg-amber-50 dark:bg-amber-500/10 p-3 rounded-lg border border-amber-200 dark:border-amber-500/20 flex items-center gap-2 w-full shadow-sm">
                           <CalendarOff className="w-5 h-5 shrink-0" />
-                          O estabelecimento não abre aos domingos. Por favor, selecione outro dia.
+                          O profissional não atende neste dia da semana. Por favor, selecione outro dia.
                         </p>
                       ) : (
                         (() => {
