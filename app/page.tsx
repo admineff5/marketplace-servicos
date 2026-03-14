@@ -77,6 +77,37 @@ export default function Home() {
     fetchCompanies();
   }, []);
 
+  // Handle Rebooking Parameter
+  useEffect(() => {
+    if (companies.length > 0) {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('rebook') === 'true') {
+            const companyId = params.get('companyId');
+            const locationId = params.get('locationId');
+            const employeeId = params.get('employeeId');
+            const serviceName = params.get('serviceName');
+
+            // Find matching company/location card
+            const company = companies.find(c => c.companyId === companyId && c.locationId === locationId);
+            if (company) {
+                handleOpenCompany(company);
+                // Pre-select professional
+                if (employeeId) setSelectedProfessional(employeeId);
+                // Pre-select service by name (since IDs might differ or we want to be safe)
+                if (serviceName) {
+                    const service = company.services.find((s: any) => s.name === serviceName);
+                    if (service) {
+                        setSelectedServiceId(service.id);
+                        setSelectedServiceName(service.name);
+                    }
+                }
+                // Limpar params para não reabrir no refresh
+                window.history.replaceState({}, '', window.location.pathname);
+            }
+        }
+    }
+  }, [companies]);
+
   // Scheduling State within Modal
   const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);

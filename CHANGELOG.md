@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.9.22] - 2026-03-13
+### Adicionado
+- Sistema de avaliação com estrelas na área do cliente (PF).
+- Cálculo automático da média de avaliações na página principal.
+
+### Alterado
+- Botão "Agendar de Novo" agora redireciona para a Home com empresa e profissional pré-selecionados.
+- Atualizado rodapé para v0.9.22 em todas as referências.
+
 ## [0.9.21] - 2026-03-13
 ### Alterado
 - Renomeado "Configurações" para "Perfil da loja" no Painel do Parceiro.

@@ -114,6 +114,40 @@ export async function POST(request: Request) {
     }
 }
 
+export async function PATCH(request: Request) {
+    try {
+        const cookieStore = await cookies();
+        const session = cookieStore.get("auth_session");
+        
+        if (!session) {
+            return NextResponse.json({ error: "Sessão expirada" }, { status: 401 });
+        }
+
+        const { id: userId } = JSON.parse(session.value);
+        const { appointmentId, rating, comment } = await request.json();
+
+        if (!appointmentId || !rating) {
+            return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
+        }
+
+        const appointment = await (prisma.appointment as any).updateMany({
+            where: {
+                id: appointmentId,
+                userId: userId
+            },
+            data: {
+                rating: parseInt(rating),
+                comment: comment || null
+            }
+        });
+
+        return NextResponse.json({ success: true });
+    } catch (error) {
+        console.error("PATCH User Appointment Error:", error);
+        return NextResponse.json({ error: "Erro ao salvar avaliação" }, { status: 500 });
+    }
+}
+
 function formatApt(apt: any) {
     return {
         id: apt.id,
@@ -125,8 +159,11 @@ function formatApt(apt: any) {
         address: apt.location.name + " - " + apt.location.address,
         price: "R$ " + apt.service.price.toFixed(2),
         status: apt.status.toLowerCase(),
+        rating: apt.rating,
+        comment: apt.comment,
         image: apt.employee.image || "https://images.unsplash.com/photo-1560066914-1f29b3bbec3e?w=150&auto=format&fit=crop&q=80",
         locationId: apt.locationId,
-        companyId: apt.companyId
+        companyId: apt.companyId,
+        employeeId: apt.employeeId
     };
 }

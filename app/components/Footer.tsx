@@ -17,6 +17,7 @@ export function Footer() {
                                 height={36}
                                 className="rounded-full"
                             />
+                            <span className="text-gray-400">v0.9.22</span>
                             <span className="text-lg font-bold text-gray-900 dark:text-white tracking-tight">
                                 Agende<span className="text-cyan-700 dark:text-primary">Já</span>
                             </span>
@@ -101,7 +102,7 @@ export function Footer() {
                 {/* Divider */}
                 <div className="border-t border-gray-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <p className="text-gray-500 text-xs">
-                       AgendaJá © {new Date().getFullYear()} • v0.9.19 Pro by EFF5. Todos os direitos reservados. <span className="text-cyan-700/50 dark:text-primary/30 ml-2">v0.9.19</span>
+                       AgendaJá © {new Date().getFullYear()} • v0.9.22 Pro by EFF5. Todos os direitos reservados. <span className="text-cyan-700/50 dark:text-primary/30 ml-2">v0.9.22</span>
                     </p>
                     <div className="flex items-center gap-4">
                         <a href="#" className="text-gray-500 hover:text-[#0A66C2] transition-colors" aria-label="LinkedIn">

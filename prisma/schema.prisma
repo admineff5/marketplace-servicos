@@ -135,6 +135,8 @@ model Appointment {
   userId     String
   date       DateTime
   status     AppointmentStatus @default(PENDING)
+  rating     Int?
+  comment    String?
   createdAt  DateTime          @default(now())
   updatedAt  DateTime          @updatedAt
   employee   Employee          @relation(fields: [employeeId], references: [id])

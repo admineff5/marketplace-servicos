@@ -36,6 +36,35 @@ export default function ClienteDashboard() {
         }
     };
 
+    const handleRate = async (appointmentId: string, rating: number) => {
+        try {
+            const res = await fetch('/api/user/appointments', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ appointmentId, rating })
+            });
+            if (res.ok) {
+                // Update local state
+                setPast(prev => prev.map(apt => 
+                    apt.id === appointmentId ? { ...apt, rating } : apt
+                ));
+            }
+        } catch (error) {
+            console.error("Erro ao salvar avaliação:", error);
+        }
+    };
+
+    const handleRebook = (item: any) => {
+        const params = new URLSearchParams({
+            rebook: 'true',
+            companyId: item.companyId,
+            locationId: item.locationId,
+            employeeId: item.employeeId,
+            serviceName: item.service
+        });
+        window.location.href = `/?${params.toString()}`;
+    };
+
     return (
         <div className="space-y-8 animate-fade-in pb-10">
 
@@ -153,7 +182,7 @@ export default function ClienteDashboard() {
                                 <p className="text-lg font-bold text-gray-900 dark:text-white">{item.price}</p>
                                 <div className="flex gap-2 mt-4 sm:mt-0">
                                     <button 
-                                        onClick={() => window.location.href = `/marcar?id=${item.companyId}`}
+                                        onClick={() => handleRebook(item)}
                                         className="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors w-full sm:w-auto"
                                     >
                                         Reagendar
@@ -193,7 +222,13 @@ export default function ClienteDashboard() {
                                     <p className="text-sm font-bold text-gray-900 dark:text-white">{item.price}</p>
                                     <div className="flex items-center gap-1">
                                         {[1, 2, 3, 4, 5].map((star) => (
-                                            <Star key={star} className={`w-3.5 h-3.5 ${star <= item.rating! ? "text-yellow-400 fill-current" : "text-gray-300 dark:text-gray-700"}`} />
+                                            <button 
+                                                key={star} 
+                                                onClick={() => handleRate(item.id, star)}
+                                                className="focus:outline-none transition-transform hover:scale-110"
+                                            >
+                                                <Star className={`w-4 h-4 ${star <= (item.rating || 0) ? "text-yellow-400 fill-current" : "text-gray-300 dark:text-gray-700"}`} />
+                                            </button>
                                         ))}
                                     </div>
                                 </div>
@@ -205,7 +240,10 @@ export default function ClienteDashboard() {
                                     <Receipt className="w-4 h-4" />
                                     Recibo
                                 </button>
-                                <button className="px-4 py-2 flex items-center gap-2 bg-primary/10 text-cyan-700 dark:text-primary border border-primary/20 rounded-lg text-sm font-bold hover:bg-primary hover:text-black transition-colors w-full sm:w-auto">
+                                <button 
+                                    onClick={() => handleRebook(item)}
+                                    className="px-4 py-2 flex items-center gap-2 bg-primary/10 text-cyan-700 dark:text-primary border border-primary/20 rounded-lg text-sm font-bold hover:bg-primary hover:text-black transition-colors w-full sm:w-auto"
+                                >
                                     Agendar de Novo
                                 </button>
                             </div>

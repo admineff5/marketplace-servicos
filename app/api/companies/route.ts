@@ -19,23 +19,33 @@ export async function GET() {
                         date: { gte: new Date(new Date().setHours(0,0,0,0)) }
                     },
                     select: { id: true, date: true, situation: true, employeeId: true, isAllDay: true, openTime: true, closeTime: true }
+                },
+                appointments: {
+                    where: {
+                        rating: { not: null }
+                    },
+                    select: { rating: true }
                 }
             },
-        });
+        } as any);
 
         // Transformar para o formato esperado pelo layout (Por Unidade)
         const transformedLocations: any[] = [];
 
         (companies as any[]).forEach(company => {
             company.locations.forEach((loc: any) => {
+                const companyRatings = company.appointments || [];
+                const totalRating = companyRatings.reduce((acc: number, curr: any) => acc + (curr.rating || 0), 0);
+                const avgRating = companyRatings.length > 0 ? (totalRating / companyRatings.length).toFixed(1) : "5.0";
+
                 transformedLocations.push({
                     id: `${company.id}-${loc.id}`,
                     companyId: company.id,
                     locationId: loc.id,
                     name: company.name + (loc.name ? ` - ${loc.name}` : ""),
                     niche: company.niche || "Serviços",
-                    rating: "5.0",
-                    reviews: Math.floor(Math.random() * 100),
+                    rating: avgRating,
+                    reviews: companyRatings.length,
                     address: loc.address || "Endereço não informado",
                     image: company.imageUrl || "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&q=80&w=800",
                     logo: company.imageUrl || "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?auto=format&fit=crop&q=80&w=150",
