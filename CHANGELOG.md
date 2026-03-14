@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.9.30] - 2026-03-14
+### Corrigido
+- Ajustada lógica de redirecionamento no Middleware para permitir acesso à página de Cadastro (`/register`) mesmo para usuários autenticados.
+- Corrigido comportamento do botão "Cadastrar minha Empresa" na Home para usuários logados.
+- Atualizada versão global para v0.9.30.
+
 ## [0.9.29] - 2026-03-14
 ### Alterado
 - Refinado layout do Showcase para garantir visibilidade total e centragem perfeita das capturas de sistema.

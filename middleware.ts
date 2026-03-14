@@ -5,8 +5,8 @@ export function middleware(request: NextRequest) {
     const session = request.cookies.get('auth_session');
     const { pathname } = request.nextUrl;
 
-    // Se o usuário está logado e tenta acessar login/register, redireciona para sua área
-    if (session && (pathname === '/login' || pathname === '/register')) {
+    // Se o usuário está logado e tenta acessar login, redireciona para sua área
+    if (session && pathname === '/login') {
         try {
             const userData = JSON.parse(session.value);
             const redirectUrl = userData.role === 'CLIENT' ? '/cliente' : '/dashboard';
