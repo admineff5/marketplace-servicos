@@ -1024,7 +1024,7 @@ export default function Home() {
                           <CalendarOff className="w-5 h-5 shrink-0" />
                           {currentBlock.prof === "all"
                             ? `O estabelecimento está fechado neste dia pelo motivo: ${currentBlock.situation}. Nenhum horário disponível.`
-                            : `Este profissional não tem horários disponíveis neste dia (${currentBlock.situation}). Por favor, selecione outro dia ou outro profissional.`}
+                            : `Este profissional não tem horários disponíveis neste dia. Por favor, selecione outro dia ou outro profissional.`}
                         </p>
                       ) : isWeekendBlock ? (
                         <p className="text-sm text-amber-500 font-bold bg-amber-50 dark:bg-amber-500/10 p-3 rounded-lg border border-amber-200 dark:border-amber-500/20 flex items-center gap-2 w-full shadow-sm">
