@@ -2,7 +2,7 @@
 
 import { User, Mail, CreditCard, MapPin, Phone, ShieldCheck, Save, ArrowLeft, Plus, Trash2, Star, CheckCircle2, X, Home, Camera, Upload } from "lucide-react";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function PerfilCliente() {
     const [isLoading, setIsLoading] = useState(true);
@@ -11,6 +11,8 @@ export default function PerfilCliente() {
     const [addresses, setAddresses] = useState<any[]>([]);
     const [paymentMethods, setPaymentMethods] = useState<any[]>([]);
     const [message, setMessage] = useState({ type: "", text: "" });
+    const [isDragging, setIsDragging] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Modals
     const [showAddressModal, setShowAddressModal] = useState(false);
@@ -102,6 +104,61 @@ export default function PerfilCliente() {
             setIsSaving(false);
         }
     };
+
+    const handleFileUpload = async (file: File) => {
+        if (!file) return;
+        
+        // Basic validation
+        if (!file.type.startsWith("image/")) {
+            setMessage({ type: "error", text: "Por favor, selecione uma imagem válida (JPG, PNG ou WebP)." });
+            return;
+        }
+        
+        if (file.size > 5 * 1024 * 1024) {
+            setMessage({ type: "error", text: "A imagem deve ter no máximo 5MB." });
+            return;
+        }
+
+        setIsSaving(true);
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try {
+            const res = await fetch("/api/upload", {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await res.json();
+            if (data.success && data.url) {
+                await handleAvatarUpdate(data.url);
+            } else {
+                throw new Error(data.error || "Erro no upload");
+            }
+        } catch (err: any) {
+            setMessage({ type: "error", text: err.message || "Erro ao fazer upload da imagem." });
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const onDragOver = (e: React.DragEvent) => {
+        e.preventDefault();
+        setIsDragging(true);
+    };
+
+    const onDragLeave = (e: React.DragEvent) => {
+        e.preventDefault();
+        setIsDragging(false);
+    };
+
+    const onDrop = (e: React.DragEvent) => {
+        e.preventDefault();
+        setIsDragging(false);
+        const file = e.dataTransfer.files[0];
+        if (file) handleFileUpload(file);
+    };
+
 
 
     const handleAddCard = async () => {
@@ -441,19 +498,40 @@ export default function PerfilCliente() {
                         </button>
                         <h2 className="text-2xl font-bold dark:text-white mb-6">Alterar Foto de Perfil</h2>
                         
-                        {/* Upload Zone (Simulated) */}
-                        <div 
-                            className="w-full border-2 border-dashed border-gray-200 dark:border-gray-800 hover:border-cyan-500 dark:hover:border-primary transition-colors rounded-2xl p-8 flex flex-col items-center justify-center cursor-pointer mb-8"
-                            onClick={() => {
-                                const url = prompt("Cole a URL da sua foto (ou usaríamos um input file real aqui):");
-                                if (url) handleAvatarUpdate(url);
+                        {/* Hidden File Input */}
+                        <input 
+                            type="file" 
+                            ref={fileInputRef} 
+                            className="hidden" 
+                            accept="image/*" 
+                            onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) handleFileUpload(file);
                             }}
+                        />
+
+                        {/* Upload Zone */}
+                        <div 
+                            className={`w-full border-2 border-dashed transition-all rounded-3xl p-10 flex flex-col items-center justify-center cursor-pointer mb-8 group ${isDragging ? 'border-primary bg-primary/5' : 'border-gray-200 dark:border-gray-800 hover:border-cyan-500 dark:hover:border-primary bg-gray-50/50 dark:bg-black/20'}`}
+                            onDragOver={onDragOver}
+                            onDragLeave={onDragLeave}
+                            onDrop={onDrop}
+                            onClick={() => fileInputRef.current?.click()}
                         >
-                            <div className="w-12 h-12 bg-cyan-100 dark:bg-primary/10 rounded-full flex items-center justify-center mb-3">
-                                <Upload className="w-5 h-5 text-cyan-700 dark:text-primary" />
+                            <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 ${isDragging ? 'bg-primary text-black' : 'bg-cyan-100 dark:bg-primary/10 text-cyan-700 dark:text-primary'}`}>
+                                <Upload className="w-7 h-7" />
                             </div>
-                            <p className="font-bold text-gray-700 dark:text-gray-200">Faça Upload do seu Computador</p>
-                            <p className="text-xs text-gray-400 mt-1">JPG, PNG ou WebP. Máx 5MB.</p>
+                            <p className="font-bold text-lg text-gray-900 dark:text-white mb-1">
+                                {isDragging ? "Solte para enviar" : "Faça Upload do seu Computador"}
+                            </p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                Arraste e solte ou clique para selecionar
+                            </p>
+                            <div className="mt-4 flex gap-2">
+                                <span className="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-md text-[10px] font-bold text-gray-500 uppercase">JPG</span>
+                                <span className="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-md text-[10px] font-bold text-gray-500 uppercase">PNG</span>
+                                <span className="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-md text-[10px] font-bold text-gray-500 uppercase">WebP</span>
+                            </div>
                         </div>
 
                         <div className="flex items-center gap-4 mb-6">

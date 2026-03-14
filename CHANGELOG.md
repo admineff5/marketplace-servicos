@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.9.35] - 2026-03-14
+### Adicionado
+- Implementação real de upload de fotos: Drag and Drop (arrastar e soltar) e seleção via explorador de arquivos.
+- Novo endpoint de API para processamento de arquivos locais (`/api/upload`).
+- Persistência de fotos carregadas na pasta pública do servidor.
+- Removido protocolo Discord de todas as memórias e skills do agente.
+
+
 ## [0.9.34] - 2026-03-14
 ### Adicionado
 - Nova funcionalidade de upload e escolha de foto de perfil (avatares) para clientes.
