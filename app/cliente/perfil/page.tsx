@@ -239,7 +239,14 @@ export default function PerfilCliente() {
                             <div className="relative group cursor-pointer mb-4" onClick={() => setShowAvatarModal(true)}>
                                 <div className="w-24 h-24 bg-cyan-100 dark:bg-primary/10 rounded-full flex items-center justify-center border-2 border-cyan-200 dark:border-primary/20 overflow-hidden relative">
                                     {user?.imageUrl ? (
-                                        <img src={user.imageUrl} alt="Avatar" className="w-full h-full object-cover" />
+                                        <img 
+                                            src={user.imageUrl} 
+                                            alt="Avatar" 
+                                            className="w-full h-full object-cover" 
+                                            onError={(e) => {
+                                                (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${user?.name || 'User'}&background=random&color=fff`;
+                                            }}
+                                        />
                                     ) : (
                                         <User className="w-10 h-10 text-cyan-700 dark:text-primary" />
                                     )}
@@ -541,22 +548,22 @@ export default function PerfilCliente() {
                         </div>
 
                         <div className="grid grid-cols-5 gap-3">
-                            {Array.from({ length: 10 }).map((_, i) => (
-                                <button
-                                    key={i}
-                                    onClick={() => handleAvatarUpdate(`/avatars/avatar-${i + 1}.png`)}
-                                    className={`aspect-square rounded-2xl overflow-hidden border-2 transition-all hover:scale-105 active:scale-95 ${user?.imageUrl === `/avatars/avatar-${i + 1}.png` ? 'border-primary ring-2 ring-primary/20' : 'border-transparent hover:border-gray-300 dark:hover:border-gray-600'}`}
-                                >
-                                    <img 
-                                        src={`/avatars/avatar-${i + 1}.png`} 
-                                        alt={`Avatar ${i + 1}`} 
-                                        className="w-full h-full object-cover bg-gray-100 dark:bg-gray-800"
-                                        onError={(e) => {
-                                            (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=Avatar+${i + 1}&background=random`;
-                                        }}
-                                    />
-                                </button>
-                            ))}
+                            {Array.from({ length: 10 }).map((_, i) => {
+                                const avatarUrl = `https://ui-avatars.com/api/?name=Avatar+${i + 1}&background=random&color=fff&size=150`;
+                                return (
+                                    <button
+                                        key={i}
+                                        onClick={() => handleAvatarUpdate(avatarUrl)}
+                                        className={`aspect-square rounded-2xl overflow-hidden border-2 transition-all hover:scale-105 active:scale-95 ${user?.imageUrl === avatarUrl ? 'border-primary ring-2 ring-primary/20' : 'border-transparent hover:border-gray-300 dark:hover:border-gray-600'}`}
+                                    >
+                                        <img 
+                                            src={avatarUrl} 
+                                            alt={`Avatar ${i + 1}`} 
+                                            className="w-full h-full object-cover bg-gray-100 dark:bg-gray-800"
+                                        />
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
                 </div>
