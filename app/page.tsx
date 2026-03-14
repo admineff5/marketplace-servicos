@@ -718,7 +718,7 @@ export default function Home() {
                 <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#111] p-2 shadow-2xl overflow-hidden">
                   <div className="relative aspect-[16/10] rounded-xl overflow-hidden bg-[#0a0a0a]">
                     <Image
-                      src={['/showcase-dashboard-real.png', '/showcase-agenda-real.png', '/showcase-estoque-real.png'][showcaseIndex]}
+                      src={['/showcase-dashboard-v27.png', '/showcase-agenda-v27.png', '/showcase-estoque-v27.png'][showcaseIndex]}
                       alt={['Dashboard Principal', 'Calendário de Agendamentos', 'Controle de Estoque'][showcaseIndex]}
                       fill
                       className="object-cover object-top transition-opacity duration-500"
