@@ -17,7 +17,6 @@ export function Footer() {
                                 height={36}
                                 className="rounded-full"
                             />
-                            <span className="text-gray-400">v0.9.22</span>
                             <span className="text-lg font-bold text-gray-900 dark:text-white tracking-tight">
                                 Agende<span className="text-cyan-700 dark:text-primary">Já</span>
                             </span>
@@ -55,17 +54,7 @@ export function Footer() {
                         <ul className="space-y-3">
                             <li>
                                 <Link href="/fale-conosco" className="text-sm text-gray-400 hover:text-cyan-700 dark:hover:text-primary transition-colors">
-                                    Sobre
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/changelog" className="text-sm text-cyan-700 dark:text-primary font-medium hover:underline transition-colors">
-                                    Notas de Versão
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/fale-conosco" className="text-sm text-gray-400 hover:text-cyan-700 dark:hover:text-primary transition-colors">
-                                    Blog
+                                    Quem somos
                                 </Link>
                             </li>
                             <li>
@@ -88,11 +77,6 @@ export function Footer() {
                             <li>
                                 <Link href="/privacidade" className="text-sm text-gray-400 hover:text-cyan-700 dark:hover:text-primary transition-colors">
                                     Privacidade
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/privacidade" className="text-sm text-gray-400 hover:text-cyan-700 dark:hover:text-primary transition-colors">
-                                    LGPD
                                 </Link>
                             </li>
                         </ul>
