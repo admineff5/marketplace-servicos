@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.9.31] - 2026-03-14
+### Corrigido
+- Implementado bypass explícito no Middleware para a rota `/register`, eliminando qualquer redirecionamento residual para usuários logados (PF e PJ).
+- Atualizada versão global para v0.9.31.
+
 ## [0.9.30] - 2026-03-14
 ### Corrigido
 - Ajustada lógica de redirecionamento no Middleware para permitir acesso à página de Cadastro (`/register`) mesmo para usuários autenticados.

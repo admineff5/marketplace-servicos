@@ -2,8 +2,14 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-    const session = request.cookies.get('auth_session');
     const { pathname } = request.nextUrl;
+
+    // Bypass total para a rota de cadastro (necessário para usuários logados PF/PJ)
+    if (pathname === '/register') {
+        return NextResponse.next();
+    }
+
+    const session = request.cookies.get('auth_session');
 
     // Se o usuário está logado e tenta acessar login, redireciona para sua área
     if (session && pathname === '/login') {
