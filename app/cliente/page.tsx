@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, Clock, MapPin, Receipt, Star, CheckCircle, Search, Filter } from "lucide-react";
+import { Calendar, Clock, MapPin, Receipt, Star, CheckCircle, Search, Filter, User } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
@@ -197,6 +197,10 @@ export default function ClienteDashboard() {
                                     </div>
                                     <div className="flex items-center gap-1.5 bg-gray-50 dark:bg-[#1a1a1c] px-3 py-1.5 rounded-lg border border-gray-100 dark:border-gray-800/50">
                                         <Clock className="w-3.5 h-3.5" />
+                                        {item.time}
+                                    </div>
+                                    <div className="flex items-center gap-1.5 bg-gray-50 dark:bg-[#1a1a1c] px-3 py-1.5 rounded-lg border border-gray-100 dark:border-gray-800/50">
+                                        <User className="w-3.5 h-3.5" />
                                         Com {item.professional}
                                     </div>
                                     <div className="flex items-center gap-1.5 bg-gray-50 dark:bg-[#1a1a1c] px-3 py-1.5 rounded-lg border border-gray-100 dark:border-gray-800/50">
@@ -247,9 +251,14 @@ export default function ClienteDashboard() {
                                         <h3 className="text-md font-bold text-gray-900 dark:text-white mb-0.5">{item.service}</h3>
                                         <p className="font-medium text-gray-500 text-sm">{item.company}</p>
                                     </div>
-                                    <div className="flex items-center gap-1.5 bg-gray-100 dark:bg-[#1a1a1c] px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-800">
-                                        <Calendar className="w-3.5 h-3.5 text-gray-500" />
-                                        <span className="text-xs font-semibold text-gray-500">{item.date}</span>
+                                    <div className="flex flex-col items-end gap-2">
+                                        <span className={`px-2.5 py-1 text-xs font-bold rounded-full ${item.status === 'cancelled' ? 'bg-red-500/10 text-red-500' : 'bg-green-500/10 text-green-500'}`}>
+                                            {item.status === 'cancelled' ? 'Cancelado' : 'Realizado'}
+                                        </span>
+                                        <div className="flex items-center gap-1.5 bg-gray-100 dark:bg-[#1a1a1c] px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-800">
+                                            <Calendar className="w-3.5 h-3.5 text-gray-500" />
+                                            <span className="text-xs font-semibold text-gray-500">{item.date}</span>
+                                        </div>
                                     </div>
                                 </div>
 
