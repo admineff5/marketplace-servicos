@@ -722,8 +722,8 @@ export default function Home() {
 
               {/* Dashboard Showcase — Carousel de imagens */}
               <div className="relative">
-                <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#111] p-2 shadow-2xl overflow-hidden">
-                  <div className="relative aspect-[16/10] rounded-xl overflow-hidden bg-[#0a0a0a]">
+                <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-[#0a0a0a] p-1.5 sm:p-3 shadow-2xl overflow-hidden group/showcase">
+                  <div className="relative aspect-video rounded-xl overflow-hidden bg-white dark:bg-[#050505] flex items-center justify-center">
                     <Image
                       src={
                         (!mounted || (resolvedTheme === 'dark'))
@@ -732,8 +732,8 @@ export default function Home() {
                       }
                       alt={['Dashboard Principal', 'Calendário de Agendamentos', 'Controle de Estoque'][showcaseIndex]}
                       fill
-                      className="object-cover object-top transition-all duration-500"
-                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="object-contain object-center transition-all duration-700"
+                      sizes="(max-width: 1280px) 100vw, 80vw"
                       priority={showcaseIndex === 0}
                     />
                   </div>

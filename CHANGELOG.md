@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.29] - 2026-03-14
+### Alterado
+- Refinado layout do Showcase para garantir visibilidade total e centragem perfeita das capturas de sistema.
+- Alterada proporção do container para 16:9 (aspect-video) para melhor ergonomia visual.
+- Ajustado modo de escala para `contain` para evitar cortes nas interfaces do sistema.
+- Atualizada versão global para v0.9.29.
+
 ## [0.9.28] - 2026-03-14
 ### Adicionado
 - Implementado Showcase Dinâmico que alterna automaticamente entre os modos Claro (Light) e Escuro (Dark) baseado no tema do sistema.
