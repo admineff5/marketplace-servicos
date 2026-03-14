@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.9.23] - 2026-03-13
+### Adicionado
+- Suporte a link customizado do Google Maps para cada unidade/loja.
+
+### Alterado
+- Botão "Ver Rota" na área do cliente agora prioriza o link configurado pelo empresário.
+- Atualizada versão global para v0.9.23 (Footer e package.json).
+
 ## [0.9.22] - 2026-03-13
 ### Adicionado
 - Sistema de avaliação com estrelas na área do cliente (PF).
@@ -7,7 +15,9 @@
 
 ### Alterado
 - Botão "Agendar de Novo" agora redireciona para a Home com empresa e profissional pré-selecionados.
-- Atualizado rodapé para v0.9.22 em todas as referências.
+- Atualizado rodapé para v0.9.22 e removidos links desnecessários (Sobre, Notas de Versão, Blog, LGPD).
+- Adicionado link "Quem somos" na seção Empresa do rodapé.
+- Corrigida versão global no `package.json` para 0.9.22.
 
 ## [0.9.21] - 2026-03-13
 ### Alterado

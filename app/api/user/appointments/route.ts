@@ -25,7 +25,8 @@ export async function GET() {
                 location: {
                     select: {
                         name: true,
-                        address: true
+                        address: true,
+                        mapsLink: true
                     }
                 },
                 employee: {
@@ -164,6 +165,7 @@ function formatApt(apt: any) {
         image: apt.employee.image || "https://images.unsplash.com/photo-1560066914-1f29b3bbec3e?w=150&auto=format&fit=crop&q=80",
         locationId: apt.locationId,
         companyId: apt.companyId,
-        employeeId: apt.employeeId
+        employeeId: apt.employeeId,
+        mapsLink: apt.location.mapsLink
     };
 }
