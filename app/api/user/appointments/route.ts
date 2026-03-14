@@ -92,7 +92,7 @@ export async function POST(request: Request) {
         }
 
         const body = await request.json();
-        const { employeeId, serviceId, locationId, companyId, date, note } = body;
+        const { employeeId, serviceId, locationId, companyId, date, note, rebookId } = body;
 
         // Validar dados básicos
         if (!employeeId) return NextResponse.json({ error: "Escolha um profissional" }, { status: 400 });
@@ -100,16 +100,26 @@ export async function POST(request: Request) {
         if (!locationId) return NextResponse.json({ error: "Localização não identificada" }, { status: 400 });
         if (!date) return NextResponse.json({ error: "Escolha uma data e horário" }, { status: 400 });
 
-        const appointment = await (prisma.appointment as any).create({
-            data: {
-                userId,
-                employeeId,
-                serviceId,
-                locationId,
-                companyId, // <--- Novo campo adicionado
-                date: new Date(date),
-                status: "PENDING"
+        const appointment = await prisma.$transaction(async (tx) => {
+            if (rebookId) {
+                // Cancelar o agendamento antigo
+                await (tx.appointment as any).updateMany({
+                    where: { id: rebookId, userId: userId },
+                    data: { status: "CANCELLED" }
+                });
             }
+
+            return await (tx.appointment as any).create({
+                data: {
+                    userId,
+                    employeeId,
+                    serviceId,
+                    locationId,
+                    companyId,
+                    date: new Date(date),
+                    status: "PENDING"
+                }
+            });
         });
 
         // Se houver nota, poderíamos salvar em uma tabela de comentários ou campo extra no futuro

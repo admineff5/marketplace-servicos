@@ -80,7 +80,8 @@ export default function ClienteDashboard() {
             companyId: item.companyId,
             locationId: item.locationId,
             employeeId: item.employeeId,
-            serviceName: item.service
+            serviceName: item.service,
+            appointmentId: item.id // <--- ID do agendamento que será cancelado
         });
         window.location.href = `/?${params.toString()}`;
     };

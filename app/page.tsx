@@ -83,7 +83,6 @@ export default function Home() {
     };
     fetchCompanies();
   }, []);
-
   // Handle Rebooking Parameter
   useEffect(() => {
     if (companies.length > 0) {
@@ -93,7 +92,10 @@ export default function Home() {
             const locationId = params.get('locationId');
             const employeeId = params.get('employeeId');
             const serviceName = params.get('serviceName');
-
+            const appointmentId = params.get('appointmentId'); // <--- Ler do param
+ 
+            if (appointmentId) setRebookId(appointmentId); // <--- Setar no state
+ 
             // Find matching company/location card
             const company = companies.find(c => c.companyId === companyId && c.locationId === locationId);
             if (company) {
@@ -127,6 +129,7 @@ export default function Home() {
   const [clientNote, setClientNote] = useState<string>("");
   const [isBooking, setIsBooking] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [rebookId, setRebookId] = useState<string | null>(null); // <--- ID do agendamento que será cancelado
 
   // App State
   const [activeCategory, setActiveCategory] = useState("Todos");
@@ -255,7 +258,8 @@ export default function Home() {
           locationId: selectedCompany.locationId,
           companyId: selectedCompanyId,
           date: new Date(dateTime).toISOString(),
-          note: clientNote
+          note: clientNote,
+          rebookId: rebookId // <--- Envia para cancelar o antigo
         })
       });
 
