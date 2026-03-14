@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.9.33] - 2026-03-14
+### Adicionado
+- Expandido Sistema de Memória Persistente com regras estritas de escopo e protocolos de notificação Discord.
+- Implementado protocolo de "Live Update" obrigatório antes de qualquer ação técnica.
+- Atualizada versão global para v0.9.33.
+
 ## [0.9.32] - 2026-03-14
 ### Alterado
 - Corrigida saudação no topo da área do cliente para exibir o nome real do usuário em vez de "Cliente".
