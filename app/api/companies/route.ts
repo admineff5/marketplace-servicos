@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 
 export async function GET() {
     try {
-        const companies = await prisma.company.findMany({
+        const companies = await (prisma as any).company.findMany({
             include: {
                 locations: {
                     select: { id: true, address: true, name: true },
@@ -32,7 +32,7 @@ export async function GET() {
                     id: `${company.id}-${loc.id}`,
                     companyId: company.id,
                     locationId: loc.id,
-                    name: company.name + (company.locations.length > 1 ? ` - ${loc.name || loc.address}` : ""),
+                    name: company.name + (loc.name ? ` - ${loc.name}` : ""),
                     niche: company.niche || "Serviços",
                     rating: "5.0",
                     reviews: Math.floor(Math.random() * 100),

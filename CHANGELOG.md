@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.9.21] - 2026-03-13
+### Alterado
+- Renomeado "Configurações" para "Perfil da loja" no Painel do Parceiro.
+- Sidebar do cliente agora inicia recolhida por padrão.
+- Reduzida altura do rodapé (Footer) para um design mais compacto.
+- Melhorada legibilidade de endereços na lista de agendamentos.
+
+### Adicionado
+- Máscara de CEP (00000-000) e limite de caracteres no cadastro de unidades.
+
 ## [0.9.20] - 2026-03-13
 ### Fixed
 - Corrigida a exibição do nome do usuário ("Olá, [Nome]") na área do cliente (PF).

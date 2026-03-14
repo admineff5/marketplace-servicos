@@ -15,7 +15,7 @@ const CLIENT_LINKS = [
 
 export default function ClienteLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
-    const [isCollapsed, setIsCollapsed] = useState(false);
+    const [isCollapsed, setIsCollapsed] = useState(true);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [session, setSession] = useState<any>(null);
 

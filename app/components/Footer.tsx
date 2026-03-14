@@ -3,10 +3,10 @@ import Link from "next/link";
 
 export function Footer() {
     return (
-        <footer className="w-full bg-gray-100 dark:bg-[#0a0a0a] border-t border-gray-200 dark:border-gray-800 py-12 px-4 sm:px-6 lg:px-8 transition-colors mt-auto shrink-0 z-10 relative">
+        <footer className="w-full bg-gray-100 dark:bg-[#0a0a0a] border-t border-gray-200 dark:border-gray-800 py-8 px-4 sm:px-6 lg:px-8 transition-colors mt-auto shrink-0 z-10 relative">
             <div className="container mx-auto">
                 {/* Grid principal */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-16 mb-10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-16 mb-6">
                     {/* Coluna 1 — Branding */}
                     <div>
                         <div className="flex items-center gap-2.5 mb-4">

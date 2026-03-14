@@ -49,6 +49,11 @@ export default function ConfigPage() {
             .slice(0, 18);
     };
 
+    const maskCEP = (value: string) => {
+        if (!value) return "";
+        return value.replace(/\D/g, "").replace(/(\d{5})(\d)/, "$1-$2").slice(0, 9);
+    };
+
     useEffect(() => {
         fetchProfile();
     }, []);
@@ -175,7 +180,7 @@ export default function ConfigPage() {
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
                         <Settings className="w-6 h-6 text-cyan-700 dark:text-primary" />
-                        Configurações
+                        Perfil da loja
                     </h1>
                     <p className="text-gray-500 dark:text-gray-400 mt-1">
                         Gerencie as preferências e opções da sua conta empresarial.
@@ -302,8 +307,8 @@ export default function ConfigPage() {
                                                 <label className="text-xs font-medium text-gray-500 dark:text-gray-400">CEP</label>
                                                 <input 
                                                     type="text" 
-                                                    value={loc.cep} 
-                                                    onChange={(e) => handleUpdateLocation(loc.id, "cep", e.target.value)}
+                                                    value={maskCEP(loc.cep)} 
+                                                    onChange={(e) => handleUpdateLocation(loc.id, "cep", e.target.value.replace(/\D/g, "").slice(0, 8))}
                                                     className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm text-gray-900 dark:text-white outline-none focus:ring-1 focus:ring-primary" 
                                                 />
                                             </div>
@@ -431,8 +436,11 @@ export default function ConfigPage() {
                                     <input 
                                         required
                                         type="text" 
-                                        value={newLocation.cep}
-                                        onChange={(e) => setNewLocation({...newLocation, cep: e.target.value})}
+                                        value={maskCEP(newLocation.cep)}
+                                        onChange={(e) => {
+                                            const val = e.target.value.replace(/\D/g, "").slice(0, 8);
+                                            setNewLocation({...newLocation, cep: val});
+                                        }}
                                         className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 outline-none" 
                                         placeholder="00000-000"
                                     />
