@@ -8,6 +8,8 @@
   - Showcase must use real screenshots, never placeholders.
   - Use `object-cover` for business/service photos to ensure full framing.
   - Backgrounds: Use glassmorphism (`backdrop-blur`) and deep grays (`#0a0a0a`) for dark mode cards.
+- **Layout Previews:** 
+  - NUNCA altere a estrutura principal do site (Layout) diretamente para encaixar novidades sem antes apresentar a proposta no arquivo de plano (`implementation_plan.md`) e aguardar a aprovação do Rodrigo.
 
 ## Fluxo de Trabalho & Escopo
 - **Foco Estrito:** Siga **apenas** o que foi solicitado pelo Rodrigo. Não faça alterações "por conta própria" ou melhorias não requisitadas que fujam do escopo da tarefa atual.

@@ -41,9 +41,7 @@ export default function ClienteLayout({ children }: { children: React.ReactNode 
             <aside className={`fixed inset-y-0 left-0 z-50 flex flex-col bg-white dark:bg-[#111] border-r border-gray-200 dark:border-gray-800 transition-all duration-300 md:relative md:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} w-72 ${isCollapsed ? 'md:w-20' : 'md:w-64'}`}>
                 <div className={`h-16 flex items-center border-b border-gray-100 dark:border-gray-800 relative ${isCollapsed ? 'md:justify-center px-6 md:px-0' : 'px-6 justify-between'}`}>
                     <Link href="/cliente" className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-cyan-700 dark:bg-primary flex items-center justify-center shrink-0">
-                            <Calendar className="w-5 h-5 text-white dark:text-black" />
-                        </div>
+                        <Image src="/logo-icon.png" alt="Logo" width={32} height={32} className="object-contain" />
                         <span className={`font-bold text-gray-900 dark:text-white tracking-tight truncate ${isCollapsed ? 'md:hidden' : ''}`}>Minha Agenda</span>
                     </Link>
 

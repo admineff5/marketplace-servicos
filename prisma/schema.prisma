@@ -23,6 +23,7 @@ model User {
   address         String?
   addresses       Address[]
   paymentMethods  PaymentMethod[]
+  imageUrl        String?
 }
 
 model Company {

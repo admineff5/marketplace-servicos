@@ -145,7 +145,7 @@ def parse_changelog(content):
     # Sort by version tuple
     final_list.sort(key=lambda x: [int(p) for p in x["version"].split(".")])
     
-    return [f for f in final_list if [int(p) for p in f["version"].split(".")] >= [0, 8, 0]]
+    return [f for f in final_list if [int(p) for p in f["version"].split(".")] >= [0, 9, 33]]
 
 def main():
     with open("CHANGELOG.md", "r", encoding="utf-8") as f:

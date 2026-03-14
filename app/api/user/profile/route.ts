@@ -30,6 +30,7 @@ export async function GET() {
                 cpf: true,
                 address: true,
                 phone: true,
+                imageUrl: true,
             }
         });
 
@@ -59,13 +60,14 @@ export async function PUT(request: Request) {
 
         const { id } = JSON.parse(session.value);
         const body = await request.json();
-        const { name, address, phone } = body;
+        const { name, address, phone, imageUrl } = body;
 
         // Construir objeto de atualização apenas com campos permitidos
         const updateData: Record<string, string> = {};
         if (name) updateData.name = name;
         if (address) updateData.address = address;
         if (phone) updateData.phone = phone;
+        if (imageUrl !== undefined) updateData.imageUrl = imageUrl;
 
         if (Object.keys(updateData).length === 0) {
             return NextResponse.json({ error: "Nenhum campo válido para atualizar" }, { status: 400 });
@@ -80,6 +82,7 @@ export async function PUT(request: Request) {
                 email: true,
                 address: true,
                 phone: true,
+                imageUrl: true,
             }
         });
 

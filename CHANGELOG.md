@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.9.34] - 2026-03-14
+### Adicionado
+- Nova funcionalidade de upload e escolha de foto de perfil (avatares) para clientes.
+- Exibição dinâmica da foto de perfil integrada ao layout e banco de dados.
+### Alterado
+- Removido ícone duplicado de "Agenda" do menu lateral e substituído pela logo oficial da AgendaJá.
+- Atualizada versão global para v0.9.34.
+
 ## [0.9.33] - 2026-03-14
 ### Adicionado
 - Expandido Sistema de Memória Persistente com regras estritas de escopo e protocolos de notificação Discord.

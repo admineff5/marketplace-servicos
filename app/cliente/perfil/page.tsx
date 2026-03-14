@@ -1,6 +1,6 @@
 "use client";
 
-import { User, Mail, CreditCard, MapPin, Phone, ShieldCheck, Save, ArrowLeft, Plus, Trash2, Star, CheckCircle2, X, Home } from "lucide-react";
+import { User, Mail, CreditCard, MapPin, Phone, ShieldCheck, Save, ArrowLeft, Plus, Trash2, Star, CheckCircle2, X, Home, Camera, Upload } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
@@ -15,6 +15,7 @@ export default function PerfilCliente() {
     // Modals
     const [showAddressModal, setShowAddressModal] = useState(false);
     const [showCardModal, setShowCardModal] = useState(false);
+    const [showAvatarModal, setShowAvatarModal] = useState(false);
 
     // Form States
     const [newAddress, setNewAddress] = useState({
@@ -80,6 +81,28 @@ export default function PerfilCliente() {
             console.error(err);
         }
     };
+
+    const handleAvatarUpdate = async (imageUrl: string) => {
+        setIsSaving(true);
+        try {
+            const res = await fetch("/api/user/profile", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ imageUrl })
+            });
+            if (res.ok) {
+                setShowAvatarModal(false);
+                fetchData();
+                setMessage({ type: "success", text: "Foto alterada com sucesso!" });
+                setTimeout(() => setMessage({ type: "", text: "" }), 3000);
+            }
+        } catch (err) {
+            setMessage({ type: "error", text: "Erro ao atualizar foto." });
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
 
     const handleAddCard = async () => {
         setIsSaving(true);
@@ -156,11 +179,21 @@ export default function PerfilCliente() {
                 <div className="lg:col-span-1 space-y-6">
                     <div className="bg-white dark:bg-[#111] border border-gray-100 dark:border-gray-800 rounded-3xl p-6 shadow-sm">
                         <div className="flex flex-col items-center text-center mb-6">
-                            <div className="w-20 h-20 bg-cyan-100 dark:bg-primary/10 rounded-full flex items-center justify-center mb-4 border border-cyan-200 dark:border-primary/20">
-                                <User className="w-10 h-10 text-cyan-700 dark:text-primary" />
+                            <div className="relative group cursor-pointer mb-4" onClick={() => setShowAvatarModal(true)}>
+                                <div className="w-24 h-24 bg-cyan-100 dark:bg-primary/10 rounded-full flex items-center justify-center border-2 border-cyan-200 dark:border-primary/20 overflow-hidden relative">
+                                    {user?.imageUrl ? (
+                                        <img src={user.imageUrl} alt="Avatar" className="w-full h-full object-cover" />
+                                    ) : (
+                                        <User className="w-10 h-10 text-cyan-700 dark:text-primary" />
+                                    )}
+                                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <Camera className="w-6 h-6 text-white" />
+                                    </div>
+                                </div>
                             </div>
                             <h2 className="font-bold text-lg dark:text-white">{user?.name}</h2>
                             <span className="text-xs text-cyan-700 dark:text-primary font-bold uppercase tracking-widest">{user?.role}</span>
+                            {message.type && <p className={`mt-2 text-xs font-bold ${message.type === 'error' ? 'text-red-500' : 'text-green-500'}`}>{message.text}</p>}
                         </div>
 
                         <div className="space-y-4">
@@ -396,6 +429,57 @@ export default function PerfilCliente() {
                         <button onClick={handleAddCard} disabled={isSaving} className="w-full mt-8 bg-black dark:bg-primary text-white dark:text-black font-bold py-4 rounded-2xl hover:opacity-90 transition-all flex items-center justify-center gap-2">
                             {isSaving ? "Salvando..." : <><CheckCircle2 className="w-4 h-4" /> Cadastrar Cartão</>}
                         </button>
+                    </div>
+                </div>
+            )}
+            {/* Avatar Modal */}
+            {showAvatarModal && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 rounded-[32px] w-full max-w-lg p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto custom-scrollbar">
+                        <button onClick={() => setShowAvatarModal(false)} className="absolute top-6 right-6 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full">
+                            <X className="w-5 h-5 text-gray-400" />
+                        </button>
+                        <h2 className="text-2xl font-bold dark:text-white mb-6">Alterar Foto de Perfil</h2>
+                        
+                        {/* Upload Zone (Simulated) */}
+                        <div 
+                            className="w-full border-2 border-dashed border-gray-200 dark:border-gray-800 hover:border-cyan-500 dark:hover:border-primary transition-colors rounded-2xl p-8 flex flex-col items-center justify-center cursor-pointer mb-8"
+                            onClick={() => {
+                                const url = prompt("Cole a URL da sua foto (ou usaríamos um input file real aqui):");
+                                if (url) handleAvatarUpdate(url);
+                            }}
+                        >
+                            <div className="w-12 h-12 bg-cyan-100 dark:bg-primary/10 rounded-full flex items-center justify-center mb-3">
+                                <Upload className="w-5 h-5 text-cyan-700 dark:text-primary" />
+                            </div>
+                            <p className="font-bold text-gray-700 dark:text-gray-200">Faça Upload do seu Computador</p>
+                            <p className="text-xs text-gray-400 mt-1">JPG, PNG ou WebP. Máx 5MB.</p>
+                        </div>
+
+                        <div className="flex items-center gap-4 mb-6">
+                            <div className="h-px bg-gray-200 dark:bg-gray-800 flex-1"></div>
+                            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Ou Escolha um Avatar</span>
+                            <div className="h-px bg-gray-200 dark:bg-gray-800 flex-1"></div>
+                        </div>
+
+                        <div className="grid grid-cols-5 gap-3">
+                            {Array.from({ length: 10 }).map((_, i) => (
+                                <button
+                                    key={i}
+                                    onClick={() => handleAvatarUpdate(`/avatars/avatar-${i + 1}.png`)}
+                                    className={`aspect-square rounded-2xl overflow-hidden border-2 transition-all hover:scale-105 active:scale-95 ${user?.imageUrl === `/avatars/avatar-${i + 1}.png` ? 'border-primary ring-2 ring-primary/20' : 'border-transparent hover:border-gray-300 dark:hover:border-gray-600'}`}
+                                >
+                                    <img 
+                                        src={`/avatars/avatar-${i + 1}.png`} 
+                                        alt={`Avatar ${i + 1}`} 
+                                        className="w-full h-full object-cover bg-gray-100 dark:bg-gray-800"
+                                        onError={(e) => {
+                                            (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=Avatar+${i + 1}&background=random`;
+                                        }}
+                                    />
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 </div>
             )}
