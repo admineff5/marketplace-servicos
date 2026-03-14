@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.9.24] - 2026-03-14
+### Alterado
+- Substituídas imagens de demonstração (Showcase) por capturas reais do sistema.
+- Atualizada versão global para v0.9.24.
+
 ## [0.9.23] - 2026-03-13
 ### Adicionado
 - Suporte a link customizado do Google Maps para cada unidade/loja.
