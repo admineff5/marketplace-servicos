@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.9.26.2] - 2026-03-14
+### Alterado
+- Substituídas imagens de showcase (Dashboard, Agenda e Estoque) pelos prints reais enviados pelo usuário.
+- Atualizada versão global para v0.9.26.2.
+
 ## [0.9.25.1] - 2026-03-14
 ### Corrigido
 - Corrigidos links das imagens de demonstração (Showcase) que estavam apontando para caminhos inválidos.
