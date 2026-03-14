@@ -23,7 +23,7 @@ export default function ClienteLayout({ children }: { children: React.ReactNode 
         fetch("/api/auth/session")
             .then(res => res.json())
             .then(data => {
-                if (!data.error) setSession(data);
+                if (data.authenticated) setSession(data.user);
             });
     }, []);
 

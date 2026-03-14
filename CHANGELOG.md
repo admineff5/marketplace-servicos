@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.9.32] - 2026-03-14
+### Alterado
+- Corrigida saudação no topo da área do cliente para exibir o nome real do usuário em vez de "Cliente".
+- Padronizada exibição de imagens de empresas em todas as abas da área do cliente (agora usam `object-cover` para enquadramento total).
+- Atualizada versão global para v0.9.32.
+
 ## [0.9.31] - 2026-03-14
 ### Corrigido
 - Implementado bypass explícito no Middleware para a rota `/register`, eliminando qualquer redirecionamento residual para usuários logados (PF e PJ).
