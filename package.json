@@ -1,6 +1,6 @@
 {
   "name": "marketplace",
-  "version": "0.9.24",
+  "version": "0.9.25.1",
   "private": true,
   "scripts": {
     "dev": "next dev",

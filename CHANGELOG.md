@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.9.25.1] - 2026-03-14
+### Corrigido
+- Corrigidos links das imagens de demonstração (Showcase) que estavam apontando para caminhos inválidos.
+- Movidas imagens reais para a pasta `/public` para garantir o carregamento correto.
+- Atualizada versão global para v0.9.25.1.
+
 ## [0.9.24] - 2026-03-14
 ### Alterado
 - Substituídas imagens de demonstração (Showcase) por capturas reais do sistema.
