@@ -804,7 +804,7 @@ export default function Home() {
           onClick={closeModal}
         >
           <div
-            className="w-full max-w-2xl bg-[#0a0a0b] dark:bg-[#111] rounded-3xl overflow-hidden shadow-2xl scale-100 transition-transform flex flex-col max-h-[90vh] border border-[#222]"
+            className="w-full max-w-2xl bg-white dark:bg-[#0a0a0b] rounded-3xl overflow-hidden shadow-2xl scale-100 transition-transform flex flex-col max-h-[90vh] border border-gray-200 dark:border-[#222]"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Scrollable entire modal */}
@@ -832,7 +832,7 @@ export default function Home() {
                   alt="Banner"
                   className="w-full h-full object-cover opacity-80"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0b] dark:from-[#111] to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-[#0a0a0b] to-transparent"></div>
                 <button
                   onClick={closeModal}
                   className="absolute top-4 right-4 p-2 bg-black/40 hover:bg-black/80 text-white rounded-full backdrop-blur-md transition-colors z-20"
@@ -846,7 +846,7 @@ export default function Home() {
                 <div className="flex flex-col sm:flex-row items-end sm:items-center justify-between gap-4 mb-6">
                   {/* Profile Icon overlapping banner */}
                   <div className="flex items-center gap-4">
-                    <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-2xl border-4 border-[#0a0a0b] dark:border-[#111] bg-gray-800 flex items-center justify-center relative z-20 shadow-md overflow-hidden">
+                    <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-2xl border-4 border-white dark:border-[#0a0a0b] bg-gray-100 dark:bg-gray-800 flex items-center justify-center relative z-20 shadow-md overflow-hidden">
                       <img
                         src={selectedCompany.logo}
                         alt="Logo"
@@ -854,7 +854,7 @@ export default function Home() {
                       />
                     </div>
                     <div className="mt-4">
-                      <h2 className="text-2xl font-bold text-white mb-1">
+                      <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
                         {selectedCompany.name}
                       </h2>
                       <div className="flex items-center gap-3">
@@ -872,12 +872,12 @@ export default function Home() {
                   </div>
                 </div>
 
-                <p className="text-gray-400 text-sm leading-relaxed mb-6">
+                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-6">
                   {selectedCompany.description}
                 </p>
 
                 <div className="flex flex-wrap gap-3 mb-8">
-                  <div className="flex items-center gap-2 text-xs font-medium text-gray-300 bg-[#1a1a1c] border border-[#2a2a2c] px-3 py-1.5 rounded-lg">
+                  <div className="flex items-center gap-2 text-xs font-medium text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-[#1a1a1c] border border-gray-100 dark:border-[#2a2a2c] px-3 py-1.5 rounded-lg">
                     <MapPin className="w-3.5 h-3.5 text-cyan-700 dark:text-primary" />
                     {selectedCompany.address}
                   </div>
@@ -886,7 +886,7 @@ export default function Home() {
                 {/* --- SCHEDULING FLOW --- */}
 
                 {/* 1. Services */}
-                <h3 className="text-lg font-bold text-white mb-3">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
                   1. Escolha um Serviço
                 </h3>
                 <div className="space-y-3 mb-8">
@@ -900,11 +900,11 @@ export default function Home() {
                           setSelectedCompanyId(service.companyId);
                           setSelectedServiceName(service.name);
                         }}
-                        className={`group flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${isSelected ? "border-primary bg-primary/5" : "border-[#2a2a2c] bg-[#151516] hover:border-[#3a3a3c]"} `}
+                        className={`group flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${isSelected ? "border-primary bg-primary/5" : "border-gray-100 dark:border-[#2a2a2c] bg-gray-50 dark:bg-[#151516] hover:border-gray-300 dark:hover:border-[#3a3a3c]"} `}
                       >
                         <div className="flex items-center gap-4">
                           <div
-                            className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? "border-primary" : "border-gray-600"} `}
+                            className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? "border-primary" : "border-gray-300 dark:border-gray-600"} `}
                           >
                             {isSelected && (
                               <div className="w-2.5 h-2.5 bg-primary rounded-full"></div>
@@ -912,7 +912,7 @@ export default function Home() {
                           </div>
                           <div>
                             <h4
-                              className={`font-semibold text-sm transition-colors ${isSelected ? "text-cyan-700 dark:text-primary" : "text-gray-200 group-hover:text-white"} `}
+                              className={`font-semibold text-sm transition-colors ${isSelected ? "text-cyan-700 dark:text-primary" : "text-gray-800 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white"} `}
                             >
                               {service.name}
                             </h4>
@@ -922,7 +922,7 @@ export default function Home() {
                           </div>
                         </div>
                         <p
-                          className={`font-bold text-sm ${isSelected ? "text-cyan-700 dark:text-primary" : "text-gray-300"} `}
+                          className={`font-bold text-sm ${isSelected ? "text-cyan-700 dark:text-primary" : "text-gray-700 dark:text-gray-300"} `}
                         >
                           {service.price}
                         </p>
@@ -935,7 +935,7 @@ export default function Home() {
                 <div
                   className={`transition-all duration-500 ease -in -out ${selectedServiceId ? "opacity-100 max-h-[500px]" : "opacity-50 max-h-40 overflow-hidden pointer-events-none"} `}
                 >
-                  <h3 className="text-lg font-bold text-white mb-3">
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
                     2. Profissional
                   </h3>
                   <div className="flex items-center gap-4 overflow-x-auto pb-4 mb-6 scrollbar-hide py-3 px-2">
@@ -951,7 +951,7 @@ export default function Home() {
                           className={`flex flex-col items-center gap-2 cursor-pointer group shrink-0 transition-opacity ${!isSelected && selectedProfessional ? "opacity-60 hover:opacity-100" : "opacity-100"} `}
                         >
                           <div
-                            className={`h-16 w-16 rounded-full overflow-hidden transition-all ${isSelected ? "ring-2 ring-offset-4 ring-primary ring-offset-[#111] shadow-[0_0_15px_rgba(0,255,255,0.3)]" : "border-2 border-transparent group-hover:border-gray-500"} `}
+                            className={`h-16 w-16 rounded-full overflow-hidden transition-all ${isSelected ? "ring-2 ring-offset-4 ring-primary ring-offset-white dark:ring-offset-[#0a0a0b] shadow-[0_0_15px_rgba(0,255,255,0.3)]" : "border-2 border-transparent group-hover:border-gray-500"} `}
                           >
                             <img
                               src={person.image}
@@ -960,7 +960,7 @@ export default function Home() {
                             />
                           </div>
                           <span
-                            className={`text-xs font-medium transition-colors ${isSelected ? "text-cyan-700 dark:text-primary font-bold" : "text-gray-400 group-hover:text-gray-200"} `}
+                            className={`text-xs font-medium transition-colors ${isSelected ? "text-cyan-700 dark:text-primary font-bold" : "text-gray-600 dark:text-gray-400 group-hover:text-gray-800 dark:group-hover:text-gray-200"} `}
                           >
                             {person.name}
                           </span>
@@ -974,7 +974,7 @@ export default function Home() {
                 <div
                   className={`transition-all duration-500 ease-in-out ${selectedProfessional ? "opacity-100 max-h-[500px]" : "opacity-0 max-h-0 overflow-hidden pointer-events-none"} `}
                 >
-                  <h3 className="text-lg font-bold text-white mb-3">
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
                     3. Escolha o Dia
                   </h3>
                   <div className="flex items-center gap-3 overflow-x-auto pb-4 mb-6 scrollbar-hide py-1 px-1">
@@ -989,14 +989,14 @@ export default function Home() {
                           }}
                           className={`flex flex-col items-center justify-center shrink-0 w-[72px] h-[84px] rounded-2xl border transition-all cursor-pointer ${isSelected
                               ? "border-primary bg-primary text-black shadow-[0_0_15px_rgba(0,255,255,0.4)]"
-                              : "border-[#2a2a2c] bg-[#151516] text-gray-400 hover:border-gray-500 hover:text-white hover:bg-[#1e1f22]"
+                              : "border-gray-100 dark:border-[#2a2a2c] bg-gray-50 dark:bg-[#151516] text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-500 hover:text-gray-800 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#1e1f22]"
                             } `}
                         >
                           <span className="text-[11px] font-bold uppercase tracking-wider mb-1">
                             {ds.dayName}
                           </span>
                           <span
-                            className={`text-2xl font-extrabold leading-none mb-1 ${isSelected ? "text-black" : "text-white"} `}
+                            className={`text-2xl font-extrabold leading-none mb-1 ${isSelected ? "text-black" : "text-gray-900 dark:text-white"} `}
                           >
                             {ds.dayNumber}
                           </span>
@@ -1013,7 +1013,7 @@ export default function Home() {
                 <div
                   className={`transition-all duration-500 ease-in-out ${selectedDate ? "opacity-100 max-h-[500px]" : "opacity-0 max-h-0 overflow-hidden pointer-events-none"} `}
                 >
-                  <h3 className="text-lg font-bold text-white mb-3">
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
                     4. Horários Livres
                   </h3>
 
@@ -1073,7 +1073,7 @@ export default function Home() {
                 <div
                   className={`transition-all duration-500 ease-in-out ${selectedTime ? "opacity-100 max-h-[500px]" : "opacity-0 max-h-0 overflow-hidden pointer-events-none"} `}
                 >
-                  <h3 className="text-lg font-bold text-white mb-3">
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
                     5. Alguma dúvida ou observação?
                   </h3>
                   <div className="mb-8">
@@ -1081,14 +1081,14 @@ export default function Home() {
                       value={clientNote}
                       onChange={(e) => setClientNote(e.target.value)}
                       placeholder="Ex: Preciso que tirem apenas as pontas, tenho alergia a tal produto..."
-                      className="w-full bg-[#151516] border border-[#2a2a2c] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all resize-none h-24"
+                      className="w-full bg-gray-50 dark:bg-[#151516] border border-gray-100 dark:border-[#2a2a2c] rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all resize-none h-24"
                     />
                   </div>
                 </div>
 
                  {/* Checkout Button */}
                 <div
-                  className={`sticky bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#0a0a0b] via-[#0a0a0b] to-transparent transition-all duration-500 ${selectedTime ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"} `}
+                  className={`sticky bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white via-white dark:from-[#0a0a0b] dark:via-[#0a0a0b] to-transparent transition-all duration-500 ${selectedTime ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"} `}
                 >
                   <button 
                     onClick={handleConfirmBooking}
@@ -1111,12 +1111,12 @@ export default function Home() {
 
               {/* Success Overlay */}
               {showSuccess && (
-                <div className="absolute inset-0 z-[60] flex flex-col items-center justify-center bg-black/90 backdrop-blur-md animate-in fade-in zoom-in duration-300">
+                <div className="absolute inset-0 z-[60] flex flex-col items-center justify-center bg-white/90 dark:bg-black/90 backdrop-blur-md animate-in fade-in zoom-in duration-300">
                   <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mb-6 border border-primary/50">
                     <CheckCircle2 className="w-10 h-10 text-primary animate-bounce" />
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-2">Agendado com Sucesso!</h3>
-                  <p className="text-gray-400 text-center px-8">Seu horário para {selectedServiceName} foi reservado. Você pode acompanhá-lo no seu perfil.</p>
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Agendado com Sucesso!</h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-center px-8">Seu horário para {selectedServiceName} foi reservado. Você pode acompanhá-lo no seu perfil.</p>
                   <button 
                     onClick={() => {
                       setShowSuccess(false);
