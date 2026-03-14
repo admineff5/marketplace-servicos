@@ -180,7 +180,7 @@ export default function Home() {
     return dayOfWeek !== 0;
   };
 
-  const generateTimeSlots = (hoursRange: string | null, date: string | null, staffId: string | null, companyBlocks: any[] = []) => {
+  const generateTimeSlots = (hoursRange: string | null, date: string | null, staffId: string | null, companyBlocks: any[] = [], companyAppointments: any[] = []) => {
     if (!hoursRange) return ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"];
     
     try {
@@ -207,7 +207,15 @@ export default function Home() {
           timeStr >= (b.openTime || "") && timeStr <= (b.closeTime || "")
         );
 
-        if (!isTimeBlocked) {
+        // --- NOVO BLOQUEIO DE HORÁRIOS JÁ AGENDADOS ---
+        const isAlreadyBooked = companyAppointments?.some(apt => {
+          const aptDate = apt.date.split("T")[0]; // "YYYY-MM-DD"
+          const aptTime = new Date(apt.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+          
+          return aptDate === date && apt.employeeId === staffId && aptTime === timeStr;
+        });
+
+        if (!isTimeBlocked && !isAlreadyBooked) {
           slots.push(timeStr);
         }
         
@@ -1041,7 +1049,8 @@ export default function Home() {
                             activeProfessionalData?.hours,
                             selectedDate,
                             selectedProfessional,
-                            selectedCompany?.blocks
+                            selectedCompany?.blocks || [],
+                            selectedCompany?.appointments || [] // <--- PASSAR OS AGENDAMENTOS
                           );
                           if (slots.length > 0) {
                             return (

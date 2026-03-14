@@ -268,10 +268,16 @@ export default function AgendaPage() {
                                                 const dayAppointments = appointments.filter((apt: any) => {
                                                     if (!day.date) return false;
                                                     const aptDate = new Date(apt.date);
+                                                    
+                                                    // Usar getUTCDate para evitar problemas de fuso horário
+                                                    const aptDay = aptDate.getUTCDate();
+                                                    const aptMonth = aptDate.getUTCMonth();
+                                                    const aptYear = aptDate.getUTCFullYear();
+
                                                     return (
-                                                        aptDate.getDate() === day.date &&
-                                                        aptDate.getMonth() === month &&
-                                                        aptDate.getFullYear() === year &&
+                                                        aptDay === day.date &&
+                                                        aptMonth === month &&
+                                                        aptYear === year &&
                                                         (selectedPros.length === 0 || selectedPros.includes(apt.employeeId || apt.employee?.id))
                                                     );
                                                 });
@@ -331,9 +337,9 @@ export default function AgendaPage() {
                                                 const colApts = appointments.filter((apt: any) => {
                                                     const aptDate = new Date(apt.date);
                                                     return (
-                                                        aptDate.getDate() === cDate &&
-                                                        aptDate.getMonth() === cMon &&
-                                                        aptDate.getFullYear() === cYear &&
+                                                        aptDate.getUTCDate() === cDate &&
+                                                        aptDate.getUTCMonth() === cMon &&
+                                                        aptDate.getUTCFullYear() === cYear &&
                                                         selectedPros.includes(apt.prof)
                                                     );
                                                 });
@@ -413,9 +419,9 @@ export default function AgendaPage() {
                                                 {appointments.filter((apt: any) => {
                                                     const aptDate = new Date(apt.date);
                                                     return (
-                                                        aptDate.getDate() === currentDate.getDate() &&
-                                                        aptDate.getMonth() === currentDate.getMonth() &&
-                                                        aptDate.getFullYear() === currentDate.getFullYear() &&
+                                                        aptDate.getUTCDate() === currentDate.getDate() &&
+                                                        aptDate.getUTCMonth() === currentDate.getMonth() &&
+                                                        aptDate.getUTCFullYear() === currentDate.getFullYear() &&
                                                         selectedPros.includes(apt.prof)
                                                     );
                                                 }).map((apt: any, idx: any) => {
