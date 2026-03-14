@@ -110,8 +110,12 @@ export default function ClienteDashboard() {
                     upcoming.map(item => (
                         <div key={item.id} className="bg-white dark:bg-[#111] border border-gray-100 dark:border-gray-800 rounded-2xl p-5 shadow-sm transition-all hover:shadow-md flex flex-col sm:flex-row gap-5 relative overflow-hidden group">
                             {/* Image */}
-                            <div className="w-full sm:w-24 h-32 sm:h-24 rounded-xl overflow-hidden shrink-0 border border-gray-200 dark:border-gray-800">
-                                <img src={item.image} alt={item.company} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                            <div className="w-full sm:w-24 h-32 sm:h-24 rounded-xl overflow-hidden shrink-0 border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
+                                <img 
+                                    src={item.image} 
+                                    alt={item.company} 
+                                    className="w-full h-full object-contain group-hover:scale-105 transition-transform" 
+                                />
                             </div>
 
                             {/* Info */}
@@ -148,10 +152,16 @@ export default function ClienteDashboard() {
                             <div className="flex flex-col justify-between sm:items-end border-t sm:border-t-0 sm:border-l border-gray-100 dark:border-gray-800 pt-4 sm:pt-0 sm:pl-5">
                                 <p className="text-lg font-bold text-gray-900 dark:text-white">{item.price}</p>
                                 <div className="flex gap-2 mt-4 sm:mt-0">
-                                    <button className="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors w-full sm:w-auto">
+                                    <button 
+                                        onClick={() => window.location.href = `/marcar?id=${item.companyId}`}
+                                        className="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors w-full sm:w-auto"
+                                    >
                                         Reagendar
                                     </button>
-                                    <button className="px-4 py-2 bg-primary/10 text-cyan-700 dark:text-primary border border-primary/20 rounded-lg text-sm font-bold hover:bg-primary hover:text-black transition-colors w-full sm:w-auto">
+                                    <button 
+                                        onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.address)}`, '_blank')}
+                                        className="px-4 py-2 bg-primary/10 text-cyan-700 dark:text-primary border border-primary/20 rounded-lg text-sm font-bold hover:bg-primary hover:text-black transition-colors w-full sm:w-auto"
+                                    >
                                         Ver Rota
                                     </button>
                                 </div>

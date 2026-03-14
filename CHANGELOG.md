@@ -1,3 +1,21 @@
+# Changelog
+
+## [0.9.20] - 2026-03-13
+### Fixed
+- Corrigida a exibição do nome do usuário ("Olá, [Nome]") na área do cliente (PF).
+- Resolvida inconsistência na Agenda do Dashboard (agora reflete os agendamentos reais).
+- Corrigido endereços e nomes de empresas na lista de agendamentos do cliente.
+- Corrigida a versão exibida no Footer para v0.9.19 (conforme solicitado).
+
+### Changed
+- Dashboard: Renomeado "Configurações" para "Perfil da loja".
+- Dashboard: Cabeçalho agora mostra o nome da empresa e o texto "Perfil" ao lado do avatar.
+- Área do Cliente: Imagens dos agendamentos agora usam `object-contain` para evitar cortes.
+
+### Added
+- Botão "Ver Rota" funcional (Google Maps) na lista de agendamentos.
+- Botão "Reagendar" funcional (redireciona para a página da empresa).
+
 ## [0.9.19] - 2026-03-13
 ### Adicionado
 - Opção "Final de semana" em bloqueios de agenda.

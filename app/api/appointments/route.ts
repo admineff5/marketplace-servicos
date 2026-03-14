@@ -39,10 +39,10 @@ export async function GET(request: Request) {
                 whereClause.date = { gte: startOfDay, lte: endOfDay };
             }
 
-            const appointments = await prisma.appointment.findMany({
+            const appointments = await (prisma.appointment as any).findMany({
                 where: whereClause,
                 include: {
-                    employee: { select: { name: true } },
+                    employee: { select: { id: true, name: true } }, // Include ID for agenda filter
                     service: { select: { name: true, price: true } },
                     location: { select: { name: true, address: true } },
                     user: { select: { name: true } }
@@ -51,12 +51,13 @@ export async function GET(request: Request) {
                 take: limitStr ? parseInt(limitStr) : undefined
             });
 
-            const formatted = appointments.map((apt: any) => ({
+            const formatted = (appointments as any[]).map((apt: any) => ({
                 id: apt.id,
                 start: apt.date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
                 end: new Date(apt.date.getTime() + (apt.service?.duration || 30) * 60000).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
                 client: apt.user?.name || "Cliente",
                 prof: apt.employee?.name || "Profissional",
+                employeeId: apt.employeeId, // <--- NECESSÁRIO PARA O FILTRO DA AGENDA
                 title: `${apt.service?.name || "Serviço"} - ${apt.user?.name || "Cliente"}`,
                 value: apt.service?.price || 0,
                 status: apt.status,
@@ -113,7 +114,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Campos obrigatórios: employeeId, serviceId, locationId, date" }, { status: 400 });
         }
 
-        const appointment = await prisma.appointment.create({
+        const appointment = await (prisma.appointment as any).create({
             data: {
                 employeeId,
                 serviceId,

@@ -13,7 +13,7 @@ export async function GET() {
 
         const { id: userId } = JSON.parse(session.value);
 
-        const appointments = await prisma.appointment.findMany({
+        const appointments = await (prisma.appointment as any).findMany({
             where: { userId },
             include: {
                 service: {
@@ -29,6 +29,12 @@ export async function GET() {
                     }
                 },
                 employee: {
+                    select: {
+                        name: true,
+                        image: true
+                    }
+                },
+                company: {
                     select: {
                         name: true
                     }
@@ -86,7 +92,7 @@ export async function POST(request: Request) {
         if (!locationId) return NextResponse.json({ error: "Localização não identificada" }, { status: 400 });
         if (!date) return NextResponse.json({ error: "Escolha uma data e horário" }, { status: 400 });
 
-        const appointment = await prisma.appointment.create({
+        const appointment = await (prisma.appointment as any).create({
             data: {
                 userId,
                 employeeId,
@@ -112,13 +118,15 @@ function formatApt(apt: any) {
     return {
         id: apt.id,
         service: apt.service.name,
-        company: "Marketplace Estética", // No futuro, buscar o nome da empresa via employee -> company
+        company: apt.company?.name || "Empresa", 
         date: new Date(apt.date).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }),
         time: new Date(apt.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
         professional: apt.employee.name,
         address: apt.location.name + " - " + apt.location.address,
         price: "R$ " + apt.service.price.toFixed(2),
         status: apt.status.toLowerCase(),
-        image: "https://images.unsplash.com/photo-1560066914-1f29b3bbec3e?w=150&auto=format&fit=crop&q=80"
+        image: apt.employee.image || "https://images.unsplash.com/photo-1560066914-1f29b3bbec3e?w=150&auto=format&fit=crop&q=80",
+        locationId: apt.locationId,
+        companyId: apt.companyId
     };
 }

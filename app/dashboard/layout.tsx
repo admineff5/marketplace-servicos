@@ -239,7 +239,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 )}
                             </div>
                             <span className="text-sm font-medium text-gray-700 dark:text-gray-300 hidden sm:block">
-                                {profile?.name?.split(" ")[0] || "Carregando..."}
+                                Perfil
                             </span>
                         </Link>
                     </div>
