@@ -38,7 +38,7 @@ export async function GET() {
                 company: {
                     select: {
                         name: true,
-                        image: true
+                        imageUrl: true
                     }
                 }
             },
@@ -212,7 +212,7 @@ function formatApt(apt: any) {
         status: apt.status?.toLowerCase() || 'pending',
         rating: apt.rating,
         comment: apt.comment,
-        image: apt.company?.image || "https://images.unsplash.com/photo-1560066914-1f29b3bbec3e?w=150&auto=format&fit=crop&q=80",
+        image: apt.company?.imageUrl || "https://images.unsplash.com/photo-1560066914-1f29b3bbec3e?w=150&auto=format&fit=crop&q=80",
         employeeImage: apt.employee?.image, 
         locationId: apt.locationId,
         companyId: apt.companyId,
