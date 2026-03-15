@@ -585,7 +585,7 @@ export default function Home() {
                     className={`flex flex-col flex-1 p-6 ${layoutMode === "grid" ? "pt-10" : ""} `}
                   >
                     <div className="flex items-center gap-2 mb-1">
-                      <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-700 dark:hover:text-primary transition-colors line-clamp-1">
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-cyan-700 dark:group-hover:text-primary transition-colors line-clamp-1">
                         {company.name}
                       </h3>
                     </div>

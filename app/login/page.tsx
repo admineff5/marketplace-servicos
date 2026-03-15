@@ -150,7 +150,7 @@ export default function Login() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="exemplo@email.com"
-                                    className="block w-full px-4 py-3.5 bg-gray-50 dark:bg-[#151516] border border-gray-200 dark:border-[#222] rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all text-sm"
+                                    className="block w-full px-4 py-3.5 bg-gray-50 dark:bg-[#151516] border border-gray-200 dark:border-[#222] rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-cyan-600 focus:border-cyan-600 dark:focus:ring-primary dark:focus:border-primary transition-all text-sm"
                                 />
                             </div>
 
@@ -165,7 +165,7 @@ export default function Login() {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="••••••••"
-                                    className="block w-full px-4 py-3.5 bg-gray-50 dark:bg-[#151516] border border-gray-200 dark:border-[#222] rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all text-sm"
+                                    className="block w-full px-4 py-3.5 bg-gray-50 dark:bg-[#151516] border border-gray-200 dark:border-[#222] rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-cyan-600 focus:border-cyan-600 dark:focus:ring-primary dark:focus:border-primary transition-all text-sm"
                                 />
                             </div>
 
@@ -191,7 +191,7 @@ export default function Login() {
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className="w-full flex justify-center py-4 px-4 border border-transparent rounded-xl shadow-lg shadow-primary/10 text-sm font-bold text-black bg-primary hover:bg-cyan-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all transform hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
+                                className="w-full flex justify-center py-4 px-4 border border-transparent rounded-xl shadow-lg shadow-primary/10 text-sm font-bold text-white dark:text-black bg-cyan-700 dark:bg-primary hover:bg-cyan-800 dark:hover:bg-cyan-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all transform hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
                             >
                                 {isLoading ? "Autenticando..." : "Entrar no Painel"}
                             </button>

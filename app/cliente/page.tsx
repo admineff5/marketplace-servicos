@@ -229,7 +229,7 @@ export default function ClienteDashboard() {
                                     </button>
                                     <button 
                                         onClick={() => window.open(item.mapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.address)}`, '_blank')}
-                                        className="px-4 py-2 bg-primary/10 text-cyan-700 dark:text-primary border border-primary/20 rounded-lg text-sm font-bold hover:bg-primary hover:text-black transition-colors w-full sm:w-auto"
+                                        className="px-4 py-2 bg-cyan-500/10 text-cyan-700 dark:bg-primary/20 dark:text-primary border border-cyan-600/30 dark:border-primary/30 rounded-lg text-sm font-bold hover:bg-cyan-700 hover:text-white dark:hover:bg-primary dark:hover:text-black transition-colors w-full sm:w-auto"
                                     >
                                         Ver Rota
                                     </button>

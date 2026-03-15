@@ -129,7 +129,7 @@ export default function Register() {
                                         value={formData.name}
                                         onChange={handleChange}
                                         placeholder="João Silva ou Barbearia do João"
-                                        className="appearance-none block w-full px-3 py-3 border border-gray-300 dark:border-gray-700 rounded-lg placeholder-gray-400 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-primary focus:border-primary sm:text-sm transition-colors"
+                                        className="appearance-none block w-full px-3 py-3 border border-gray-300 dark:border-gray-700 rounded-lg placeholder-gray-400 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-cyan-600 focus:border-cyan-600 dark:focus:ring-primary dark:focus:border-primary sm:text-sm transition-colors"
                                     />
                                 </div>
                             </div>
@@ -148,7 +148,7 @@ export default function Register() {
                                         value={formData.email}
                                         onChange={handleChange}
                                         placeholder="seu@email.com"
-                                        className="appearance-none block w-full px-3 py-3 border border-gray-300 dark:border-gray-700 rounded-lg placeholder-gray-400 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-primary focus:border-primary sm:text-sm transition-colors"
+                                        className="appearance-none block w-full px-3 py-3 border border-gray-300 dark:border-gray-700 rounded-lg placeholder-gray-400 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-cyan-600 focus:border-cyan-600 dark:focus:ring-primary dark:focus:border-primary sm:text-sm transition-colors"
                                     />
                                 </div>
                             </div>
@@ -167,7 +167,7 @@ export default function Register() {
                                         onChange={handleChange}
                                         placeholder="000.000.000-00"
                                         maxLength={14}
-                                        className="appearance-none block w-full px-3 py-3 border border-gray-300 dark:border-gray-700 rounded-lg placeholder-gray-400 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-primary focus:border-primary sm:text-sm transition-colors"
+                                        className="appearance-none block w-full px-3 py-3 border border-gray-300 dark:border-gray-700 rounded-lg placeholder-gray-400 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-cyan-600 focus:border-cyan-600 dark:focus:ring-primary dark:focus:border-primary sm:text-sm transition-colors"
                                     />
                                 </div>
                                 <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
@@ -188,7 +188,7 @@ export default function Register() {
                                         value={formData.phone}
                                         onChange={handleChange}
                                         placeholder="(00) 00000-0000"
-                                        className="appearance-none block w-full px-3 py-3 border border-gray-300 dark:border-gray-700 rounded-lg placeholder-gray-400 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-primary focus:border-primary sm:text-sm transition-colors"
+                                        className="appearance-none block w-full px-3 py-3 border border-gray-300 dark:border-gray-700 rounded-lg placeholder-gray-400 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-cyan-600 focus:border-cyan-600 dark:focus:ring-primary dark:focus:border-primary sm:text-sm transition-colors"
                                     />
                                 </div>
                             </div>
@@ -206,7 +206,7 @@ export default function Register() {
                                         required
                                         value={formData.password}
                                         onChange={handleChange}
-                                        className="appearance-none block w-full px-3 py-3 border border-gray-300 dark:border-gray-700 rounded-lg placeholder-gray-400 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-primary focus:border-primary sm:text-sm transition-colors"
+                                        className="appearance-none block w-full px-3 py-3 border border-gray-300 dark:border-gray-700 rounded-lg placeholder-gray-400 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-cyan-600 focus:border-cyan-600 dark:focus:ring-primary dark:focus:border-primary sm:text-sm transition-colors"
                                     />
                                 </div>
                             </div>
@@ -215,7 +215,7 @@ export default function Register() {
                                 <button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-black bg-primary hover:bg-cyan-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white dark:text-black bg-cyan-700 dark:bg-primary hover:bg-cyan-800 dark:hover:bg-cyan-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {isLoading ? "Processando..." : "Cadastrar"}
                                 </button>
@@ -225,7 +225,7 @@ export default function Register() {
                         <div className="mt-6 text-center">
                             <p className="text-sm text-gray-600 dark:text-gray-400">
                                 Já possui conta?{' '}
-                                <Link href="/login" className="font-medium text-cyan-700 dark:text-primary hover:text-cyan-700 dark:hover:text-cyan-400">
+                                <Link href="/login" className="font-medium text-cyan-700 dark:text-primary hover:text-cyan-800 dark:hover:text-cyan-400 dark:hover:text-cyan-400">
                                     Faça login
                                 </Link>
                             </p>

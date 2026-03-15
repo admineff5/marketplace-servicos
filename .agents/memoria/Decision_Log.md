@@ -28,4 +28,16 @@
 ## Branding: Petrol Tone (v0.9.5)
 - **Decision:** Switch from Neon Blue to Cyan-700 in Light Mode.
 - **Reason:** Accessibility was poor, and the blue felt "cheap" compare to the dashboard petrol tone.
-- **Outcome:** Unified, professional brand identity.
+## [v0.9.37] - 2026-03-14: Regra Mista de Botões (Light Mode)
+- **Problema:** Botão `bg-primary` (Ciano Claro) ficava berrante ou com pouco contraste no Light Mode se fosse sólido.
+- **Códigos e Classes das Regras:**
+  1. **Option 2 - Botões CTA (Sólido):**
+     * **Light:** `bg-cyan-700 text-white hover:bg-cyan-800` (Azul Petróleo).
+     * **Dark:** `dark:bg-primary dark:text-black dark:hover:bg-cyan-400` (Neon Blue).
+  2. **Option 1 - Badges, Filtros e Hover (Translúcidos):**
+     * **Light:** `bg-cyan-500/10 text-cyan-700 border-cyan-600/30`
+     * **Dark:** `dark:bg-primary/20 dark:text-primary dark:border-primary/30`
+  3. **Insumos de Input e Textos:**
+     * **H3 Hover:** `group-hover:text-cyan-700 dark:group-hover:text-primary`
+     * **Focus Ring:** `focus:ring-cyan-600 focus:border-cyan-600 dark:focus:ring-primary dark:focus:border-primary`
+- **Resultado:** Layout 100% legível, estética "Smooth" e coerência visual em todo o site.
