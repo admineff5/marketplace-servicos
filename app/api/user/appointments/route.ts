@@ -37,7 +37,8 @@ export async function GET() {
                 },
                 company: {
                     select: {
-                        name: true
+                        name: true,
+                        image: true
                     }
                 }
             },
@@ -211,7 +212,8 @@ function formatApt(apt: any) {
         status: apt.status.toLowerCase(),
         rating: apt.rating,
         comment: apt.comment,
-        image: apt.employee.image || "https://images.unsplash.com/photo-1560066914-1f29b3bbec3e?w=150&auto=format&fit=crop&q=80",
+        image: apt.company?.image || "https://images.unsplash.com/photo-1560066914-1f29b3bbec3e?w=150&auto=format&fit=crop&q=80",
+        employeeImage: apt.employee.image, // <--- ADICIONADO PARA DESENHAR O AVATAR
         locationId: apt.locationId,
         companyId: apt.companyId,
         employeeId: apt.employeeId,
