@@ -136,7 +136,7 @@ export default function AgendaPage() {
                     </p>
                 </div>
 
-                {/* Top Action Bar Outside Agenda UI */}
+                
                 <div className="flex bg-gray-200 dark:bg-gray-800/80 rounded-lg p-1 shadow-sm border border-gray-300 dark:border-gray-700">
                     <button
                         onClick={() => setAgendaLayout("calendar")}
@@ -156,9 +156,9 @@ export default function AgendaPage() {
             </div>
 
             <div className="flex flex-1 overflow-hidden bg-white dark:bg-[#1e1f22] text-gray-900 dark:text-gray-200 font-sans border border-gray-200 dark:border-gray-800 rounded-xl">
-                {/* Sidebar Google Calendar Style */}
+                
                 <aside className="hidden lg:flex w-64 flex-col py-4 px-2 border-r border-gray-200 dark:border-gray-800 shrink-0">
-                    {/* Mini Calendar Mock */}
+                    
                     <div className="mb-6 px-2">
                         <div className="flex items-center justify-between mb-2 px-1">
                             <h3 className="text-sm font-medium text-gray-800 dark:text-gray-200">{MONTHS[month]} {year}</h3>
@@ -167,7 +167,7 @@ export default function AgendaPage() {
                                 <button onClick={navNext} className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"><ChevronRight className="w-4 h-4 text-gray-500" /></button>
                             </div>
                         </div>
-                        {/* Fake mini grid */}
+                        
                         <div className="grid grid-cols-7 text-center text-[10px] text-gray-500 dark:text-gray-400 mb-1">
                             <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
                         </div>
@@ -217,9 +217,9 @@ export default function AgendaPage() {
                     </div>
                 </aside>
 
-                {/* Main Calendar View */}
+                
                 <div className="flex-1 flex flex-col min-w-0">
-                    {/* Header Top Bar */}
+                    
                     <header className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-800 shrink-0">
                         <div className="flex items-center gap-4">
                             <button onClick={jumpToToday} className="px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-medium">Hoje</button>
@@ -247,13 +247,13 @@ export default function AgendaPage() {
                         </div>
                     </header>
 
-                    {/* Grid Container */}
+                    
                     <div className="flex-1 flex flex-col overflow-hidden bg-white dark:bg-[#1e1f22]">
                         {agendaLayout === "calendar" ? (
                             <>
                                 {viewMode === "Mês" && (
                                     <div className="flex flex-col flex-1 overflow-y-auto relative">
-                                        {/* Days Header */}
+                                        
                                         <div className="grid grid-cols-7 border-b border-gray-200 dark:border-gray-800 shrink-0 sticky top-0 bg-white dark:bg-[#1e1f22] z-10">
                                             {WEEKDAYS.map((day, i) => (
                                                 <div key={day} className={`flex flex-col items-center justify-center py-2 ${i !== 0 ? 'border-l border-gray-200 dark:border-gray-800' : ''}`}>
@@ -262,7 +262,7 @@ export default function AgendaPage() {
                                             ))}
                                         </div>
 
-                                        {/* 5 Weeks Grid */}
+                                        
                                         <div className="grid grid-cols-7 flex-1">
                                             {calendarGrid.map((day, i) => {
                                                 const dayAppointments = appointments.filter((apt: any) => {
@@ -367,14 +367,14 @@ export default function AgendaPage() {
                     </div>
                 </div>
 
-                {/* Appointment Detail Modal Overlay */}
+                
                 {selectedAppointment && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-transparent backdrop-blur-sm" onClick={closeModal}>
                         <div
                             className="relative w-full max-w-[420px] bg-white dark:bg-[#313338] shadow-[0_8px_30px_rgb(0,0,0,0.3)] border border-gray-200 dark:border-gray-700 flex flex-col rounded-2xl overflow-hidden"
                             onClick={e => e.stopPropagation()}
                         >
-                            {/* Action Icons Top Right */}
+                            
                             <div className="absolute top-3 right-3 flex items-center gap-2 z-10">
                                 <button className="p-1.5 hover:bg-black/10 dark:hover:bg-white/10 rounded-full text-gray-700 dark:text-gray-300 transition-colors"><Edit2 className="w-4 h-4" /></button>
                                 <button className="p-1.5 hover:bg-black/10 dark:hover:bg-white/10 rounded-full text-gray-700 dark:text-gray-300 transition-colors"><Trash2 className="w-4 h-4" /></button>
@@ -383,7 +383,7 @@ export default function AgendaPage() {
                                 <button onClick={closeModal} className="p-1.5 hover:bg-black/10 dark:hover:bg-white/10 rounded-full text-gray-700 dark:text-gray-300 transition-colors ml-1"><X className="w-5 h-5" /></button>
                             </div>
 
-                            {/* Decorative Header Banner */}
+                            
                             <div className="h-[120px] bg-[#FDE29F] relative overflow-hidden flex items-end px-6">
                                 <div className="absolute bottom-0 left-8 w-12 h-16 bg-[#E6D19C] rounded-t-md"></div>
                                 <div className="absolute bottom-6 left-[38px] w-8 h-10 bg-white rounded-md"></div>
