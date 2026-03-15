@@ -24,9 +24,13 @@ export default function DashboardIndex() {
             try {
                 setIsLoading(true);
                 // Fetch Recent Appointments
-                const aptRes = await fetch('/api/appointments?limit=5');
+                const aptRes = await fetch('/api/appointments?limit=10');
                 const aptData = await aptRes.json();
-                setRecentAppointments(Array.isArray(aptData) ? aptData.slice(0, 5) : []);
+                // Filtrar agendamentos cancelados para não poluir a dashboard
+                const activeApts = Array.isArray(aptData) 
+                    ? aptData.filter((a: any) => a.status !== 'CANCELLED' && a.status !== 'CANCELADO' && a.status !== 'CANCEL')
+                    : [];
+                setRecentAppointments(activeApts.slice(0, 5));
 
                 // Fetch Stats
                 const statsRes = await fetch('/api/dashboard/stats');

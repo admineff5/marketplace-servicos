@@ -266,163 +266,13 @@ export default function AgendaPage() {
                                         <div className="grid grid-cols-7 flex-1">
                                             {calendarGrid.map((day, i) => {
                                                 const dayAppointments = appointments.filter((apt: any) => {
-                                                    if (!day.date) return false;
-                                                    const aptDate = new Date(apt.date);
-                                                    
-                                                    // Usar getUTCDate para evitar problemas de fuso horário
-                                                    const aptDay = aptDate.getUTCDate();
-                                                    const aptMonth = aptDate.getUTCMonth();
-                                                    const aptYear = aptDate.getUTCFullYear();
-
-                                                    return (
-                                                        aptDay === day.date &&
-                                                        aptMonth === month &&
-                                                        aptYear === year &&
-                                                        (selectedPros.length === 0 || selectedPros.includes(apt.employeeId || apt.employee?.id))
-                                                    );
-                                                });
-                                                const dayIsToday = isToday(day.date);
-
-                                                return (
-                                                    <div key={i} className={`min-h-[120px] p-1 border-b border-gray-200 dark:border-gray-800 ${i % 7 !== 0 ? 'border-l border-gray-200 dark:border-gray-800' : ''}`}>
-                                                        <div className="flex justify-center mb-1">
-                                                            <span className={`text-[12px] font-medium w-6 h-6 flex items-center justify-center rounded-full mt-1 ${dayIsToday ? 'bg-blue-600 text-white' : 'text-gray-700 dark:text-gray-300'}`}>
-                                                                {day.date || ''}
-                                                            </span>
-                                                        </div>
-
-                                                        <div className="flex flex-col gap-0.5 px-0.5">
-                                                            {dayAppointments.map((apt: any) => (
-                                                                <div
-                                                                    key={apt.id}
-                                                                    onClick={() => setSelectedAppointment(apt)}
-                                                                    className="flex items-center gap-1.5 px-1 py-0.5 hover:bg-gray-100 dark:hover:bg-gray-800/60 rounded cursor-pointer transition-colors group"
-                                                                >
-                                                                    <span className={`w-2 h-2 rounded-full shrink-0 ${apt.dot}`}></span>
-                                                                    <span className={`text-[11px] font-medium truncate ${apt.color} group-hover:underline`}>
-                                                                        <span className="font-semibold text-gray-600 dark:text-gray-400 mr-1">{apt.start}</span> {apt.title.split('-')[0].trim()}
-                                                                    </span>
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {viewMode === "Semana" && (
-                                    <div className="flex flex-1 overflow-y-auto relative">
-                                        {/* Time Column */}
-                                        <div className="w-16 shrink-0 border-r border-gray-200 dark:border-gray-800 flex flex-col">
-                                            {Array.from({ length: 15 }).map((_, i) => {
-                                                const hour = i + 7;
-                                                return (
-                                                    <div key={i} className="h-16 border-b border-gray-100 dark:border-gray-800/50 flex items-start justify-end pr-2 py-1">
-                                                        <span className="text-[10px] text-gray-400">{hour}:00</span>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                        {/* 7 Days Columns */}
-                                        <div className="flex-1 grid grid-cols-7">
-                                            {WEEKDAYS.map((dayName, i) => {
-                                                const colDate = new Date(weekStart);
-                                                colDate.setDate(weekStart.getDate() + i);
-                                                const cDate = colDate.getDate();
-                                                const cMon = colDate.getMonth();
-                                                const cYear = colDate.getFullYear();
-                                                const isColToday = cDate === new Date().getDate() && cMon === new Date().getMonth() && cYear === new Date().getFullYear();
-                                                const colApts = appointments.filter((apt: any) => {
-                                                    const aptDate = new Date(apt.date);
-                                                    return (
-                                                        aptDate.getUTCDate() === cDate &&
-                                                        aptDate.getUTCMonth() === cMon &&
-                                                        aptDate.getUTCFullYear() === cYear &&
-                                                        selectedPros.includes(apt.prof)
-                                                    );
-                                                });
-
-                                                return (
-                                                    <div key={i} className={`relative border-r border-gray-200 dark:border-gray-800 ${isColToday ? 'bg-blue-50/10 dark:bg-blue-900/5' : ''}`}>
-                                                        {/* Sticky Header */}
-                                                        <div className="sticky flex top-0 z-10 bg-white/90 dark:bg-[#1e1f22]/90 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800 flex-col items-center py-2 h-14">
-                                                            <span className={`text-[11px] font-medium uppercase ${isColToday ? 'text-blue-600' : 'text-gray-500'}`}>{dayName}</span>
-                                                            <span className={`text-lg transition-colors w-8 h-8 flex items-center justify-center rounded-full ${isColToday ? 'bg-blue-600 text-white font-normal' : 'text-gray-700 dark:text-gray-300'}`}>{cDate}</span>
-                                                        </div>
-                                                        {/* Hour Slots */}
-                                                        <div className="relative">
-                                                            {Array.from({ length: 15 }).map((_, h) => (
-                                                                <div key={h} className="h-16 border-b border-gray-100 dark:border-gray-800/50 w-full hover:bg-gray-50 dark:hover:bg-gray-800/30 cursor-pointer"></div>
-                                                            ))}
-
-                                                            {colApts.map((apt: any) => {
-                                                                // Helper to parse time string like "9am", "10:30am", "2pm"
-                                                                const parseTime = (timeStr: string) => {
-                                                                    const time = timeStr.toLowerCase();
-                                                                    let [h, m] = time.replace(/[am|pm]/g, '').split(':').map(Number);
-                                                                    if (isNaN(m)) m = 0;
-                                                                    if (time.includes('pm') && h < 12) h += 12;
-                                                                    if (time.includes('am') && h === 12) h = 0;
-                                                                    return h + m / 60;
-                                                                };
-
-                                                                const startTime = parseTime(apt.start);
-                                                                const topOffset = (startTime - 7) * 64; // (hour - startHour) * hourHeight
-
-                                                                if (startTime < 7 || startTime > 22) return null;
-
-                                                                return (
-                                                                    <div
-                                                                        key={apt.id}
-                                                                        onClick={() => setSelectedAppointment(apt)}
-                                                                        className={`absolute left-1 right-1 rounded border-l-4 p-1.5 text-xs shadow-sm cursor-pointer hover:brightness-110 overflow-hidden ${apt.dot.replace('bg-', 'border-').replace('500', '600')} bg-white dark:bg-gray-800 ${apt.color}`}
-                                                                        style={{ top: `${topOffset}px`, height: '60px' }}
-                                                                    >
-                                                                        <p className="font-semibold truncate">{apt.start} - {apt.end}</p>
-                                                                        <p className="truncate text-gray-700 dark:text-gray-300">{apt.title.split('-')[0].trim()}</p>
-                                                                    </div>
-                                                                )
-                                                            })}
-                                                        </div>
-                                                    </div>
-                                                )
-                                            })}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {viewMode === "Dia" && (
-                                    <div className="flex flex-1 overflow-y-auto relative">
-                                        {/* Time Column */}
-                                        <div className="w-16 shrink-0 border-r border-gray-200 dark:border-gray-800 flex flex-col">
-                                            {Array.from({ length: 15 }).map((_, i) => {
-                                                const hour = i + 7;
-                                                return (
-                                                    <div key={i} className="h-24 border-b border-gray-100 dark:border-gray-800/50 flex items-start justify-end pr-2 py-1">
-                                                        <span className="text-[10px] text-gray-400">{hour}:00</span>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                        {/* Single Day Column */}
-                                        <div className="flex-1 relative bg-blue-50/10 dark:bg-blue-900/5">
-                                            <div className="sticky top-0 z-10 bg-white/90 dark:bg-[#1e1f22]/90 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800 flex flex-col items-center py-2">
-                                                <span className="text-[11px] font-medium uppercase text-blue-600">{WEEKDAYS[currentDate.getDay()]}</span>
-                                                <span className="text-2xl mt-1 w-10 h-10 flex items-center justify-center rounded-full bg-blue-600 text-white font-normal">{currentDate.getDate()}</span>
-                                            </div>
-                                            <div className="relative">
-                                                {Array.from({ length: 15 }).map((_, h) => (
-                                                    <div key={h} className="h-24 border-b border-gray-100 dark:border-gray-800/50 w-full hover:bg-gray-50 dark:hover:bg-gray-800/30 cursor-pointer"></div>
-                                                ))}
-                                                {appointments.filter((apt: any) => {
                                                     const aptDate = new Date(apt.date);
                                                     return (
                                                         aptDate.getUTCDate() === currentDate.getDate() &&
                                                         aptDate.getUTCMonth() === currentDate.getMonth() &&
                                                         aptDate.getUTCFullYear() === currentDate.getFullYear() &&
-                                                        selectedPros.includes(apt.prof)
+                                                        (selectedPros.includes(apt.employeeId) || selectedPros.includes(apt.employee?.id) || selectedPros.includes(apt.prof)) &&
+                                                        apt.status !== 'CANCELLED' && apt.status !== 'CANCELADO'
                                                     );
                                                 }).map((apt: any, idx: any) => {
                                                     const parseTime = (timeStr: string) => {
@@ -447,7 +297,7 @@ export default function AgendaPage() {
                                                             style={{ top: `${topOffset}px`, height: '76px' }}
                                                         >
                                                             <div className="flex justify-between items-start">
-                                                                <p className="font-semibold text-gray-900 dark:text-gray-100">{apt.title.split('-')[0].trim()}</p>
+                                                                <p className="font-semibold text-gray-900 dark:text-gray-100">{(apt.service?.name || apt.title?.split('-')[0]?.trim() || 'Serviço')}</p>
                                                                 <span className="text-xs font-bold bg-white/50 dark:bg-black/20 px-2 py-1 rounded">{apt.start} - {apt.end}</span>
                                                             </div>
                                                             <p className="mt-1 text-gray-600 dark:text-gray-400">Profissional: <span className="font-semibold">{apt.prof}</span></p>
@@ -463,7 +313,7 @@ export default function AgendaPage() {
                             <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-gray-50/50 dark:bg-[#1e1f22]">
                                 <div className="max-w-4xl mx-auto space-y-6">
                                     {appointments
-                                        .filter((apt: any) => selectedPros.includes(apt.prof))
+                                        .filter((apt: any) => (selectedPros.includes(apt.employeeId) || selectedPros.includes(apt.employee?.id) || selectedPros.includes(apt.prof)))
                                         // Normally you'd sort by real date here. Just putting them in a fake order based on mock data.
                                         .sort((a: any, b: any) => a.date - b.date)
                                         .map((apt: any) => (
@@ -475,7 +325,7 @@ export default function AgendaPage() {
                                                     </div>
                                                     <div>
                                                         <div className="flex items-center gap-3 mb-1">
-                                                            <h3 className="text-base font-bold text-gray-900 dark:text-white">{apt.start} - {apt.title.split('-')[0].trim()}</h3>
+                                                            <h3 className="text-base font-bold text-gray-900 dark:text-white">{apt.start} - {(apt.service?.name || apt.title?.split('-')[0]?.trim() || 'Serviço')}</h3>
                                                             <span className={`px-2 py-0.5 text-[10px] font-bold uppercase rounded-md ${apt.dot.replace('bg-', 'text-').replace('500', '600')} bg-opacity-10 dark:bg-opacity-20 bg-current`}>
                                                                 Confirmado
                                                             </span>
@@ -506,7 +356,7 @@ export default function AgendaPage() {
                                             </div>
                                         ))}
 
-                                    {appointments.filter((apt: any) => selectedPros.includes(apt.prof)).length === 0 && (
+                                    {appointments.filter((apt: any) => (selectedPros.includes(apt.employeeId) || selectedPros.includes(apt.employee?.id) || selectedPros.includes(apt.prof))).length === 0 && (
                                         <div className="text-center py-20 text-gray-500">
                                             Nenhum agendamento encontrado para os profissionais selecionados.
                                         </div>
