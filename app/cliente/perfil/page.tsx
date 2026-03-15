@@ -1,6 +1,6 @@
 "use client";
 
-import { User, Mail, CreditCard, MapPin, Phone, ShieldCheck, Save, ArrowLeft, Plus, Trash2, Star, CheckCircle2, X, Home, Camera, Upload } from "lucide-react";
+import { User, Mail, CreditCard, MapPin, Phone, ShieldCheck, Save, ArrowLeft, Plus, Trash2, Star, CheckCircle2, X, Home, Camera, Upload, Edit } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 
@@ -18,6 +18,33 @@ export default function PerfilCliente() {
     const [showAddressModal, setShowAddressModal] = useState(false);
     const [showCardModal, setShowCardModal] = useState(false);
     const [showAvatarModal, setShowAvatarModal] = useState(false);
+
+    // Edit Name
+    const [isEditingName, setIsEditingName] = useState(false);
+    const [tempName, setTempName] = useState("");
+
+    const handleSaveName = async () => {
+        if (!tempName.trim()) return;
+        setIsSaving(true);
+        try {
+            const res = await fetch("/api/user/profile", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name: tempName })
+            });
+            if (res.ok) {
+                setUser({ ...user, name: tempName });
+                setIsEditingName(false);
+                setMessage({ type: "success", text: "Nome atualizado com sucesso!" });
+            } else {
+                setMessage({ type: "error", text: "Erro ao atualizar nome." });
+            }
+        } catch (err) {
+            setMessage({ type: "error", text: "Erro na requisição." });
+        } finally {
+            setIsSaving(false);
+        }
+    };
 
     // Form States
     const [newAddress, setNewAddress] = useState({
@@ -255,7 +282,30 @@ export default function PerfilCliente() {
                                     </div>
                                 </div>
                             </div>
-                            <h2 className="font-bold text-lg dark:text-white">{user?.name}</h2>
+                            {isEditingName ? (
+                                <div className="flex items-center gap-2 mt-1">
+                                    <input 
+                                        type="text" 
+                                        value={tempName} 
+                                        onChange={(e) => setTempName(e.target.value)} 
+                                        className="px-2 py-1 text-sm rounded bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-gray-800 focus:outline-none dark:text-white"
+                                        autoFocus
+                                        onKeyDown={(e) => e.key === 'Enter' && handleSaveName()}
+                                        disabled={isSaving}
+                                    />
+                                    <button onClick={handleSaveName} disabled={isSaving} className="text-green-500 hover:text-green-600">
+                                        <CheckCircle2 className="w-4 h-4" />
+                                    </button>
+                                    <button onClick={() => setIsEditingName(false)} disabled={isSaving} className="text-red-500 hover:text-red-600">
+                                        <X className="w-4 h-4" />
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="flex items-center gap-1.5 group cursor-pointer" onClick={() => { setIsEditingName(true); setTempName(user?.name || ""); }}>
+                                    <h2 className="font-bold text-lg dark:text-white group-hover:text-cyan-700 dark:group-hover:text-primary transition-colors">{user?.name}</h2>
+                                    <Edit className="w-3.5 h-3.5 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                </div>
+                            )}
                             <span className="text-xs text-cyan-700 dark:text-primary font-bold uppercase tracking-widest">{user?.role}</span>
                             {message.type && <p className={`mt-2 text-xs font-bold ${message.type === 'error' ? 'text-red-500' : 'text-green-500'}`}>{message.text}</p>}
                         </div>
