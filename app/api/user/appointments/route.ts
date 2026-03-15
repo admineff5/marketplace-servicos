@@ -201,22 +201,22 @@ export async function PATCH(request: Request) {
 function formatApt(apt: any) {
     return {
         id: apt.id,
-        service: apt.service.name,
+        service: apt.service?.name || "Serviço",
         company: apt.company?.name || "Empresa", 
         date: new Date(apt.date).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }),
         time: new Date(apt.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-        rawDate: apt.date.toISOString(), // <--- ENVIA O ISO ORIGINAL PARA O FRONTEND
-        professional: apt.employee.name,
-        address: apt.location.name + " - " + apt.location.address,
-        price: "R$ " + apt.service.price.toFixed(2),
-        status: apt.status.toLowerCase(),
+        rawDate: apt.date.toISOString(), 
+        professional: apt.employee?.name || "Desconhecido",
+        address: (apt.location?.name || "") + " - " + (apt.location?.address || ""),
+        price: "R$ " + (apt.service?.price ? apt.service.price.toFixed(2) : "0.00"),
+        status: apt.status?.toLowerCase() || 'pending',
         rating: apt.rating,
         comment: apt.comment,
         image: apt.company?.image || "https://images.unsplash.com/photo-1560066914-1f29b3bbec3e?w=150&auto=format&fit=crop&q=80",
-        employeeImage: apt.employee.image, // <--- ADICIONADO PARA DESENHAR O AVATAR
+        employeeImage: apt.employee?.image, 
         locationId: apt.locationId,
         companyId: apt.companyId,
         employeeId: apt.employeeId,
-        mapsLink: apt.location.mapsLink
+        mapsLink: apt.location?.mapsLink
     };
 }
