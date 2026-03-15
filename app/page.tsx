@@ -877,7 +877,7 @@ export default function Home() {
                         {selectedCompany.name}
                       </h2>
                       <div className="flex items-center gap-3">
-                        <p className="text-cyan-700 dark:text-primary font-medium text-sm">
+                        <p className="text-cyan-800 dark:text-primary font-medium text-sm">
                           {selectedCompany.niche}
                         </p>
                         <div className="flex items-center gap-1 text-sm bg-yellow-500/10 text-yellow-500 px-2 py-0.5 rounded-full">
@@ -897,7 +897,7 @@ export default function Home() {
 
                 <div className="flex flex-wrap gap-3 mb-8">
                   <div className="flex items-center gap-2 text-xs font-medium text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-[#1a1a1c] border border-gray-100 dark:border-[#2a2a2c] px-3 py-1.5 rounded-lg">
-                    <MapPin className="w-3.5 h-3.5 text-cyan-700 dark:text-primary" />
+                    <MapPin className="w-3.5 h-3.5 text-cyan-800 dark:text-primary" />
                     {selectedCompany.address}
                   </div>
                 </div>
@@ -919,19 +919,19 @@ export default function Home() {
                           setSelectedCompanyId(service.companyId);
                           setSelectedServiceName(service.name);
                         }}
-                        className={`group flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${isSelected ? "border-cyan-600 dark:border-primary bg-cyan-500/5 dark:bg-primary/5" : "border-gray-100 dark:border-[#2a2a2c] bg-gray-50 dark:bg-[#151516] hover:border-gray-300 dark:hover:border-[#3a3a3c]"} `}
+                        className={`group flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${isSelected ? "border-cyan-800 dark:border-primary bg-cyan-800/10 dark:bg-primary/5" : "border-gray-100 dark:border-[#2a2a2c] bg-gray-50 dark:bg-[#151516] hover:border-gray-300 dark:hover:border-[#3a3a3c]"} `}
                       >
                         <div className="flex items-center gap-4">
                           <div
-                            className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? "border-cyan-600 dark:border-primary" : "border-gray-300 dark:border-gray-600"} `}
+                            className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? "border-cyan-800 dark:border-primary" : "border-gray-300 dark:border-gray-600"} `}
                           >
                             {isSelected && (
-                              <div className="w-2.5 h-2.5 bg-cyan-600 dark:bg-primary rounded-full"></div>
+                              <div className="w-2.5 h-2.5 bg-cyan-800 dark:bg-primary rounded-full"></div>
                             )}
                           </div>
                           <div>
                             <h4
-                              className={`font-semibold text-sm transition-colors ${isSelected ? "text-cyan-700 dark:text-primary" : "text-gray-800 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white"} `}
+                              className={`font-semibold text-sm transition-colors ${isSelected ? "text-cyan-800 dark:text-primary" : "text-gray-800 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white"} `}
                             >
                               {service.name}
                             </h4>
@@ -941,7 +941,7 @@ export default function Home() {
                           </div>
                         </div>
                         <p
-                          className={`font-bold text-sm ${isSelected ? "text-cyan-700 dark:text-primary" : "text-gray-700 dark:text-gray-300"} `}
+                          className={`font-bold text-sm ${isSelected ? "text-cyan-800 dark:text-primary" : "text-gray-700 dark:text-gray-300"} `}
                         >
                           {service.price}
                         </p>
@@ -970,7 +970,7 @@ export default function Home() {
                           className={`flex flex-col items-center gap-2 cursor-pointer group shrink-0 transition-opacity ${!isSelected && selectedProfessional ? "opacity-60 hover:opacity-100" : "opacity-100"} `}
                         >
                           <div
-                            className={`h-16 w-16 rounded-full overflow-hidden transition-all ${isSelected ? "ring-2 ring-offset-4 ring-cyan-600 dark:ring-primary ring-offset-white dark:ring-offset-[#0a0a0b] shadow-[0_0_15px_rgba(0,255,255,0.2)]" : "border-2 border-transparent group-hover:border-gray-500"} `}
+                            className={`h-16 w-16 rounded-full overflow-hidden transition-all ${isSelected ? "ring-2 ring-offset-4 ring-cyan-800 dark:ring-primary ring-offset-white dark:ring-offset-[#0a0a0b] shadow-[0_0_15px_rgba(0,255,255,0.2)]" : "border-2 border-transparent group-hover:border-gray-500"} `}
                           >
                             <img
                               src={person.image}
@@ -979,7 +979,7 @@ export default function Home() {
                             />
                           </div>
                           <span
-                            className={`text-xs font-medium transition-colors ${isSelected ? "text-cyan-700 dark:text-primary font-bold" : "text-gray-600 dark:text-gray-400 group-hover:text-gray-800 dark:group-hover:text-gray-200"} `}
+                            className={`text-xs font-medium transition-colors ${isSelected ? "text-cyan-800 dark:text-primary font-bold" : "text-gray-600 dark:text-gray-400 group-hover:text-gray-800 dark:group-hover:text-gray-200"} `}
                           >
                             {person.name}
                           </span>
@@ -1018,7 +1018,7 @@ export default function Home() {
                             setSelectedTime(null);
                           }}
                           className={`flex flex-col items-center justify-center shrink-0 w-[72px] h-[84px] rounded-2xl border transition-all cursor-pointer ${isSelected
-                              ? "border-primary bg-primary text-black shadow-[0_0_15px_rgba(0,255,255,0.4)]"
+                              ? "border-cyan-800 bg-cyan-800 text-white dark:border-primary dark:bg-primary dark:text-black shadow-[0_0_15px_rgba(0,255,255,0.4)]"
                               : "border-gray-100 dark:border-[#2a2a2c] bg-gray-50 dark:bg-[#151516] text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-500 hover:text-gray-800 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#1e1f22]"
                             } `}
                         >
@@ -1026,7 +1026,7 @@ export default function Home() {
                             {ds.dayName}
                           </span>
                           <span
-                            className={`text-2xl font-extrabold leading-none mb-1 ${isSelected ? "text-black" : "text-gray-900 dark:text-white"} `}
+                            className={`text-2xl font-extrabold leading-none mb-1 ${isSelected ? "text-white dark:text-black" : "text-gray-900 dark:text-white"} `}
                           >
                             {ds.dayNumber}
                           </span>
