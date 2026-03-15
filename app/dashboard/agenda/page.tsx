@@ -297,7 +297,7 @@ export default function AgendaPage() {
                                                             style={{ top: `${topOffset}px`, height: '76px' }}
                                                         >
                                                             <div className="flex justify-between items-start">
-                                                                <p className="font-semibold text-gray-900 dark:text-gray-100">{(apt.service?.name || apt.title?.split('-')[0]?.trim() || 'Serviço')}</p>
+                                                                <p className="font-semibold text-gray-900 dark:text-gray-100">{apt.service?.name || apt.title?.split('-')[0]?.trim() || 'Serviço'}</p>
                                                                 <span className="text-xs font-bold bg-white/50 dark:bg-black/20 px-2 py-1 rounded">{apt.start} - {apt.end}</span>
                                                             </div>
                                                             <p className="mt-1 text-gray-600 dark:text-gray-400">Profissional: <span className="font-semibold">{apt.prof}</span></p>
@@ -325,7 +325,7 @@ export default function AgendaPage() {
                                                     </div>
                                                     <div>
                                                         <div className="flex items-center gap-3 mb-1">
-                                                            <h3 className="text-base font-bold text-gray-900 dark:text-white">{apt.start} - {(apt.service?.name || apt.title?.split('-')[0]?.trim() || 'Serviço')}</h3>
+                                                            <h3 className="text-base font-bold text-gray-900 dark:text-white">{apt.start} - {apt.service?.name || apt.title?.split('-')[0]?.trim() || 'Serviço'}</h3>
                                                             <span className={`px-2 py-0.5 text-[10px] font-bold uppercase rounded-md ${apt.dot.replace('bg-', 'text-').replace('500', '600')} bg-opacity-10 dark:bg-opacity-20 bg-current`}>
                                                                 Confirmado
                                                             </span>
