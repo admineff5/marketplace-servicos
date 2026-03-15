@@ -912,14 +912,14 @@ export default function Home() {
                           setSelectedCompanyId(service.companyId);
                           setSelectedServiceName(service.name);
                         }}
-                        className={`group flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${isSelected ? "border-primary bg-primary/5" : "border-gray-100 dark:border-[#2a2a2c] bg-gray-50 dark:bg-[#151516] hover:border-gray-300 dark:hover:border-[#3a3a3c]"} `}
+                        className={`group flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${isSelected ? "border-cyan-600 dark:border-primary bg-cyan-500/5 dark:bg-primary/5" : "border-gray-100 dark:border-[#2a2a2c] bg-gray-50 dark:bg-[#151516] hover:border-gray-300 dark:hover:border-[#3a3a3c]"} `}
                       >
                         <div className="flex items-center gap-4">
                           <div
-                            className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? "border-primary" : "border-gray-300 dark:border-gray-600"} `}
+                            className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? "border-cyan-600 dark:border-primary" : "border-gray-300 dark:border-gray-600"} `}
                           >
                             {isSelected && (
-                              <div className="w-2.5 h-2.5 bg-primary rounded-full"></div>
+                              <div className="w-2.5 h-2.5 bg-cyan-600 dark:bg-primary rounded-full"></div>
                             )}
                           </div>
                           <div>
@@ -963,7 +963,7 @@ export default function Home() {
                           className={`flex flex-col items-center gap-2 cursor-pointer group shrink-0 transition-opacity ${!isSelected && selectedProfessional ? "opacity-60 hover:opacity-100" : "opacity-100"} `}
                         >
                           <div
-                            className={`h-16 w-16 rounded-full overflow-hidden transition-all ${isSelected ? "ring-2 ring-offset-4 ring-primary ring-offset-white dark:ring-offset-[#0a0a0b] shadow-[0_0_15px_rgba(0,255,255,0.3)]" : "border-2 border-transparent group-hover:border-gray-500"} `}
+                            className={`h-16 w-16 rounded-full overflow-hidden transition-all ${isSelected ? "ring-2 ring-offset-4 ring-cyan-600 dark:ring-primary ring-offset-white dark:ring-offset-[#0a0a0b] shadow-[0_0_15px_rgba(0,255,255,0.2)]" : "border-2 border-transparent group-hover:border-gray-500"} `}
                           >
                             <img
                               src={person.image}
@@ -1125,8 +1125,8 @@ export default function Home() {
               {/* Success Overlay */}
               {showSuccess && (
                 <div className="absolute inset-0 z-[60] flex flex-col items-center justify-center bg-white/90 dark:bg-black/90 backdrop-blur-md animate-in fade-in zoom-in duration-300">
-                  <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mb-6 border border-primary/50">
-                    <CheckCircle2 className="w-10 h-10 text-primary animate-bounce" />
+                  <div className="w-20 h-20 bg-cyan-500/10 dark:bg-primary/20 rounded-full flex items-center justify-center mb-6 border border-cyan-600/30 dark:border-primary/50">
+                    <CheckCircle2 className="w-10 h-10 text-cyan-600 dark:text-primary animate-bounce" />
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Agendado com Sucesso!</h3>
                   <p className="text-gray-600 dark:text-gray-400 text-center px-8">Seu horário para {selectedServiceName} foi reservado. Você pode acompanhá-lo no seu perfil.</p>
@@ -1136,7 +1136,7 @@ export default function Home() {
                       closeModal();
                       window.location.href = "/cliente";
                     }}
-                    className="mt-8 text-primary font-bold hover:underline"
+                    className="mt-8 text-cyan-600 dark:text-primary font-bold hover:underline"
                   >
                     Ver meu perfil
                   </button>
