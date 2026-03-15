@@ -48,6 +48,14 @@ const CATEGORIES = [
 export default function Home() {
   const [companies, setCompanies] = useState<any[]>([]);
   const [isLoadingCompanies, setIsLoadingCompanies] = useState(true);
+
+  // Scroll de Datas do Modal de Agendamento
+  const dateScrollRef = useRef<HTMLDivElement>(null);
+  const scrollDays = (direction: 'left' | 'right') => {
+    if (dateScrollRef.current) {
+      dateScrollRef.current.scrollBy({ left: direction === 'left' ? -220 : 220, behavior: "smooth" });
+    }
+  };
   const [selectedCompany, setSelectedCompany] = useState<any | null>(null);
   const [session, setSession] = useState<any>(null);
   const { theme, resolvedTheme } = useTheme();
@@ -897,97 +905,20 @@ export default function Home() {
 
                 {/* 1. Services */}
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
-                  1. Escolha um Serviço
-                </h3>
-                <div className="space-y-3 mb-8">
-                  {selectedCompany.services.map((service: any, idx: number) => {
-                    const isSelected = selectedServiceId === service.id;
-                    return (
-                      <div
-                        key={idx}
-                        onClick={() => {
-                          setSelectedServiceId(service.id);
-                          setSelectedCompanyId(service.companyId);
-                          setSelectedServiceName(service.name);
-                        }}
-                        className={`group flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${isSelected ? "border-cyan-600 dark:border-primary bg-cyan-500/5 dark:bg-primary/5" : "border-gray-100 dark:border-[#2a2a2c] bg-gray-50 dark:bg-[#151516] hover:border-gray-300 dark:hover:border-[#3a3a3c]"} `}
-                      >
-                        <div className="flex items-center gap-4">
-                          <div
-                            className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? "border-cyan-600 dark:border-primary" : "border-gray-300 dark:border-gray-600"} `}
-                          >
-                            {isSelected && (
-                              <div className="w-2.5 h-2.5 bg-cyan-600 dark:bg-primary rounded-full"></div>
-                            )}
-                          </div>
-                          <div>
-                            <h4
-                              className={`font-semibold text-sm transition-colors ${isSelected ? "text-cyan-700 dark:text-primary" : "text-gray-800 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white"} `}
-                            >
-                              {service.name}
-                            </h4>
-                            <p className="text-xs text-gray-500 mt-0.5">
-                              {service.duration}
-                            </p>
-                          </div>
-                        </div>
-                        <p
-                          className={`font-bold text-sm ${isSelected ? "text-cyan-700 dark:text-primary" : "text-gray-700 dark:text-gray-300"} `}
-                        >
-                          {service.price}
-                        </p>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* 2. Professional Selection-Only show if Service is selected */}
-                <div
-                  className={`transition-all duration-500 ease -in -out ${selectedServiceId ? "opacity-100 max-h-[500px]" : "opacity-50 max-h-40 overflow-hidden pointer-events-none"} `}
-                >
-                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
-                    2. Profissional
-                  </h3>
-                  <div className="flex items-center gap-4 overflow-x-auto pb-4 mb-6 scrollbar-hide py-3 px-2">
-                    {selectedCompany.staff?.map((person: any) => {
-                      const isSelected = selectedProfessional === person.id;
-                      return (
-                        <div
-                          key={person.id}
-                          onClick={() => {
-                            setSelectedProfessional(person.id);
-                            setSelectedTime(null);
-                          }}
-                          className={`flex flex-col items-center gap-2 cursor-pointer group shrink-0 transition-opacity ${!isSelected && selectedProfessional ? "opacity-60 hover:opacity-100" : "opacity-100"} `}
-                        >
-                          <div
-                            className={`h-16 w-16 rounded-full overflow-hidden transition-all ${isSelected ? "ring-2 ring-offset-4 ring-cyan-600 dark:ring-primary ring-offset-white dark:ring-offset-[#0a0a0b] shadow-[0_0_15px_rgba(0,255,255,0.2)]" : "border-2 border-transparent group-hover:border-gray-500"} `}
-                          >
-                            <img
-                              src={person.image}
-                              alt={person.name}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                          <span
-                            className={`text-xs font-medium transition-colors ${isSelected ? "text-cyan-700 dark:text-primary font-bold" : "text-gray-600 dark:text-gray-400 group-hover:text-gray-800 dark:group-hover:text-gray-200"} `}
-                          >
-                            {person.name}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* 3. Date Selection-Only show if Professional is selected */}
-                <div
-                  className={`transition-all duration-500 ease-in-out ${selectedProfessional ? "opacity-100 max-h-[500px]" : "opacity-0 max-h-0 overflow-hidden pointer-events-none"} `}
-                >
-                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
                     3. Escolha o Dia
                   </h3>
-                  <div className="flex items-center gap-3 overflow-x-auto pb-4 mb-6 scrollbar-hide py-1 px-1">
+                  <div className="relative group/scroll">
+                    {/* Botão Esquerda */}
+                    <button 
+                      onClick={() => scrollDays('left')}
+                      className="hidden md:flex absolute -left-2 top-[30px] z-10 bg-white/95 dark:bg-[#151516]/95 backdrop-blur-sm border border-gray-200 dark:border-gray-800 p-1.5 rounded-full shadow-md text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-[#1a1a1c] hover:scale-105 transition-all opacity-0 group-hover/scroll:opacity-100"
+                      aria-label="Rolar para esquerda"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+
+                    <div ref={dateScrollRef} className="flex items-center gap-3 overflow-x-auto pb-4 mb-3 scrollbar-hide py-1 px-1">
+                      
                     {upcomingDays.map((ds, idx) => {
                       const isSelected = selectedDate === ds.fullDateStr;
                       return (
@@ -1013,7 +944,18 @@ export default function Home() {
                           <span className="text-[10px] font-medium uppercase">
                             {ds.monthName}
                           </span>
-                        </div>
+                        
+                    </div>
+
+                    {/* Botão Direita */}
+                    <button 
+                      onClick={() => scrollDays('right')}
+                      className="hidden md:flex absolute -right-2 top-[30px] z-10 bg-white/95 dark:bg-[#151516]/95 backdrop-blur-sm border border-gray-200 dark:border-gray-800 p-1.5 rounded-full shadow-md text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-[#1a1a1c] hover:scale-105 transition-all opacity-0 group-hover/scroll:opacity-100"
+                      aria-label="Rolar para direita"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
                       );
                     })}
                   </div>
