@@ -204,6 +204,7 @@ function formatApt(apt: any) {
         company: apt.company?.name || "Empresa", 
         date: new Date(apt.date).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }),
         time: new Date(apt.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+        rawDate: apt.date.toISOString(), // <--- ENVIA O ISO ORIGINAL PARA O FRONTEND
         professional: apt.employee.name,
         address: apt.location.name + " - " + apt.location.address,
         price: "R$ " + apt.service.price.toFixed(2),

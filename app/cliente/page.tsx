@@ -194,11 +194,11 @@ export default function ClienteDashboard() {
                                 <div className="grid grid-cols-2 lg:flex lg:flex-row gap-4 mt-4 text-xs font-medium text-gray-600 dark:text-gray-400">
                                     <div className="flex items-center gap-1.5 bg-gray-50 dark:bg-[#1a1a1c] px-3 py-1.5 rounded-lg border border-gray-100 dark:border-gray-800/50">
                                         <Calendar className="w-3.5 h-3.5" />
-                                        {item.date}
+                                        {item.rawDate ? new Date(item.rawDate).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }) : item.date}
                                     </div>
                                     <div className="flex items-center gap-1.5 bg-gray-50 dark:bg-[#1a1a1c] px-3 py-1.5 rounded-lg border border-gray-100 dark:border-gray-800/50">
                                         <Clock className="w-3.5 h-3.5" />
-                                        {item.time}
+                                        {item.rawDate ? new Date(item.rawDate).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : item.time}
                                     </div>
                                     <div className="flex items-center gap-1.5 bg-gray-50 dark:bg-[#1a1a1c] px-3 py-1.5 rounded-lg border border-gray-100 dark:border-gray-800/50">
                                         <User className="w-3.5 h-3.5" />
@@ -258,7 +258,9 @@ export default function ClienteDashboard() {
                                         </span>
                                         <div className="flex items-center gap-1.5 bg-gray-100 dark:bg-[#1a1a1c] px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-800">
                                             <Calendar className="w-3.5 h-3.5 text-gray-500" />
-                                            <span className="text-xs font-semibold text-gray-500">{item.date}</span>
+                                            <span className="text-xs font-semibold text-gray-500">
+                                                {item.rawDate ? new Date(item.rawDate).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }) : item.date}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
