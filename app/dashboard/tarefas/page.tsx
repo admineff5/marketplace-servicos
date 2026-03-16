@@ -20,6 +20,7 @@ export default function TarefasPage() {
     const [activeListId, setActiveListId] = useState<number | null>(null); // null = Todas
     const [newTaskTitle, setNewTaskTitle] = useState("");
     const [addingTaskToListId, setAddingTaskToListId] = useState<number | null>(null);
+    const [showCompletedMap, setShowCompletedMap] = useState<{[key: number]: boolean}>({});
 
     // --- CARREGAR E SALVAR DO LOCALSTORAGE ---
     useEffect(() => {
@@ -196,7 +197,6 @@ export default function TarefasPage() {
                     const listTasks = tarefas.filter(t => t.listId === lista.id && (activeTab !== "starred" || t.star));
                     const openTasks = listTasks.filter(t => !t.completed);
                     const completedTasks = listTasks.filter(t => t.completed);
-                    const [showCompleted, setShowCompleted] = useState(false);
 
                     if (activeTab === "starred" && listTasks.length === 0) return null;
 
@@ -268,14 +268,14 @@ export default function TarefasPage() {
                                 {completedTasks.length > 0 && (
                                     <div className="mt-4">
                                         <button
-                                            onClick={() => setShowCompleted(!showCompleted)}
+                                            onClick={() => setShowCompletedMap(prev => ({ ...prev, [lista.id]: !prev[lista.id] }))}
                                             className="flex items-center gap-1.5 text-xs font-bold text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 py-1"
                                         >
-                                            {showCompleted ? <ChevronDown className="w-3" /> : <ChevronRight className="w-3" />}
+                                            {showCompletedMap[lista.id] ? <ChevronDown className="w-3" /> : <ChevronRight className="w-3" />}
                                             Concluídas ({completedTasks.length})
                                         </button>
                                         
-                                        {showCompleted && (
+                                        {showCompletedMap[lista.id] && (
                                             <div className="space-y-1 mt-1 pl-4 border-l border-gray-100 dark:border-gray-800">
                                                 {completedTasks.map(task => (
                                                     <div key={task.id} className="flex items-center justify-between group py-1.5 px-2 hover:bg-gray-50 dark:hover:bg-gray-800/20 rounded-lg transition-all">
