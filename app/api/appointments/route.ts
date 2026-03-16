@@ -39,6 +39,17 @@ export async function GET(request: Request) {
                 whereClause.date = { gte: startOfDay, lte: endOfDay };
             }
 
+            const fromTodayStr = searchParams.get("fromToday");
+            if (fromTodayStr === "true") {
+                const now = new Date();
+                now.setHours(0, 0, 0, 0);
+                if (whereClause.date) {
+                    whereClause.date.gte = now; // Se já houver data, combinar
+                } else {
+                    whereClause.date = { gte: now };
+                }
+            }
+
             const appointments = await (prisma.appointment as any).findMany({
                 where: whereClause,
                 include: {

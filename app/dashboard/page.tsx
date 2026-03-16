@@ -40,7 +40,7 @@ export default function DashboardIndex() {
             try {
                 setIsLoading(true);
                 // Fetch Recent Appointments
-                const aptRes = await fetch('/api/appointments?limit=10');
+                const aptRes = await fetch('/api/appointments?limit=10&fromToday=true');
                 const aptData = await aptRes.json();
                 // Filtrar agendamentos cancelados para não poluir a dashboard
                 const activeApts = Array.isArray(aptData) 

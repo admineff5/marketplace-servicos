@@ -22,7 +22,13 @@ export default function AgendaPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [selectedAppointment, setSelectedAppointment] = useState<any | null>(null);
     const [viewMode, setViewMode] = useState<"Mês" | "Semana" | "Dia">("Mês");
-    const [agendaLayout, setAgendaLayout] = useState<"calendar" | "list">("calendar");
+    const [agendaLayout, setAgendaLayout] = useState<"calendar" | "list">(() => {
+        if (typeof window !== 'undefined') {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('view') === 'list') return 'list';
+        }
+        return 'calendar';
+    });
     const [selectedPros, setSelectedPros] = useState<string[]>([]);
     const [currentDate, setCurrentDate] = useState(new Date());
     const [searchQuery, setSearchQuery] = useState("");
