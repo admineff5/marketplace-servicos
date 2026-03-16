@@ -39,7 +39,7 @@ export default function AgendaPage() {
 
     useEffect(() => {
         fetchData();
-    }, [currentDate, viewMode]);
+    }, [currentDate, viewMode, startDate, endDate, agendaLayout]);
 
     const fetchData = async () => {
         try {
@@ -57,7 +57,11 @@ export default function AgendaPage() {
 
             // Fetch appointments - in a real scenario we'd filter by date range based on viewMode
             const dateStr = currentDate.toISOString().split('T')[0];
-            const apptRes = await fetch(viewMode === "Mês" ? '/api/appointments' : `/api/appointments?date=${dateStr}`);
+            let url = viewMode === "Mês" ? '/api/appointments' : `/api/appointments?date=${dateStr}`;
+            if (agendaLayout === "list" && startDate && endDate) {
+                url = `/api/appointments?startDate=${startDate}&endDate=${endDate}`;
+            }
+            const apptRes = await fetch(url);
             const appts = await apptRes.json();
             
             if (Array.isArray(appts)) {
