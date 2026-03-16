@@ -120,6 +120,21 @@ export default function AgendaPage() {
     const filteredPros = professionals.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
     const navPrev = () => {
+        const isList = agendaLayout === "list";
+        if (isList) {
+            setSelectedMiniDate(prev => {
+                const currentDay = prev !== null ? prev : currentDate.getUTCDate();
+                if (currentDay <= 1) {
+                    const newDate = new Date(currentDate);
+                    newDate.setMonth(newDate.getMonth() - 1);
+                    setCurrentDate(newDate);
+                    const daysInPrev = new Date(newDate.getFullYear(), newDate.getMonth() + 1, 0).getDate();
+                    return daysInPrev;
+                }
+                return currentDay - 1;
+            });
+            return;
+        }
         const newDate = new Date(currentDate);
         if (viewMode === "Mês") newDate.setMonth(newDate.getMonth() - 1);
         if (viewMode === "Semana") newDate.setDate(newDate.getDate() - 7);
@@ -128,6 +143,21 @@ export default function AgendaPage() {
     };
 
     const navNext = () => {
+        const isList = agendaLayout === "list";
+        if (isList) {
+            setSelectedMiniDate(prev => {
+                const currentDay = prev !== null ? prev : currentDate.getUTCDate();
+                const daysInCurr = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+                if (currentDay >= daysInCurr) {
+                    const newDate = new Date(currentDate);
+                    newDate.setMonth(newDate.getMonth() + 1);
+                    setCurrentDate(newDate);
+                    return 1;
+                }
+                return currentDay + 1;
+            });
+            return;
+        }
         const newDate = new Date(currentDate);
         if (viewMode === "Mês") newDate.setMonth(newDate.getMonth() + 1);
         if (viewMode === "Semana") newDate.setDate(newDate.getDate() + 7);
