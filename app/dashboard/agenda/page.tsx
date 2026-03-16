@@ -98,6 +98,24 @@ export default function AgendaPage() {
 
     const closeModal = () => setSelectedAppointment(null);
 
+    const approveAppointment = async (id: string, e: any) => {
+        e.stopPropagation();
+        try {
+            const res = await fetch(`/api/appointments/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: 'CONFIRMED' })
+            });
+            if (res.ok) {
+                fetchData(); // Recarregar
+            } else {
+                alert("Erro ao aprovar o agendamento.");
+            }
+        } catch (error) {
+            console.error("Erro na aprovação:", error);
+        }
+    };
+
     const filteredPros = professionals.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
     const navPrev = () => {
