@@ -1090,7 +1090,7 @@ export default function Home() {
                                     className={`px-4 py-2 rounded-lg text-sm font-bold border transition-all ${
                                       selectedTime === time
                                         ? "border-cyan-800 bg-cyan-800 text-white dark:border-primary dark:bg-primary dark:text-black"
-                                        : "bg-gray-50 dark:bg-black border-gray-100 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:border-primary/50"
+                                        : "bg-gray-50 dark:bg-black border-gray-100 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:border-cyan-800 hover:text-cyan-800 hover:bg-cyan-50/50 dark:hover:bg-primary/10 dark:hover:border-primary dark:hover:text-primary"
                                     }`}
                                   >
                                     {time}
