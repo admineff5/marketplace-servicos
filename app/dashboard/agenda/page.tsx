@@ -54,7 +54,7 @@ export default function AgendaPage() {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [searchQuery, setSearchQuery] = useState("");
     const [listFilter, setListFilter] = useState<"Proximos" | "Todos">("Proximos");
-    const [selectedMiniDate, setSelectedMiniDate] = useState<number | null>(new Date().getDate());
+    const [selectedMiniDate, setSelectedMiniDate] = useState<number | null>(null);
     const [startDate, setStartDate] = useState<string>("");
     const [endDate, setEndDate] = useState<string>("");
 
