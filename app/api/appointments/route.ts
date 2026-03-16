@@ -29,7 +29,14 @@ export async function GET(request: Request) {
                 companyId: company.id
             };
             
-            if (dateStr) {
+            const startDateStr = searchParams.get("startDate");
+            const endDateStr = searchParams.get("endDate");
+
+            if (startDateStr && endDateStr) {
+                const start = new Date(startDateStr + 'T00:00:00');
+                const end = new Date(endDateStr + 'T23:59:59');
+                whereClause.date = { gte: start, lte: end };
+            } else if (dateStr) {
                 // Forçar meio-dia para evitar problemas de fuso ao extrair o dia
                 const date = new Date(dateStr + 'T12:00:00');
                 const startOfDay = new Date(date);

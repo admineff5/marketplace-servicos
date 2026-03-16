@@ -34,6 +34,8 @@ export default function AgendaPage() {
     const [searchQuery, setSearchQuery] = useState("");
     const [listFilter, setListFilter] = useState<"Proximos" | "Todos">("Proximos");
     const [selectedMiniDate, setSelectedMiniDate] = useState<number | null>(null);
+    const [startDate, setStartDate] = useState<string>("");
+    const [endDate, setEndDate] = useState<string>("");
 
     useEffect(() => {
         fetchData();
@@ -262,15 +264,35 @@ export default function AgendaPage() {
                         </div>
                         <div className="flex items-center gap-4">
                             {agendaLayout === "list" && (
-                                <div className="hidden sm:flex items-center border border-gray-300 dark:border-gray-600 rounded-md bg-transparent mr-2">
-                                    <select
-                                        value={listFilter}
-                                        onChange={(e) => setListFilter(e.target.value as any)}
-                                        className="bg-transparent px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 outline-none focus:bg-white dark:focus:bg-gray-900 cursor-pointer"
-                                    >
-                                        <option value="Proximos">Próximos</option>
-                                        <option value="Todos">Todos</option>
-                                    </select>
+                                <div className="flex items-center gap-2 text-sm">
+                                    <div className="flex items-center border border-gray-300 dark:border-gray-700 rounded-lg px-2 py-1 bg-transparent hover:border-cyan-600 dark:hover:border-primary transition-all">
+                                        <input 
+                                            type="date" 
+                                            value={startDate} 
+                                            onChange={e => setStartDate(e.target.value)} 
+                                            className="bg-transparent outline-none text-gray-700 dark:text-gray-300 text-xs font-semibold cursor-pointer" 
+                                        />
+                                    </div>
+                                    <span className="text-gray-500 text-xs">até</span>
+                                    <div className="flex items-center border border-gray-300 dark:border-gray-700 rounded-lg px-2 py-1 bg-transparent hover:border-cyan-600 dark:hover:border-primary transition-all">
+                                        <input 
+                                            type="date" 
+                                            value={endDate} 
+                                            onChange={e => setEndDate(e.target.value)} 
+                                            className="bg-transparent outline-none text-gray-700 dark:text-gray-300 text-xs font-semibold cursor-pointer" 
+                                        />
+                                    </div>
+                                    {(startDate || endDate) && (
+                                        <button 
+                                            onClick={() => { setStartDate(""); setEndDate(""); }} 
+                                            className="p-1.5 hover:bg-red-50 dark:hover:bg-red-500/10 text-red-500 rounded-full transition-colors"
+                                            title="Limpar Filtro"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+                                              <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                            </svg>
+                                        </button>
+                                    )}
                                 </div>
                             )}
                             {agendaLayout === "calendar" && (
@@ -363,6 +385,10 @@ export default function AgendaPage() {
                                             if (isCancelled) return false;
                                             const matchesPro = selectedPros.includes(apt.employeeId) || selectedPros.includes(apt.employee?.id) || selectedPros.includes(apt.prof);
                                             if (!matchesPro) return false;
+
+                                            // Se houver filtro por periodo, aceitar tudo que a API mandar
+                                            if (startDate && endDate) return true;
+
                                             if (selectedMiniDate) {
                                                 const aptDate = new Date(apt.date);
                                                 const aptDay = aptDate.getUTCDate();
@@ -372,16 +398,9 @@ export default function AgendaPage() {
                                                     return false;
                                                 }
                                             }
-                                            if (selectedMiniDate) {
-                                                const aptDate = new Date(apt.date);
-                                                const aptDay = aptDate.getUTCDate();
-                                                const aptMonth = aptDate.getUTCMonth();
-                                                const aptYear = aptDate.getUTCFullYear();
-                                                if (aptDay !== selectedMiniDate || aptMonth !== month || aptYear !== year) {
-                                                    return false;
-                                                }
-                                            }
-                                            if (listFilter === "Proximos") {
+                                            
+                                            // Se nao houver data selecionada, manter o padrao de 'Proximos' para nao poluir
+                                            if (!selectedMiniDate && listFilter === "Proximos") {
                                                 const aptDate = new Date(apt.date);
                                                 const now = new Date();
                                                 now.setHours(0,0,0,0);
