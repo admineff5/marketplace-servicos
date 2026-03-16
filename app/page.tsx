@@ -324,7 +324,7 @@ export default function Home() {
       monthName: [
         "Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"
       ][d.getMonth()],
-      fullDateStr: d.toISOString().split("T")[0],
+      fullDateStr: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`,
     };
   });
 

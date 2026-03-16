@@ -53,8 +53,8 @@ export async function GET(request: Request) {
 
             const formatted = (appointments as any[]).map((apt: any) => ({
                 id: apt.id,
-                start: apt.date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-                end: new Date(apt.date.getTime() + (apt.service?.duration || 30) * 60000).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+                start: apt.date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' }),
+                end: new Date(apt.date.getTime() + (apt.service?.duration || 30) * 60000).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' }),
                 client: apt.user?.name || "Cliente",
                 prof: apt.employee?.name || "Profissional",
                 employeeId: apt.employeeId, // <--- NECESSÁRIO PARA O FILTRO DA AGENDA
