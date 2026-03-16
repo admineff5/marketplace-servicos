@@ -226,7 +226,7 @@ export default function GestaoProdutosPage() {
 
                             {/* Image Header */}
                             <div className="relative h-48 bg-gray-100 dark:bg-[#1a1a1c] overflow-hidden">
-                                <img src={produto.image} alt={produto.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                <img src={produto.image} alt={produto.name} onError={(e: any) => e.target.style.display = 'none'} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
 
                                 {/* Stock Badges */}
                                 <div className="absolute top-3 left-3 flex flex-col gap-2">
@@ -297,7 +297,25 @@ export default function GestaoProdutosPage() {
                         <div className="p-6 space-y-5">
 
                             <div className="flex items-center gap-4">
-                                <div className="w-20 h-20 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-[#111] overflow-hidden flex items-center justify-center shrink-0 shadow-sm relative group cursor-pointer">
+                                <div 
+                                    onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                                    onDrop={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        const file = e.dataTransfer.files[0];
+                                        if (file && file.type.startsWith("image/")) {
+                                            const reader = new FileReader();
+                                            reader.onload = (event) => setFormImage(event.target?.result as string);
+                                            reader.readAsDataURL(file);
+                                        } else {
+                                            const url = e.dataTransfer.getData("text/plain");
+                                            if (url && (url.startsWith("http") || url.startsWith("data:"))) {
+                                                setFormImage(url);
+                                            }
+                                        }
+                                    }}
+                                    className="w-20 h-20 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-[#111] overflow-hidden flex items-center justify-center shrink-0 shadow-sm relative group cursor-pointer"
+                                >
                                     {formImage ? (
                                         <img src={formImage} alt="Preview" className="w-full h-full object-cover" />
                                     ) : (
