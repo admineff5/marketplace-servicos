@@ -16,6 +16,14 @@ const formatEndTimeLocal = (dateStr: any, duration: number = 30) => {
     return new Date(d.getTime() + duration * 60000).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 };
 
+const getStatusStyle = (status: string) => {
+    const s = status ? status.toUpperCase() : 'CONFIRMADO';
+    if (s === 'CANCELADO' || s === 'CANCELLED') return 'bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-400';
+    if (s === 'PENDENTE' || s === 'PENDING') return 'bg-yellow-50 text-yellow-700 dark:bg-yellow-500/10 dark:text-yellow-400';
+    if (s === 'FINALIZADO' || s === 'DONE') return 'bg-cyan-50 text-cyan-700 dark:bg-cyan-500/10 dark:text-cyan-400';
+    return 'bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400';
+};
+
 export default function AgendaPage() {
     const [appointments, setAppointments] = useState<any[]>([]);
     const [professionals, setProfessionals] = useState<any[]>([]);
@@ -423,8 +431,8 @@ export default function AgendaPage() {
                                                     <div>
                                                         <div className="flex items-center gap-3 mb-1">
                                                             <h3 className="text-base font-bold text-gray-900 dark:text-white">{formatTimeLocal(apt.date)} - {apt.title || 'Serviço'}</h3>
-                                                            <span className={`px-2 py-0.5 text-[10px] font-bold uppercase rounded-md ${apt.dot.replace('bg-', 'text-').replace('500', '600')} bg-opacity-10 dark:bg-opacity-20 bg-current`}>
-                                                                Confirmado
+                                                            <span className={`px-2 py-0.5 text-[10px] font-bold uppercase rounded-md ${getStatusStyle(apt.status)}`}>
+                                                                {apt.status || 'Confirmado'}
                                                             </span>
                                                         </div>
                                                         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-600 dark:text-gray-400">
