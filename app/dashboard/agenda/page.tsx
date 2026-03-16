@@ -457,11 +457,7 @@ export default function AgendaPage() {
                                     <div className="absolute bottom-2 right-2 w-2 h-16 bg-[#50458C] rounded-sm"></div>
                                 </div>
                             </div>
-                                <div className="absolute bottom-0 left-8 w-12 h-16 bg-[#E6D19C] dark:bg-gray-800/40 rounded-t-md"></div>
-                                <div className="absolute bottom-6 left-[38px] w-8 h-10 bg-white dark:bg-gray-900 rounded-md shadow-sm"></div>
-                                <div className="absolute bottom-0 right-16 w-16 h-20 bg-[#FFA5DA] dark:bg-pink-950/20 rounded-t-lg"></div>
-                                <div className="absolute bottom-10 right-20 w-8 h-12 bg-white/40 dark:bg-white/5 rounded-sm"></div>
-                            </div>
+                                
 
                             <div className="p-6">
                                 <div className="flex gap-4">
