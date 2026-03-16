@@ -148,7 +148,7 @@ export default function DashboardIndex() {
                             <div className="py-10 text-center text-gray-500 text-sm">Carregando próximos horários...</div>
                         ) : recentAppointments.length > 0 ? (
                             recentAppointments.map((apt: any) => (
-                            <div key={apt.id} onClick={() => setSelectedAppointment(apt)} className="bg-white dark:bg-[#161618] border border-gray-200 dark:border-gray-800 rounded-xl p-4 shadow-sm hover:shadow-md hover:border-cyan-600/30 transition-shadow cursor-pointer flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
+                            <div key={apt.id} className="bg-white dark:bg-[#161618] border border-gray-200 dark:border-gray-800 rounded-xl p-4 shadow-sm hover:shadow-md hover:border-cyan-600/30 transition-shadow cursor-pointer flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
                                 <div className="flex items-start sm:items-center gap-4">
                                     <div className="hidden sm:flex flex-col items-center justify-center w-14 h-14 bg-gray-50 dark:bg-[#1e1f22] rounded-lg border border-gray-200 dark:border-gray-800 shrink-0">
                                         <span className="text-xs font-semibold text-gray-500 uppercase">{WEEKDAYS[new Date(apt.date).getUTCDay()].replace('.', '')}</span>
@@ -206,26 +206,6 @@ export default function DashboardIndex() {
                 </div>
             </div>
         
-                {selectedAppointment && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-transparent backdrop-blur-sm" onClick={closeModal}>
-                        <div className="relative w-full max-w-[420px] bg-white dark:bg-[#111] shadow-[0_8px_30px_rgb(0,0,0,0.3)] border border-gray-200 dark:border-gray-800 flex flex-col rounded-3xl overflow-hidden" onClick={e => e.stopPropagation()}>
-                            <div className="absolute top-3 right-3 flex items-center gap-2 z-10">
-                                <button onClick={closeModal} className="p-1.5 hover:bg-black/10 dark:hover:bg-white/10 rounded-full text-gray-700 dark:text-gray-300 transition-colors"><X className="w-5 h-5" /></button>
-                            </div>
-                            <div className="h-[120px] bg-[#FFF1B8] dark:bg-[#1a1a1a] relative overflow-hidden flex items-end px-6 border-b border-gray-100 dark:border-gray-800/50">
-                                <div className="absolute bottom-0 left-8 w-24 h-20 bg-[#FFE59E] rounded-t-xl border border-[#DCC78A]"></div>
-                                <div className="absolute bottom-0 right-16 w-36 h-24 bg-[#FFE59E] rounded-t-xl border border-[#DCC78A]"></div>
-                                <div className="absolute bottom-0 left-12 w-6 h-14 bg-[#1E1A35] rounded-t"></div>
-                                <div className="absolute bottom-0 left-24 w-10 h-14 bg-[#FFBADB] rounded-lg"></div>
-                                <div className="absolute bottom-0 right-32 w-11 h-12 bg-white/40 border border-white/30 rounded-t-md"></div>
-                            </div>
-                            <div className="p-6">
-                                <h2 className="text-[22px] font-normal text-gray-900 dark:text-gray-100 leading-tight">{selectedAppointment.service?.name || selectedAppointment.title || 'Agendamento'}</h2>
-                                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{formatTimeLocal(selectedAppointment.date)} - {formatEndTimeLocal(selectedAppointment.date)}</p>
-                            </div>
-                        </div>
-                    </div>
-                )}
         </div>
     );
 }
