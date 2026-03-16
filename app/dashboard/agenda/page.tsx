@@ -46,8 +46,9 @@ export default function AgendaPage() {
         if (typeof window !== 'undefined') {
             const params = new URLSearchParams(window.location.search);
             if (params.get('view') === 'list') return 'list';
+            if (params.get('view') === 'calendar') return 'calendar';
         }
-        return 'calendar';
+        return 'list';
     });
     const [selectedPros, setSelectedPros] = useState<string[]>([]);
     const [currentDate, setCurrentDate] = useState(new Date());
