@@ -160,7 +160,7 @@ export default function GestaoProfissionaisPage() {
 
                     <button
                         onClick={openNewModal}
-                        className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-bold text-black shadow-lg shadow-cyan-500/20 hover:bg-cyan-400 transition-all hover:scale-105"
+                        className="inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold shadow-lg shadow-cyan-500/20 transition-all hover:scale-105 bg-cyan-700 hover:bg-cyan-800 text-white dark:bg-primary dark:hover:bg-cyan-400 dark:text-black"
                     >
                         <Plus className="w-4 h-4" />
                         Novo Profissional

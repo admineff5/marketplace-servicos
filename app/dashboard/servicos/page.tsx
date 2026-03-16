@@ -169,7 +169,7 @@ export default function GestaoServicosPage() {
 
                     <button
                         onClick={openNewModal}
-                        className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-bold text-black shadow-lg shadow-cyan-500/20 hover:bg-cyan-400 transition-all hover:scale-105"
+                        className="inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold shadow-lg shadow-cyan-500/20 transition-all hover:scale-105 bg-cyan-700 hover:bg-cyan-800 text-white dark:bg-primary dark:hover:bg-cyan-400 dark:text-black"
                     >
                         <Plus className="w-4 h-4" />
                         Novo Serviço
@@ -234,7 +234,7 @@ export default function GestaoServicosPage() {
                                             <div className="flex items-center justify-end gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <button 
                                                     onClick={() => handleEdit(srv)}
-                                                    className="p-2 text-gray-400 hover:text-cyan-700 dark:hover:text-primary hover:bg-primary/10 rounded-lg transition-colors" 
+                                                    className="p-2 text-gray-400 hover:text-cyan-700 dark:hover:text-primary hover: /10 rounded-lg transition-colors bg-cyan-700 hover:bg-cyan-800 text-white dark:bg-primary dark:hover:bg-cyan-400 dark:text-black" 
                                                     title="Editar Serviço"
                                                 >
                                                     <Edit2 className="w-4 h-4" />

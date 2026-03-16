@@ -78,7 +78,7 @@ export default function CentralRelatoriosPage() {
                                 key={cat}
                                 onClick={() => setSelectedReportCategory(cat)}
                                 className={`whitespace-nowrap lg:whitespace-normal text-left px-4 py-3 rounded-xl font-bold transition-all text-sm border ${selectedReportCategory === cat
-                                    ? 'bg-primary text-black border-primary shadow-sm'
+                                    ? 'bg-cyan-700 hover:bg-cyan-800 text-white border-cyan-700 dark:bg-primary dark:hover:bg-cyan-400 dark:text-black dark:border-primary shadow-sm'
                                     : 'bg-white hover:bg-gray-50 dark:bg-[#111] dark:hover:bg-[#1a1a1c] text-gray-600 dark:text-gray-300 border-gray-200 dark:border-[#222]'
                                     }`}
                             >
