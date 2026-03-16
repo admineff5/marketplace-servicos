@@ -14,6 +14,7 @@ import {
     Scissors,
     Package,
     Settings,
+    Building,
     LogOut,
     Bell,
     ChevronLeft,
