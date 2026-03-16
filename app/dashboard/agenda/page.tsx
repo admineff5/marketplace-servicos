@@ -224,7 +224,7 @@ export default function AgendaPage() {
                 </div>
 
                 
-                <!-- Botões removidos -->
+                {/* Botões removidos */}
             </div>
 
             <div className="flex flex-1 overflow-hidden bg-white dark:bg-[#1e1f22] text-gray-900 dark:text-gray-200 font-sans border border-gray-200 dark:border-gray-800 rounded-xl">
