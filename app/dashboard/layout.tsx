@@ -14,6 +14,7 @@ import {
     Scissors,
     Package,
     Settings,
+    ListTodo,
     Building,
     LogOut,
     Bell,
@@ -31,6 +32,7 @@ import {
 const SIDEBAR_LINKS = [
     { name: "Visão Geral", href: "/dashboard", icon: BarChart3 },
     { name: "Agenda", href: "/dashboard/agenda", icon: Calendar },
+    { name: "Tarefas", href: "/dashboard/tarefas", icon: ListTodo },
     { name: "Consulta Agendamentos", href: "/dashboard/consulta", icon: SearchCheck },
     { name: "Feriados / Ausências", href: "/dashboard/bloqueios", icon: CalendarOff },
     { name: "Leads", href: "/dashboard/leads", icon: Target },
