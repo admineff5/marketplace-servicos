@@ -41,7 +41,7 @@ export default function DashboardIndex() {
             try {
                 setIsLoading(true);
                 // Fetch Recent Appointments
-                const aptRes = await fetch('/api/appointments?limit=10&fromToday=true');
+                const aptRes = await fetch('/api/appointments?fromToday=true');
                 const aptData = await aptRes.json();
                 // Filtrar agendamentos cancelados para não poluir a dashboard
                 const activeApts = Array.isArray(aptData) 
@@ -50,7 +50,7 @@ export default function DashboardIndex() {
                         return !isCancelled;
                     })
                     : [];
-                setRecentAppointments(activeApts.slice(0, 5));
+                setRecentAppointments([...activeApts].sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime()).slice(0, 5));
 
                 // Fetch Stats
                 const statsRes = await fetch('/api/dashboard/stats');
@@ -70,10 +70,7 @@ export default function DashboardIndex() {
 
     return (
         <div className="space-y-6 max-w-7xl mx-auto pb-10">
-            <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 p-4 rounded-xl text-[11px] font-mono text-amber-800 dark:text-amber-400 overflow-auto max-h-48 shadow-inner">
-                    <div className="font-bold mb-1 uppercase text-xs">⚠️ Diagnóstico de Logs da API (Agendamentos Encontrados):</div>
-                    {debugText || "Nenhum dado atribuido ao debugText"}
-                </div>
+            {/* Bloco de Debug removido */}
             {/* Cabecalho Principal */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
