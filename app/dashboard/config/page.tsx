@@ -229,6 +229,24 @@ export default function ConfigPage() {
                                         <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Nome Fantasia (Marketplace)</label>
                                         <input 
                                             type="text" 
+                                            value={company.name || ""} 
+                                            onChange={(e) => setCompany({...company, name: e.target.value})}
+                                            className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2.5 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-cyan-600 dark:focus:ring-cyan-600/50 dark:focus:ring-primary/50" 
+                                        />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Razão Social</label>
+                                        <input 
+                                            type="text" 
+                                            value={company.legalName || ""} 
+                                            onChange={(e) => setCompany({...company, legalName: e.target.value})}
+                                            className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2.5 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-cyan-600 dark:focus:ring-cyan-600/50 dark:focus:ring-primary/50" 
+                                        />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">CNPJ</label>
+                                        <input 
+                                            type="text" 
                                             readOnly
                                             disabled
                                             value={maskCNPJ(company.cnpj || "")} 
