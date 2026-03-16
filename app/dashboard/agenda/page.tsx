@@ -243,6 +243,18 @@ export default function AgendaPage() {
                             {agendaLayout === "list" && <h2 className="text-xl font-normal text-gray-800 dark:text-gray-200 ml-2">Próximos Agendamentos</h2>}
                         </div>
                         <div className="flex items-center gap-4">
+                            {agendaLayout === "list" && (
+                                <div className="hidden sm:flex items-center border border-gray-300 dark:border-gray-600 rounded-md bg-transparent mr-2">
+                                    <select
+                                        value={listFilter}
+                                        onChange={(e) => setListFilter(e.target.value as any)}
+                                        className="bg-transparent px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 outline-none focus:bg-white dark:focus:bg-gray-900 cursor-pointer"
+                                    >
+                                        <option value="Proximos">Próximos</option>
+                                        <option value="Todos">Todos</option>
+                                    </select>
+                                </div>
+                            )}
                             {agendaLayout === "calendar" && (
                                 <div className="hidden sm:flex items-center border border-gray-300 dark:border-gray-600 rounded-md bg-transparent">
                                     <select
@@ -328,7 +340,19 @@ export default function AgendaPage() {
                             <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-gray-50/50 dark:bg-[#1e1f22]">
                                 <div className="max-w-4xl mx-auto space-y-6">
                                     {appointments
-                                        .filter((apt: any) => apt.status !== 'CANCELLED' && apt.status !== 'CANCELADO' && (selectedPros.includes(apt.employeeId) || selectedPros.includes(apt.employee?.id) || selectedPros.includes(apt.prof)))
+                                        .filter((apt: any) => {
+                                            const isCancelled = apt.status === 'CANCELLED' || apt.status === 'CANCELADO';
+                                            if (isCancelled) return false;
+                                            const matchesPro = selectedPros.includes(apt.employeeId) || selectedPros.includes(apt.employee?.id) || selectedPros.includes(apt.prof);
+                                            if (!matchesPro) return false;
+                                            if (listFilter === "Proximos") {
+                                                const aptDate = new Date(apt.date);
+                                                const now = new Date();
+                                                now.setHours(0,0,0,0);
+                                                return aptDate >= now;
+                                            }
+                                            return true;
+                                        })
                                         .sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime())
                                         .map((apt: any) => (
                                             <div key={apt.id} className="bg-white dark:bg-[#25262b] border border-gray-200 dark:border-gray-800 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer flex flex-col sm:flex-row gap-4 sm:items-center justify-between" onClick={() => setSelectedAppointment(apt)}>
