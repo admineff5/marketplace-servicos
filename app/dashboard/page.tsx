@@ -70,12 +70,10 @@ export default function DashboardIndex() {
 
     return (
         <div className="space-y-6 max-w-7xl mx-auto pb-10">
-            {debugText && (
-                <pre className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 p-4 rounded-xl text-[11px] font-mono text-amber-800 dark:text-amber-400 overflow-auto max-h-48 shadow-inner">
+            <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 p-4 rounded-xl text-[11px] font-mono text-amber-800 dark:text-amber-400 overflow-auto max-h-48 shadow-inner">
                     <div className="font-bold mb-1 uppercase text-xs">⚠️ Diagnóstico de Logs da API (Agendamentos Encontrados):</div>
-                    {debugText}
-                </pre>
-            )}
+                    {debugText || "Nenhum dado atribuido ao debugText"}
+                </div>
             {/* Cabecalho Principal */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
