@@ -83,7 +83,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <aside className={`fixed inset-y-0 left-0 z-50 flex flex-col bg-white dark:bg-[#111] border-r border-gray-200 dark:border-gray-800 transition-all duration-300 md:relative md:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} w-72 ${isCollapsed ? 'md:w-20' : 'md:w-64'}`}>
                 <div className={`h-16 flex items-center border-b border-gray-100 dark:border-gray-800 relative ${isCollapsed ? 'md:justify-center px-6 md:px-0' : 'px-6 justify-between'}`}>
                     <Link href="/dashboard" className="flex items-center gap-2">
-                        <Image src="/logo icon.png" alt="Logo" width={28} height={28} className="object-contain" />
+                        <Image src="/logo-icon.png" alt="Logo" width={28} height={28} className="object-contain" />
                         <span className={`font-bold text-gray-900 dark:text-white tracking-tight ${isCollapsed ? 'md:hidden' : ''}`}>Painel Parceiro</span>
                     </Link>
 

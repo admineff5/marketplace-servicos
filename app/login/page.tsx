@@ -111,7 +111,7 @@ export default function Login() {
                     <div className="lg:hidden text-center mb-10">
                          <Link href="/">
                             <Image
-                                src="/logo icon.png"
+                                src="/logo-icon.png"
                                 alt="Logo"
                                 width={56}
                                 height={56}

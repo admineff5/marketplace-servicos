@@ -11,7 +11,7 @@ export function Footer() {
                     <div>
                         <div className="flex items-center gap-2.5 mb-4">
                             <Image
-                                src="/logo icon.png"
+                                src="/logo-icon.png"
                                 alt="EFF5 Logo"
                                 width={36}
                                 height={36}

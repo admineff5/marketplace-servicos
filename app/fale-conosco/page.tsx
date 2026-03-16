@@ -36,7 +36,7 @@ export default function FaleConosco() {
                 <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
                     <Link href="/" className="flex items-center gap-2">
                         <Image
-                            src="/logo icon.png"
+                            src="/logo-icon.png"
                             alt="Logo Icon"
                             width={32}
                             height={32}
