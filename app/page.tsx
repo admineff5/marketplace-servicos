@@ -1089,7 +1089,7 @@ export default function Home() {
                                     onClick={() => setSelectedTime(time)}
                                     className={`px-4 py-2 rounded-lg text-sm font-bold border transition-all ${
                                       selectedTime === time
-                                        ? "bg-primary border-primary text-black"
+                                        ? "border-cyan-800 bg-cyan-800 text-white dark:border-primary dark:bg-primary dark:text-black"
                                         : "bg-gray-50 dark:bg-black border-gray-100 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:border-primary/50"
                                     }`}
                                   >
