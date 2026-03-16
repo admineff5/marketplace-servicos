@@ -146,7 +146,8 @@ export default function DashboardIndex() {
                     <div className="space-y-3">
                         {isLoading ? (
                             <div className="py-10 text-center text-gray-500 text-sm">Carregando próximos horários...</div>
-                        ) : recentAppointments.length > 0 ? recentAppointments.map((apt: any) => (
+                        ) : recentAppointments.length > 0 ? (
+                            recentAppointments.map((apt: any) => (
                             <div key={apt.id} onClick={() => setSelectedAppointment(apt)} className="bg-white dark:bg-[#161618] border border-gray-200 dark:border-gray-800 rounded-xl p-4 shadow-sm hover:shadow-md hover:border-cyan-600/30 transition-shadow cursor-pointer flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
                                 <div className="flex items-start sm:items-center gap-4">
                                     <div className="hidden sm:flex flex-col items-center justify-center w-14 h-14 bg-gray-50 dark:bg-[#1e1f22] rounded-lg border border-gray-200 dark:border-gray-800 shrink-0">
@@ -169,7 +170,8 @@ export default function DashboardIndex() {
                                         {apt.status === 'CONFIRMED' ? 'Confirmado' : 'Pendente'}
                                     </span>
                                 </div>
-                            </div>) : (
+                            </div>
+                        ))) : (
                             <div className="py-10 text-center text-gray-500 text-sm border border-dashed border-gray-200 dark:border-gray-800 rounded-xl">
                                 Nenhum agendamento para as próximas horas.
                             </div>
