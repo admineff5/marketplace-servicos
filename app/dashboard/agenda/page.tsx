@@ -452,36 +452,6 @@ export default function AgendaPage() {
                         </div>
                     </div>
                 )}
-
-                                        {selectedAppointment?.clientNote && (
-                                            <div className="mt-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg p-3 border border-gray-200 dark:border-gray-700 relative">
-                                                <div className="absolute -left-2 top-4 w-4 h-4 bg-gray-50 dark:bg-gray-800/50 border-t border-l border-gray-200 dark:border-gray-700 transform -rotate-45"></div>
-                                                <p className="text-sm italic text-gray-700 dark:text-gray-300 relative z-10">"{selectedAppointment.clientNote}"</p>
-                                            </div>
-                                        )}
-
-                                        {selectedAppointment?.phone && (
-                                            <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
-                                                <p className="text-xs text-gray-500 mb-2">Entre em contato direto pelo WhatsApp para responder ou confirmar detalhes:</p>
-                                                <a href={selectedAppointment.phone} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-[#25D366] text-white hover:bg-[#20bd5a] transition-colors rounded-lg font-medium text-sm shadow-sm">
-                                                    Conversar no WhatsApp
-                                                </a>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-
-                                <div className="flex gap-4 mt-6 items-center text-sm text-gray-700 dark:text-gray-300">
-                                    <CalendarIcon className="w-5 h-5 text-gray-500 shrink-0" />
-                                    <div>
-                                        <p className="font-medium text-gray-900 dark:text-gray-200">Agenda_{selectedAppointment.prof}</p>
-                                        <p className="text-xs text-gray-500 mt-0.5">Criado por: EFF5 Automação Inteligente EFF5 AI</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
             </div>
         </div>
     );
