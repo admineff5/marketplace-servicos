@@ -33,7 +33,7 @@ export default function AgendaPage() {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [searchQuery, setSearchQuery] = useState("");
     const [listFilter, setListFilter] = useState<"Proximos" | "Todos">("Proximos");
-    const [selectedMiniDate, setSelectedMiniDate] = useState<number | null>(null);
+    const [selectedMiniDate, setSelectedMiniDate] = useState<number | null>(new Date().getDate());
     const [startDate, setStartDate] = useState<string>("");
     const [endDate, setEndDate] = useState<string>("");
 
@@ -354,7 +354,7 @@ export default function AgendaPage() {
                                                 return (
                                                     <div key={i} className={`min-h-[120px] p-1 border-b border-gray-200 dark:border-gray-800 ${i % 7 !== 0 ? 'border-l border-gray-200 dark:border-gray-800' : ''}`}>
                                                         <div className="flex justify-center mb-1">
-                                                            <span className={`text-[12px] font-medium w-6 h-6 flex items-center justify-center rounded-full mt-1 ${dayIsToday ? 'bg-blue-600 text-white' : 'text-gray-700 dark:text-gray-300'}`}>
+                                                            <span className={`text-[12px] font-medium w-6 h-6 flex items-center justify-center rounded-full mt-1 ${dayIsToday ? 'bg-cyan-700 text-white dark:bg-primary dark:text-black font-bold shadow-md' : 'text-gray-700 dark:text-gray-300'}`}>
                                                                 {day.date || ''}
                                                             </span>
                                                         </div>
