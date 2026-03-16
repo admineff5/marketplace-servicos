@@ -179,7 +179,7 @@ export default function ConfigPage() {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                        <Settings className="w-6 h-6 text-cyan-700 dark:text-primary" />
+                        <Building className="w-6 h-6 text-cyan-700 dark:text-primary" />
                         Perfil da loja
                     </h1>
                     <p className="text-gray-500 dark:text-gray-400 mt-1">
@@ -229,31 +229,11 @@ export default function ConfigPage() {
                                         <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Nome Fantasia (Marketplace)</label>
                                         <input 
                                             type="text" 
-                                            value={company.name} 
-                                            onChange={(e) => setCompany({...company, name: e.target.value})}
-                                            className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2.5 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-cyan-600 dark:focus:ring-cyan-600/50 dark:focus:ring-primary/50" 
-                                        />
-                                    </div>
-                                    <div className="space-y-1">
-                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Razão Social</label>
-                                        <input 
-                                            type="text" 
-                                            value={company.legalName || ""} 
-                                            onChange={(e) => setCompany({...company, legalName: e.target.value})}
-                                            className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2.5 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-cyan-600 dark:focus:ring-cyan-600/50 dark:focus:ring-primary/50" 
-                                        />
-                                    </div>
-                                    <div className="space-y-1">
-                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">CNPJ</label>
-                                        <input 
-                                            type="text" 
+                                            readOnly
+                                            disabled
                                             value={maskCNPJ(company.cnpj || "")} 
-                                            onChange={(e) => {
-                                                const val = e.target.value.replace(/\D/g, "").slice(0, 14);
-                                                setCompany({...company, cnpj: val});
-                                            }}
                                             placeholder="00.000.000/0000-00"
-                                            className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2.5 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-cyan-600 dark:focus:ring-cyan-600/50 dark:focus:ring-primary/50" 
+                                            className="w-full bg-gray-100 dark:bg-gray-800/80 border-none rounded-lg px-4 py-2.5 text-gray-500 dark:text-gray-400 outline-none cursor-not-allowed select-none opacity-80" 
                                         />
                                     </div>
                                 </div>
