@@ -26,6 +26,7 @@ export default function AgendaPage() {
     const [selectedPros, setSelectedPros] = useState<string[]>([]);
     const [currentDate, setCurrentDate] = useState(new Date());
     const [searchQuery, setSearchQuery] = useState("");
+    const [listFilter, setListFilter] = useState<"Proximos" | "Todos">("Proximos");
 
     useEffect(() => {
         fetchData();
