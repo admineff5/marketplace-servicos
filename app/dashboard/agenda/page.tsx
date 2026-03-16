@@ -36,7 +36,7 @@ export default function AgendaPage() {
 
             // Fetch appointments - in a real scenario we'd filter by date range based on viewMode
             const dateStr = currentDate.toISOString().split('T')[0];
-            const apptRes = await fetch(`/api/appointments?date=${dateStr}`);
+            const apptRes = await fetch(viewMode === "Mês" ? '/api/appointments' : `/api/appointments?date=${dateStr}`);
             const appts = await apptRes.json();
             
             if (Array.isArray(appts)) {
@@ -316,19 +316,18 @@ export default function AgendaPage() {
                             <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-gray-50/50 dark:bg-[#1e1f22]">
                                 <div className="max-w-4xl mx-auto space-y-6">
                                     {appointments
-                                        .filter((apt: any) => (selectedPros.includes(apt.employeeId) || selectedPros.includes(apt.employee?.id) || selectedPros.includes(apt.prof)))
-                                        // Normally you'd sort by real date here. Just putting them in a fake order based on mock data.
-                                        .sort((a: any, b: any) => a.date - b.date)
+                                        .filter((apt: any) => apt.status !== 'CANCELLED' && apt.status !== 'CANCELADO' && (selectedPros.includes(apt.employeeId) || selectedPros.includes(apt.employee?.id) || selectedPros.includes(apt.prof)))
+                                        .sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime())
                                         .map((apt: any) => (
                                             <div key={apt.id} className="bg-white dark:bg-[#25262b] border border-gray-200 dark:border-gray-800 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer flex flex-col sm:flex-row gap-4 sm:items-center justify-between" onClick={() => setSelectedAppointment(apt)}>
                                                 <div className="flex items-start sm:items-center gap-4">
                                                     <div className="hidden sm:flex flex-col items-center justify-center w-14 h-14 bg-gray-50 dark:bg-[#1e1f22] rounded-lg border border-gray-100 dark:border-gray-700 shrink-0">
-                                                        <span className="text-xs font-semibold text-gray-500 uppercase">{WEEKDAYS[new Date(apt.year, apt.month, apt.date).getDay()].replace('.', '')}</span>
-                                                        <span className="text-lg font-bold text-gray-900 dark:text-white leading-none mt-0.5">{apt.date}</span>
+                                                        <span className="text-xs font-semibold text-gray-500 uppercase">{WEEKDAYS[new Date(apt.date).getUTCDay()].replace('.', '')}</span>
+                                                        <span className="text-lg font-bold text-gray-900 dark:text-white leading-none mt-0.5">{new Date(apt.date).getUTCDate()}</span>
                                                     </div>
                                                     <div>
                                                         <div className="flex items-center gap-3 mb-1">
-                                                            <h3 className="text-base font-bold text-gray-900 dark:text-white">{apt.start} - apt.title || 'Serviço'</h3>
+                                                            <h3 className="text-base font-bold text-gray-900 dark:text-white">{apt.start} - {apt.title || 'Serviço'}</h3>
                                                             <span className={`px-2 py-0.5 text-[10px] font-bold uppercase rounded-md ${apt.dot.replace('bg-', 'text-').replace('500', '600')} bg-opacity-10 dark:bg-opacity-20 bg-current`}>
                                                                 Confirmado
                                                             </span>
