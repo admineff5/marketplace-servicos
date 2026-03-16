@@ -151,7 +151,7 @@ export default function FeriadosBloqueiosPage() {
                 <div className="flex w-full md:w-auto justify-end">
                     <button
                         onClick={() => { resetForm(); setIsModalOpen(true); }}
-                        className="w-full md:w-auto flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold text-white bg-primary hover:bg-cyan-400 dark:bg-primary dark:hover:bg-cyan-400 text-black rounded-xl shadow-sm transition-colors shrink-0"
+                        className="w-full md:w-auto flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold bg-cyan-700 hover:bg-cyan-800 text-white dark:bg-primary dark:hover:bg-cyan-400 dark:text-black rounded-xl shadow-sm transition-colors shrink-0"
                     >
                         <Plus className="w-4 h-4" /> Adicionar Bloqueio
                     </button>
