@@ -300,7 +300,7 @@ export default function AgendaPage() {
                                                                 >
                                                                     <span className={`w-2 h-2 rounded-full shrink-0 ${apt.dot || 'bg-blue-500'}`}></span>
                                                                     <span className={`text-[11px] font-medium truncate ${apt.color || 'text-cyan-700 dark:text-primary'} group-hover:underline`}>
-                                                                        <span className="font-semibold text-gray-600 dark:text-gray-400 mr-1">{apt.start}</span> {apt.service?.name || apt.title || 'Serviço'}
+                                                                        <span className="font-semibold text-gray-600 dark:text-gray-400 mr-1">{formatTimeLocal(apt.date)}</span> {apt.service?.name || apt.title || 'Serviço'}
                                                                     </span>
                                                                 </div>
                                                             ))}
@@ -327,7 +327,7 @@ export default function AgendaPage() {
                                                     </div>
                                                     <div>
                                                         <div className="flex items-center gap-3 mb-1">
-                                                            <h3 className="text-base font-bold text-gray-900 dark:text-white">{apt.start} - {apt.title || 'Serviço'}</h3>
+                                                            <h3 className="text-base font-bold text-gray-900 dark:text-white">{formatTimeLocal(apt.date)} - {apt.title || 'Serviço'}</h3>
                                                             <span className={`px-2 py-0.5 text-[10px] font-bold uppercase rounded-md ${apt.dot.replace('bg-', 'text-').replace('500', '600')} bg-opacity-10 dark:bg-opacity-20 bg-current`}>
                                                                 Confirmado
                                                             </span>
@@ -404,7 +404,7 @@ export default function AgendaPage() {
                                         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                                             {selectedAppointment?.year !== undefined && selectedAppointment?.month !== undefined && selectedAppointment?.date !== undefined ? (
                                                 `${WEEKDAYS[new Date(selectedAppointment.year, selectedAppointment.month, selectedAppointment.date).getDay()]}, ${selectedAppointment.date} de ${MONTHS[selectedAppointment.month].toLowerCase()}`
-                                            ) : 'Data não informada'} • {selectedAppointment?.start || '--:--'} – {selectedAppointment?.end || '--:--'}
+                                            ) : 'Data não informada'} • {formatTimeLocal(selectedAppointment?.date)} – {formatEndTimeLocal(selectedAppointment?.date)}
                                         </p>
                                     </div>
                                 </div>
