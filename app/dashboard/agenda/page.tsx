@@ -33,6 +33,7 @@ export default function AgendaPage() {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [searchQuery, setSearchQuery] = useState("");
     const [listFilter, setListFilter] = useState<"Proximos" | "Todos">("Proximos");
+    const [selectedMiniDate, setSelectedMiniDate] = useState<number | null>(null);
 
     useEffect(() => {
         fetchData();
@@ -246,7 +247,11 @@ export default function AgendaPage() {
                                 <button onClick={navNext} className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><ChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-400" /></button>
                             </div>
                             {agendaLayout === "calendar" && <h2 className="text-xl font-normal text-gray-800 dark:text-gray-200 ml-2">{headerTitle}</h2>}
-                            {agendaLayout === "list" && <h2 className="text-xl font-normal text-gray-800 dark:text-gray-200 ml-2">Próximos Agendamentos</h2>}
+                            {agendaLayout === "list" && (
+                                <h2 className="text-xl font-normal text-gray-800 dark:text-gray-200 ml-2">
+                                    {selectedMiniDate ? `Agendamentos - ${selectedMiniDate} de ${MONTHS[month]}` : "Próximos Agendamentos"}
+                                </h2>
+                            )}
                         </div>
                         <div className="flex items-center gap-4">
                             {agendaLayout === "list" && (
@@ -351,6 +356,15 @@ export default function AgendaPage() {
                                             if (isCancelled) return false;
                                             const matchesPro = selectedPros.includes(apt.employeeId) || selectedPros.includes(apt.employee?.id) || selectedPros.includes(apt.prof);
                                             if (!matchesPro) return false;
+                                            if (selectedMiniDate) {
+                                                const aptDate = new Date(apt.date);
+                                                const aptDay = aptDate.getUTCDate();
+                                                const aptMonth = aptDate.getUTCMonth();
+                                                const aptYear = aptDate.getUTCFullYear();
+                                                if (aptDay !== selectedMiniDate || aptMonth !== month || aptYear !== year) {
+                                                    return false;
+                                                }
+                                            }
                                             if (listFilter === "Proximos") {
                                                 const aptDate = new Date(apt.date);
                                                 const now = new Date();
