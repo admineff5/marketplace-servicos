@@ -44,7 +44,15 @@ export default function DashboardIndex() {
                 const aptData = await aptRes.json();
                 // Filtrar agendamentos cancelados para não poluir a dashboard
                 const activeApts = Array.isArray(aptData) 
-                    ? aptData.filter((a: any) => a.status !== 'CANCELLED' && a.status !== 'CANCELADO' && a.status !== 'CANCEL')
+                    ? aptData.filter((a: any) => {
+                        const isCancelled = a.status === 'CANCELLED' || a.status === 'CANCELADO' || a.status === 'CANCEL';
+                        if (isCancelled) return false;
+                        
+                        const aptDate = new Date(a.date);
+                        const now = new Date();
+                        now.setHours(0,0,0,0); // Considera hoje o dia inteiro
+                        return aptDate >= now;
+                    })
                     : [];
                 setRecentAppointments(activeApts.slice(0, 5));
 
@@ -138,8 +146,8 @@ export default function DashboardIndex() {
                             </h3>
                             <p className="text-xs text-gray-500 mt-1">Acompanhe quem passará pela porta nas próximas horas.</p>
                         </div>
-                        <Link href="/dashboard/agenda" className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-gray-500 hover:text-cyan-700 dark:hover:text-primary transition-colors">
-                            Ver agenda completa <ChevronRight className="w-4 h-4" />
+                        <Link href="/dashboard/agenda?view=list" className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-gray-500 hover:text-cyan-700 dark:hover:text-primary transition-colors">
+                            Ver lista completa <ChevronRight className="w-4 h-4" />
                         </Link>
                     </div>
 
