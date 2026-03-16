@@ -151,7 +151,7 @@ export default function FeriadosBloqueiosPage() {
                 <div className="flex w-full md:w-auto justify-end">
                     <button
                         onClick={() => { resetForm(); setIsModalOpen(true); }}
-                        className="w-full md:w-auto flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold text-white bg-green-600 hover:bg-green-700 dark:bg-green-600 dark:hover:bg-green-700 rounded-xl shadow-sm transition-colors shrink-0"
+                        className="w-full md:w-auto flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold text-white bg-primary hover:bg-cyan-400 dark:bg-primary dark:hover:bg-cyan-400 text-black rounded-xl shadow-sm transition-colors shrink-0"
                     >
                         <Plus className="w-4 h-4" /> Adicionar Bloqueio
                     </button>
@@ -181,7 +181,7 @@ export default function FeriadosBloqueiosPage() {
                                 <tr key={row.id} className="hover:bg-gray-50 dark:hover:bg-[#161618] transition-colors">
                                     <td className="py-3 px-4 text-sm font-semibold text-gray-900 dark:text-gray-100 border-r border-gray-100 dark:border-gray-800/50">
                                         <div className="flex items-center gap-2">
-                                            <CalendarOff className="w-3.5 h-3.5 text-orange-500" />
+                                            <CalendarOff className="w-3.5 h-3.5 text-cyan-600 dark:text-primary" />
                                             {new Date(row.date).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}
                                         </div>
                                     </td>
@@ -194,9 +194,9 @@ export default function FeriadosBloqueiosPage() {
                                     <td className="py-3 px-4 border-r border-gray-100 dark:border-gray-800/50 text-center">
                                         <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider border
                                             ${row.situation === 'Feriado' ? 'bg-red-50 text-red-600 border-red-200 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20' :
-                                                row.situation === 'Final de semana' ? 'bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20' :
-                                                row.situation === 'Atestado' ? 'bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-500/10 dark:text-orange-400 dark:border-orange-500/20' :
-                                                    'bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-500/10 dark:text-yellow-400 dark:border-yellow-500/20'}`}
+                                                row.situation === 'Final de semana' ? 'bg-gray-100 text-gray-600 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700' :
+                                                row.situation === 'Atestado' ? 'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-500/10 dark:text-indigo-400 dark:border-indigo-500/20' :
+                                                    'bg-cyan-50 text-cyan-700 border-cyan-200 dark:bg-cyan-500/10 dark:text-cyan-400 dark:border-cyan-500/20'}`}
                                         >
                                             {row.situation}
                                         </span>
