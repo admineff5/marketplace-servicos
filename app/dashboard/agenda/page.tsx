@@ -134,7 +134,11 @@ export default function AgendaPage() {
         setCurrentDate(newDate);
     };
 
-    const jumpToToday = () => setCurrentDate(new Date()); 
+    const jumpToToday = () => {
+        const now = new Date();
+        if (agendaLayout === "list") setSelectedMiniDate(now.getDate());
+        setCurrentDate(now);
+    }; 
 
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
