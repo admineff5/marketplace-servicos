@@ -21,6 +21,8 @@ export default function TarefasPage() {
     const [newTaskTitle, setNewTaskTitle] = useState("");
     const [addingTaskToListId, setAddingTaskToListId] = useState<number | null>(null);
     const [showCompletedMap, setShowCompletedMap] = useState<{[key: number]: boolean}>({});
+    const [editingListId, setEditingListId] = useState<number | null>(null);
+    const [editingListName, setEditingListName] = useState("");
 
     // --- CARREGAR E SALVAR DO LOCALSTORAGE ---
     useEffect(() => {
@@ -108,6 +110,12 @@ export default function TarefasPage() {
 
     const deleteTask = (taskId: number) => {
         setTarefas(tarefas.filter(t => t.id !== taskId));
+    };
+
+    const saveListName = (listId: number) => {
+        if (!editingListName.trim()) return;
+        setListas(listas.map(l => l.id === listId ? { ...l, name: editingListName } : l));
+        setEditingListId(null);
     };
 
     return (
@@ -205,10 +213,27 @@ export default function TarefasPage() {
                             
                             {/* Header do Card */}
                             <div className="flex items-center justify-between p-5 border-b border-gray-100 dark:border-gray-800 bg-gray-50/30 dark:bg-[#161618]">
-                                <h3 className="text-md font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                    <CheckSquare className="w-4 h-4 text-cyan-700 dark:text-primary" />
-                                    {lista.name}
-                                </h3>
+                                {editingListId === lista.id ? (
+                                    <input 
+                                        type="text"
+                                        value={editingListName}
+                                        onChange={e => setEditingListName(e.target.value)}
+                                        onBlur={() => saveListName(lista.id)}
+                                        onKeyDown={e => { if (e.key === 'Enter') saveListName(lista.id); }}
+                                        autoFocus
+                                        className="flex-1 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-2 py-1 text-sm text-gray-900 dark:text-white outline-none focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary"
+                                    />
+                                ) : (
+                                    <h3 
+                                        onClick={() => { setEditingListId(lista.id); setEditingListName(lista.name); }}
+                                        className="text-md font-bold text-gray-900 dark:text-white flex items-center gap-2 cursor-pointer hover:underline group/title"
+                                        title="Clique para editar"
+                                    >
+                                        <CheckSquare className="w-4 h-4 text-cyan-700 dark:text-primary" />
+                                        <span>{lista.name}</span>
+                                        <Edit2 className="w-3 h-3 text-gray-400 opacity-0 group-hover/title:opacity-100 transition-opacity" />
+                                    </h3>
+                                )}
                                 <button onClick={() => deleteList(lista.id)} className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg transition-colors">
                                     <Trash2 className="w-4 h-4" />
                                 </button>
