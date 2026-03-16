@@ -192,7 +192,14 @@ export default function AgendaPage() {
                         </div>
                         <div className="grid grid-cols-7 text-center text-[10px] gap-y-1 text-gray-700 dark:text-gray-300">
                             {miniCalendarGrid.map((dt, i) => (
-                                <div key={i} className={`w-6 h-6 flex items-center justify-center rounded-full mx-auto cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 ${isToday(dt) ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 font-bold' : ''}`}>
+                                <div 
+                                    key={i} 
+                                    onClick={() => dt && setSelectedMiniDate(dt === selectedMiniDate ? null : dt)}
+                                    className={`w-6 h-6 flex items-center justify-center rounded-full mx-auto cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-all
+                                        ${isToday(dt) && selectedMiniDate !== dt ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 font-semibold' : ''}
+                                        ${selectedMiniDate === dt ? 'bg-cyan-700 hover:bg-cyan-800 text-white dark:bg-primary dark:hover:bg-cyan-400 dark:text-black font-bold shadow-md scale-105' : ''}
+                                    `}
+                                >
                                     {dt}
                                 </div>
                             ))}
@@ -356,6 +363,15 @@ export default function AgendaPage() {
                                             if (isCancelled) return false;
                                             const matchesPro = selectedPros.includes(apt.employeeId) || selectedPros.includes(apt.employee?.id) || selectedPros.includes(apt.prof);
                                             if (!matchesPro) return false;
+                                            if (selectedMiniDate) {
+                                                const aptDate = new Date(apt.date);
+                                                const aptDay = aptDate.getUTCDate();
+                                                const aptMonth = aptDate.getUTCMonth();
+                                                const aptYear = aptDate.getUTCFullYear();
+                                                if (aptDay !== selectedMiniDate || aptMonth !== month || aptYear !== year) {
+                                                    return false;
+                                                }
+                                            }
                                             if (selectedMiniDate) {
                                                 const aptDate = new Date(apt.date);
                                                 const aptDay = aptDate.getUTCDate();
