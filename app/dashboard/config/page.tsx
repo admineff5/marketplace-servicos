@@ -206,7 +206,7 @@ export default function ConfigPage() {
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
                                 className={`flex items-center gap-3 px-4 py-3 rounded-xl text-left font-medium transition-colors ${isActive
-                                    ? "bg-primary text-gray-900 dark:text-gray-900"
+                                    ? "bg-cyan-700 hover:bg-cyan-800 text-white dark:bg-primary dark:hover:bg-cyan-400 dark:text-gray-900"
                                     : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
                                     }`}
                             >
