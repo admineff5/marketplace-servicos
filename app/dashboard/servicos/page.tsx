@@ -185,7 +185,7 @@ export default function GestaoServicosPage() {
                             placeholder="Buscar por nome ou descrição..."
                             value={searchTerm}
                             onChange={e => setSearchTerm(e.target.value)}
-                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all"
+                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary transition-all"
                         />
                     </div>
                 </div>
@@ -302,7 +302,7 @@ export default function GestaoServicosPage() {
                                             onFocus={() => {
                                                 if (formName === "") setShowSuggestions(true);
                                             }}
-                                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all"
+                                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary outline-none transition-all"
                                         />
                                     </div>
                                     <button
@@ -388,7 +388,7 @@ export default function GestaoServicosPage() {
                                     value={formDescription}
                                     onChange={e => setFormDescription(e.target.value)}
                                     placeholder="Descreva o que este serviço inclui..."
-                                    className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all resize-none custom-scrollbar"
+                                    className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary outline-none transition-all resize-none custom-scrollbar"
                                 />
                             </div>
 
@@ -407,7 +407,7 @@ export default function GestaoServicosPage() {
                                                 setFormPrice(raw);
                                             }}
                                             placeholder="0,00"
-                                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg pl-9 pr-3 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all"
+                                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg pl-9 pr-3 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary outline-none transition-all"
                                         />
                                     </div>
                                 </div>
@@ -441,7 +441,7 @@ export default function GestaoServicosPage() {
                                             type="number" min="5" step="5"
                                             value={formDuration} onChange={e => setFormDuration(e.target.value)}
                                             placeholder="Ex: 45"
-                                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg pl-3 pr-10 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all"
+                                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg pl-3 pr-10 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary outline-none transition-all"
                                         />
                                         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm font-medium">min</span>
                                     </div>
@@ -461,7 +461,7 @@ export default function GestaoServicosPage() {
                             <button
                                 onClick={handleSave}
                                 disabled={!formName || !formPrice || !formDuration}
-                                className="flex items-center gap-2 px-6 py-2.5 bg-primary text-black text-sm font-bold rounded-xl shadow-lg shadow-cyan-500/20 hover:bg-cyan-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="flex items-center gap-2 px-6 py-2.5 text-sm font-bold rounded-xl shadow-lg shadow-cyan-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-cyan-700 hover:bg-cyan-800 text-white dark:bg-primary dark:hover:bg-cyan-400 dark:text-black"
                             >
                                 <Check className="w-4 h-4" />
                                 Salvar Serviço

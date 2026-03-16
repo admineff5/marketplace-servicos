@@ -102,7 +102,7 @@ export default function CentralRelatoriosPage() {
                             <div
                                 key={idx}
                                 className={`group relative flex flex-col border rounded-2xl p-5 sm:p-6 transition-all ${report.active
-                                    ? 'bg-white dark:bg-[#161618] border-gray-200 dark:border-[#2a2a2c] hover:border-primary/50 hover:shadow-md cursor-pointer'
+                                    ? 'bg-white dark:bg-[#161618] border-gray-200 dark:border-[#2a2a2c] hover:border-cyan-600/50 dark:hover:border-cyan-600 dark:hover:border-primary/50 hover:shadow-md cursor-pointer'
                                     : 'bg-gray-50/50 dark:bg-[#0f0f10] border-gray-100 dark:border-[#1a1a1c] opacity-60 cursor-not-allowed'
                                     }`}
                             >

@@ -81,7 +81,7 @@ export default function GestaoLeadsPage() {
                             placeholder="Buscar interessado ou serviço..."
                             value={searchTerm}
                             onChange={e => setSearchTerm(e.target.value)}
-                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all"
+                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary transition-all"
                         />
                     </div>
 
@@ -113,7 +113,7 @@ export default function GestaoLeadsPage() {
                                     {/* Column Body / Cards */}
                                     <div className="p-4 flex-1 flex flex-col gap-4 overflow-y-auto scrollbar-hide">
                                         {columnLeads.length > 0 ? columnLeads.map(lead => (
-                                            <div key={lead.id} className="bg-white dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] p-4 rounded-xl shadow-sm hover:shadow-md hover:border-primary/30 transition-all group relative">
+                                            <div key={lead.id} className="bg-white dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] p-4 rounded-xl shadow-sm hover:shadow-md hover:border-cyan-600/30 dark:hover:border-cyan-600 dark:hover:border-cyan-600/30 dark:border-primary/30 transition-all group relative">
 
                                                 {/* Meta */}
                                                 <div className="flex justify-between items-start mb-2">

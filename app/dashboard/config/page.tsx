@@ -189,7 +189,7 @@ export default function ConfigPage() {
                 <button 
                     onClick={handleSaveProfile}
                     disabled={isSaving}
-                    className="bg-primary hover:bg-cyan-400 text-black font-bold px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
+                    className="font-bold px-4 py-2 rounded-lg transition-colors disabled:opacity-50 bg-cyan-700 hover:bg-cyan-800 text-white dark:bg-primary dark:hover:bg-cyan-400 dark:text-black"
                 >
                     {isSaving ? "Salvando..." : "Salvar Alterações"}
                 </button>
@@ -231,7 +231,7 @@ export default function ConfigPage() {
                                             type="text" 
                                             value={company.name} 
                                             onChange={(e) => setCompany({...company, name: e.target.value})}
-                                            className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2.5 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary/50" 
+                                            className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2.5 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-cyan-600 dark:focus:ring-cyan-600/50 dark:focus:ring-primary/50" 
                                         />
                                     </div>
                                     <div className="space-y-1">
@@ -240,7 +240,7 @@ export default function ConfigPage() {
                                             type="text" 
                                             value={company.legalName || ""} 
                                             onChange={(e) => setCompany({...company, legalName: e.target.value})}
-                                            className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2.5 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary/50" 
+                                            className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2.5 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-cyan-600 dark:focus:ring-cyan-600/50 dark:focus:ring-primary/50" 
                                         />
                                     </div>
                                     <div className="space-y-1">
@@ -253,7 +253,7 @@ export default function ConfigPage() {
                                                 setCompany({...company, cnpj: val});
                                             }}
                                             placeholder="00.000.000/0000-00"
-                                            className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2.5 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary/50" 
+                                            className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2.5 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-cyan-600 dark:focus:ring-cyan-600/50 dark:focus:ring-primary/50" 
                                         />
                                     </div>
                                 </div>
@@ -281,7 +281,7 @@ export default function ConfigPage() {
                                 {isLoading ? (
                                     <div className="py-20 text-center text-gray-500">Carregando unidades...</div>
                                 ) : locations.length > 0 ? locations.map((loc) => (
-                                    <div key={loc.id} className="border border-gray-200 dark:border-gray-800 rounded-xl p-5 hover:border-primary/50 transition-colors relative group bg-gray-50/50 dark:bg-gray-800/20">
+                                    <div key={loc.id} className="border border-gray-200 dark:border-gray-800 rounded-xl p-5 hover:border-cyan-600/50 dark:hover:border-cyan-600 dark:hover:border-primary/50 transition-colors relative group bg-gray-50/50 dark:bg-gray-800/20">
                                         <div className="flex justify-between items-start mb-4">
                                             <div className="flex items-center gap-3">
                                                 <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
@@ -291,7 +291,7 @@ export default function ConfigPage() {
                                                     type="text"
                                                     value={loc.name}
                                                     onChange={(e) => handleUpdateLocation(loc.id, "name", e.target.value)}
-                                                    className="font-bold text-lg bg-transparent border-b border-transparent hover:border-gray-300 dark:hover:border-gray-600 focus:border-primary outline-none text-gray-900 dark:text-white px-1 py-0.5"
+                                                    className="font-bold text-lg bg-transparent border-b border-transparent hover:border-gray-300 dark:hover:border-gray-600 focus:border-cyan-600 dark:focus:border-primary outline-none text-gray-900 dark:text-white px-1 py-0.5"
                                                 />
                                             </div>
                                             <button
@@ -309,7 +309,7 @@ export default function ConfigPage() {
                                                     type="text" 
                                                     value={maskCEP(loc.cep)} 
                                                     onChange={(e) => handleUpdateLocation(loc.id, "cep", e.target.value.replace(/\D/g, "").slice(0, 8))}
-                                                    className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm text-gray-900 dark:text-white outline-none focus:ring-1 focus:ring-primary" 
+                                                    className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm text-gray-900 dark:text-white outline-none focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary" 
                                                 />
                                             </div>
                                             <div className="space-y-1 md:col-span-2">
@@ -318,7 +318,7 @@ export default function ConfigPage() {
                                                     type="text" 
                                                     value={loc.address} 
                                                     onChange={(e) => handleUpdateLocation(loc.id, "address", e.target.value)}
-                                                    className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm text-gray-900 dark:text-white outline-none focus:ring-1 focus:ring-primary" 
+                                                    className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm text-gray-900 dark:text-white outline-none focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary" 
                                                 />
                                             </div>
                                             <div className="space-y-1 md:col-span-1">
@@ -327,7 +327,7 @@ export default function ConfigPage() {
                                                     type="text" 
                                                     value={loc.number} 
                                                     onChange={(e) => handleUpdateLocation(loc.id, "number", e.target.value)}
-                                                    className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm text-gray-900 dark:text-white outline-none focus:ring-1 focus:ring-primary" 
+                                                    className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm text-gray-900 dark:text-white outline-none focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary" 
                                                 />
                                             </div>
                                             <div className="space-y-1 md:col-span-2">
@@ -336,7 +336,7 @@ export default function ConfigPage() {
                                                     type="text" 
                                                     value={loc.neighborhood} 
                                                     onChange={(e) => handleUpdateLocation(loc.id, "neighborhood", e.target.value)}
-                                                    className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm text-gray-900 dark:text-white outline-none focus:ring-1 focus:ring-primary" 
+                                                    className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm text-gray-900 dark:text-white outline-none focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary" 
                                                 />
                                             </div>
                                             <div className="space-y-1 md:col-span-2">
@@ -345,7 +345,7 @@ export default function ConfigPage() {
                                                     type="url" 
                                                     value={loc.mapsLink} 
                                                     onChange={(e) => handleUpdateLocation(loc.id, "mapsLink", e.target.value)}
-                                                    className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm text-blue-500 outline-none focus:ring-1 focus:ring-primary" 
+                                                    className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm text-blue-500 outline-none focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary" 
                                                 />
                                             </div>
                                         </div>
@@ -425,7 +425,7 @@ export default function ConfigPage() {
                                     type="text" 
                                     value={newLocation.name}
                                     onChange={(e) => setNewLocation({...newLocation, name: e.target.value})}
-                                    className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 outline-none" 
+                                    className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-cyan-600 dark:focus:ring-cyan-600/50 dark:focus:ring-primary/50 outline-none" 
                                     placeholder="Ex: Unidade Paulista"
                                 />
                             </div>
@@ -441,7 +441,7 @@ export default function ConfigPage() {
                                             const val = e.target.value.replace(/\D/g, "").slice(0, 8);
                                             setNewLocation({...newLocation, cep: val});
                                         }}
-                                        className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 outline-none" 
+                                        className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-cyan-600 dark:focus:ring-cyan-600/50 dark:focus:ring-primary/50 outline-none" 
                                         placeholder="00000-000"
                                     />
                                 </div>
@@ -451,7 +451,7 @@ export default function ConfigPage() {
                                         type="text" 
                                         value={newLocation.number}
                                         onChange={(e) => setNewLocation({...newLocation, number: e.target.value})}
-                                        className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 outline-none" 
+                                        className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-cyan-600 dark:focus:ring-cyan-600/50 dark:focus:ring-primary/50 outline-none" 
                                         placeholder="123"
                                     />
                                 </div>
@@ -464,7 +464,7 @@ export default function ConfigPage() {
                                     type="text" 
                                     value={newLocation.address}
                                     onChange={(e) => setNewLocation({...newLocation, address: e.target.value})}
-                                    className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 outline-none" 
+                                    className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-cyan-600 dark:focus:ring-cyan-600/50 dark:focus:ring-primary/50 outline-none" 
                                 />
                             </div>
 
@@ -475,7 +475,7 @@ export default function ConfigPage() {
                                         type="text" 
                                         value={newLocation.neighborhood}
                                         onChange={(e) => setNewLocation({...newLocation, neighborhood: e.target.value})}
-                                        className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 outline-none" 
+                                        className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-cyan-600 dark:focus:ring-cyan-600/50 dark:focus:ring-primary/50 outline-none" 
                                     />
                                 </div>
                                 <div className="space-y-1">
@@ -484,7 +484,7 @@ export default function ConfigPage() {
                                         type="text" 
                                         value={newLocation.city}
                                         onChange={(e) => setNewLocation({...newLocation, city: e.target.value})}
-                                        className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary/50 outline-none" 
+                                        className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-cyan-600 dark:focus:ring-cyan-600/50 dark:focus:ring-primary/50 outline-none" 
                                     />
                                 </div>
                             </div>
@@ -500,7 +500,7 @@ export default function ConfigPage() {
                                 <button 
                                     type="submit"
                                     disabled={isCreatingLocation}
-                                    className="bg-primary hover:bg-cyan-400 text-black px-6 py-2 rounded-lg text-sm font-bold flex items-center gap-2 translate-all disabled:opacity-50"
+                                    className="px-6 py-2 rounded-lg text-sm font-bold flex items-center gap-2 translate-all disabled:opacity-50 bg-cyan-700 hover:bg-cyan-800 text-white dark:bg-primary dark:hover:bg-cyan-400 dark:text-black"
                                 >
                                     {isCreatingLocation ? (
                                         <>

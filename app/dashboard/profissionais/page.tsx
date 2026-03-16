@@ -176,14 +176,14 @@ export default function GestaoProfissionaisPage() {
                             placeholder="Buscar por nome ou especialidade..."
                             value={searchTerm}
                             onChange={e => setSearchTerm(e.target.value)}
-                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all"
+                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary transition-all"
                         />
                     </div>
                     <div className="sm:w-64">
                         <select
                             value={unitFilter}
                             onChange={e => setUnitFilter(e.target.value)}
-                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-primary transition-all appearance-none cursor-pointer"
+                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary transition-all appearance-none cursor-pointer"
                         >
                             <option value="">Todas as Unidades</option>
                             {locations.map(loc => (
@@ -325,7 +325,7 @@ export default function GestaoProfissionaisPage() {
                                     <select
                                         value={formUnitId}
                                         onChange={e => setFormUnitId(e.target.value)}
-                                        className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-4 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all appearance-none cursor-pointer"
+                                        className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-4 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary outline-none transition-all appearance-none cursor-pointer"
                                     >
                                         <option value="">Selecione a Unidade</option>
                                         {locations.map(loc => (
@@ -342,7 +342,7 @@ export default function GestaoProfissionaisPage() {
                                         type="text"
                                         value={formName} onChange={e => setFormName(e.target.value)}
                                         placeholder="Ex: João da Silva"
-                                        className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-4 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all"
+                                        className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-4 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary outline-none transition-all"
                                     />
                                 </div>
 
@@ -354,7 +354,7 @@ export default function GestaoProfissionaisPage() {
                                         type="text"
                                         value={formRole} onChange={e => setFormRole(e.target.value)}
                                         placeholder="Ex: Barbeiro Sênior"
-                                        className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-4 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all"
+                                        className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-4 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary outline-none transition-all"
                                     />
                                 </div>
                             </div>
@@ -371,7 +371,7 @@ export default function GestaoProfissionaisPage() {
                                     </label>
                                     <select
                                         value={formDays} onChange={e => setFormDays(e.target.value)}
-                                        className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all appearance-none cursor-pointer"
+                                        className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary outline-none transition-all appearance-none cursor-pointer"
                                     >
                                         <option value="Segunda a Sexta">Segunda a Sexta</option>
                                         <option value="Segunda a Sábado">Segunda a Sábado</option>
@@ -388,7 +388,7 @@ export default function GestaoProfissionaisPage() {
                                         <input
                                             type="time"
                                             value={formTimeStart} onChange={e => setFormTimeStart(e.target.value)}
-                                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all"
+                                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary outline-none transition-all"
                                         />
                                     </div>
                                     <div>
@@ -398,7 +398,7 @@ export default function GestaoProfissionaisPage() {
                                         <input
                                             type="time"
                                             value={formTimeEnd} onChange={e => setFormTimeEnd(e.target.value)}
-                                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all"
+                                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary outline-none transition-all"
                                         />
                                     </div>
                                 </div>
@@ -418,7 +418,7 @@ export default function GestaoProfissionaisPage() {
                             <button
                                 onClick={handleSave}
                                 disabled={!formName || !formRole || !formUnitId}
-                                className="flex items-center gap-2 px-6 py-2.5 bg-primary text-black text-sm font-bold rounded-xl shadow-lg shadow-cyan-500/20 hover:bg-cyan-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="flex items-center gap-2 px-6 py-2.5 text-sm font-bold rounded-xl shadow-lg shadow-cyan-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-cyan-700 hover:bg-cyan-800 text-white dark:bg-primary dark:hover:bg-cyan-400 dark:text-black"
                             >
                                 <Check className="w-4 h-4" />
                                 Salvar Profissional

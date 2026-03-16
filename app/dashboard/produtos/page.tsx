@@ -214,7 +214,7 @@ export default function GestaoProdutosPage() {
                             placeholder="Buscar por nome do produto..."
                             value={searchTerm}
                             onChange={e => setSearchTerm(e.target.value)}
-                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all"
+                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary transition-all"
                         />
                     </div>
                 </div>
@@ -316,7 +316,7 @@ export default function GestaoProdutosPage() {
                                             value={formImage}
                                             onChange={e => setFormImage(e.target.value)}
                                             placeholder="https://..."
-                                            className="flex-1 bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2 text-xs focus:ring-1 focus:ring-primary outline-none text-gray-900 dark:text-white"
+                                            className="flex-1 bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2 text-xs focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary outline-none text-gray-900 dark:text-white"
                                         />
                                         <button
                                             type="button"
@@ -337,7 +337,7 @@ export default function GestaoProdutosPage() {
                                     type="text"
                                     value={formName} onChange={e => setFormName(e.target.value)}
                                     placeholder="Ex: Minoxidil Kirkland 5%"
-                                    className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-4 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all"
+                                    className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-4 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary outline-none transition-all"
                                 />
                             </div>
 
@@ -354,7 +354,7 @@ export default function GestaoProdutosPage() {
                                             setFormPrice(raw);
                                         }}
                                         placeholder="0,00"
-                                        className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-4 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all"
+                                        className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-4 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary outline-none transition-all"
                                     />
                                 </div>
                                 <div>
@@ -365,7 +365,7 @@ export default function GestaoProdutosPage() {
                                         type="number"
                                         value={formStock} onChange={e => setFormStock(e.target.value)}
                                         placeholder="10"
-                                        className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-4 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all"
+                                        className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-4 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary outline-none transition-all"
                                     />
                                 </div>
                             </div>
@@ -381,7 +381,7 @@ export default function GestaoProdutosPage() {
                             <button
                                 onClick={handleSave}
                                 disabled={!formName || !formPrice || !formStock}
-                                className="flex items-center gap-2 px-6 py-2.5 bg-primary text-black text-sm font-bold rounded-xl shadow-lg shadow-cyan-500/20 hover:bg-cyan-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="flex items-center gap-2 px-6 py-2.5 text-sm font-bold rounded-xl shadow-lg shadow-cyan-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-cyan-700 hover:bg-cyan-800 text-white dark:bg-primary dark:hover:bg-cyan-400 dark:text-black"
                             >
                                 <Check className="w-4 h-4" />
                                 Salvar Produto

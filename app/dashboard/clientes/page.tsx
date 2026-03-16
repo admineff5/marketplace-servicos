@@ -111,7 +111,7 @@ export default function GestaoClientesPage() {
                             placeholder="Buscar por nome ou celular..."
                             value={searchTerm}
                             onChange={e => setSearchTerm(e.target.value)}
-                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all"
+                            className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary transition-all"
                         />
                     </div>
                 </div>
@@ -225,7 +225,7 @@ export default function GestaoClientesPage() {
                         </div>
 
                         <div className="p-6 space-y-5">
-                            <div className="bg-primary/10 dark:bg-cyan-900/10 border border-primary/20 p-4 rounded-xl flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
+                            <div className="bg-primary/10 dark:bg-cyan-900/10 border border-cyan-600/20 dark:border-primary/20 p-4 rounded-xl flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
                                 <Users className="w-5 h-5 text-cyan-700 dark:text-primary shrink-0 mt-0.5" />
                                 <p>Os clientes que agendarem pelo seu link público aparecerão aqui <strong>automaticamente</strong>. Use este painel apenas para inserir clientes de balcão ou antigos.</p>
                             </div>
@@ -238,7 +238,7 @@ export default function GestaoClientesPage() {
                                     type="text"
                                     value={formName} onChange={e => setFormName(e.target.value)}
                                     placeholder="Ex: Roberto Carlos"
-                                    className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-4 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all"
+                                    className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-4 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary outline-none transition-all"
                                 />
                             </div>
 
@@ -254,7 +254,7 @@ export default function GestaoClientesPage() {
                                         setFormPhone(val);
                                     }}
                                     placeholder="(11) 99999-9999"
-                                    className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-4 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all"
+                                    className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-4 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary outline-none transition-all"
                                 />
                             </div>
                         </div>
@@ -269,7 +269,7 @@ export default function GestaoClientesPage() {
                             <button
                                 onClick={handleSave}
                                 disabled={!formName || !formPhone}
-                                className="flex items-center gap-2 px-6 py-2.5 bg-primary text-black text-sm font-bold rounded-xl shadow-lg shadow-cyan-500/20 hover:bg-cyan-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="flex items-center gap-2 px-6 py-2.5 text-sm font-bold rounded-xl shadow-lg shadow-cyan-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-cyan-700 hover:bg-cyan-800 text-white dark:bg-primary dark:hover:bg-cyan-400 dark:text-black"
                             >
                                 <Check className="w-4 h-4" />
                                 Salvar Cadastro
@@ -309,7 +309,7 @@ export default function GestaoClientesPage() {
 
                             <div className="space-y-3">
                                 {[1, 2, 3].map((_, idx) => (
-                                    <div key={idx} className="p-4 rounded-xl border border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#1a1a1c] flex justify-between items-center transition-colors hover:border-primary/30">
+                                    <div key={idx} className="p-4 rounded-xl border border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#1a1a1c] flex justify-between items-center transition-colors hover:border-cyan-600/30 dark:hover:border-cyan-600 dark:hover:border-cyan-600/30 dark:border-primary/30">
                                         <div>
                                             <p className="text-sm font-bold text-gray-900 dark:text-white">Corte e Barba</p>
                                             <p className="text-xs text-gray-500">com Rodrigo Silva</p>

@@ -134,14 +134,14 @@ export default function FeriadosBloqueiosPage() {
                         type="date"
                         value={dateStart}
                         onChange={e => setDateStart(e.target.value)}
-                        className="bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-1.5 text-sm text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all"
+                        className="bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-1.5 text-sm text-gray-900 dark:text-white focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary outline-none transition-all"
                     />
                     <span className="text-sm font-semibold text-gray-600 dark:text-gray-400">até</span>
                     <input
                         type="date"
                         value={dateEnd}
                         onChange={e => setDateEnd(e.target.value)}
-                        className="bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-1.5 text-sm text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all"
+                        className="bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-1.5 text-sm text-gray-900 dark:text-white focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary outline-none transition-all"
                     />
                     <button type="button" className="flex items-center justify-center w-9 h-9 ml-1 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg shadow-sm transition-colors" title="Pesquisar">
                         <Search className="w-4 h-4" />
@@ -253,14 +253,14 @@ export default function FeriadosBloqueiosPage() {
                                     <input
                                         type="date"
                                         value={formDate} onChange={e => setFormDate(e.target.value)}
-                                        className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all"
+                                        className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary outline-none transition-all"
                                     />
                                 </div>
                                 <div>
                                     <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5 uppercase tracking-wider">Situação</label>
                                     <select
                                         value={formSituation} onChange={e => setFormSituation(e.target.value)}
-                                        className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all appearance-none"
+                                        className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary outline-none transition-all appearance-none"
                                     >
                                         <option value="Feriado">Feriado</option>
                                         <option value="Final de semana">Final de semana</option>
@@ -274,7 +274,7 @@ export default function FeriadosBloqueiosPage() {
                                 <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5 uppercase tracking-wider">Profissional Afetado</label>
                                 <select
                                     value={formProfId} onChange={e => setFormProfId(e.target.value)}
-                                    className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all appearance-none cursor-pointer"
+                                    className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2.5 text-sm font-medium text-gray-900 dark:text-white focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary outline-none transition-all appearance-none cursor-pointer"
                                 >
                                     <option value="all">Bloquear Agenda de TODOS (A loja inteira)</option>
                                     {employees.map(emp => (
@@ -289,7 +289,7 @@ export default function FeriadosBloqueiosPage() {
                                     type="text"
                                     placeholder="Ex: Reforma na loja, Dor de Dente..."
                                     value={formReason} onChange={e => setFormReason(e.target.value)}
-                                    className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all"
+                                    className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary outline-none transition-all"
                                 />
                             </div>
 
@@ -300,7 +300,7 @@ export default function FeriadosBloqueiosPage() {
                                         type="time"
                                         disabled={formSituation !== "Horário Especial"}
                                         value={formOpenTime} onChange={e => setFormOpenTime(e.target.value)}
-                                        className="w-full bg-white dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all disabled:opacity-50"
+                                        className="w-full bg-white dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary outline-none transition-all disabled:opacity-50"
                                     />
                                 </div>
                                 <div>
@@ -309,7 +309,7 @@ export default function FeriadosBloqueiosPage() {
                                         type="time"
                                         disabled={formSituation !== "Horário Especial"}
                                         value={formCloseTime} onChange={e => setFormCloseTime(e.target.value)}
-                                        className="w-full bg-white dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all disabled:opacity-50"
+                                        className="w-full bg-white dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary focus:border-cyan-600 dark:focus:border-primary outline-none transition-all disabled:opacity-50"
                                     />
                                 </div>
                             </div>
@@ -322,7 +322,7 @@ export default function FeriadosBloqueiosPage() {
                             <button 
                                 onClick={handleSave} 
                                 disabled={!formDate}
-                                className="px-6 py-2 text-sm font-bold text-black bg-primary hover:bg-cyan-400 rounded-lg shadow-sm transition-colors disabled:opacity-50"
+                                className="px-6 py-2 text-sm font-bold rounded-lg shadow-sm transition-colors disabled:opacity-50 bg-cyan-700 hover:bg-cyan-800 text-white dark:bg-primary dark:hover:bg-cyan-400 dark:text-black"
                             >
                                 {editingBlock ? "Atualizar Bloqueio" : "Salvar Bloqueio"}
                             </button>

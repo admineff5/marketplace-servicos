@@ -102,12 +102,12 @@ export default function ConsultaAgendamentos() {
                 <div className="flex items-center gap-2 w-full sm:w-auto">
                     <button
                         onClick={() => setIsFilterModalOpen(true)}
-                        className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 hover:border-primary/50 transition-all shadow-sm"
+                        className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 hover:border-cyan-600/50 dark:hover:border-cyan-600 dark:hover:border-primary/50 transition-all shadow-sm"
                     >
                         <Filter className="w-4 h-4" />
                         Filtrar
                     </button>
-                    <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 bg-primary text-black text-sm font-bold rounded-xl shadow-lg shadow-cyan-500/10 hover:bg-cyan-400 transition-all">
+                    <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 text-sm font-bold rounded-xl shadow-lg shadow-cyan-500/10 transition-all bg-cyan-700 hover:bg-cyan-800 text-white dark:bg-primary dark:hover:bg-cyan-400 dark:text-black">
                         <Download className="w-4 h-4" />
                         Exportar
                     </button>
@@ -118,7 +118,7 @@ export default function ConsultaAgendamentos() {
             <div className="bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 rounded-2xl flex-1 flex flex-col overflow-hidden shadow-sm">
                 {isSearching ? (
                     <div className="h-64 flex flex-col items-center justify-center gap-4">
-                        <div className="w-10 h-10 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+                        <div className="w-10 h-10 border-4 border-cyan-600/30 dark:border-primary/30 border-t-primary rounded-full animate-spin"></div>
                     </div>
                 ) : filteredResults.length > 0 ? (
                     <div className="block w-full overflow-x-auto text-nowrap">
@@ -209,17 +209,17 @@ export default function ConsultaAgendamentos() {
                             <div className="col-span-1 md:col-span-2 space-y-3">
                                 <label className="text-[10px] font-black uppercase text-gray-500">Período</label>
                                 <div className="grid grid-cols-2 gap-4">
-                                    <input type="date" value={dateStart} onChange={e => setDateStart(e.target.value)} className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl px-4 py-3 text-sm focus:ring-1 focus:ring-primary outline-none" />
-                                    <input type="date" value={dateEnd} onChange={e => setDateEnd(e.target.value)} className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl px-4 py-3 text-sm focus:ring-1 focus:ring-primary outline-none" />
+                                    <input type="date" value={dateStart} onChange={e => setDateStart(e.target.value)} className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl px-4 py-3 text-sm focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary outline-none" />
+                                    <input type="date" value={dateEnd} onChange={e => setDateEnd(e.target.value)} className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl px-4 py-3 text-sm focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary outline-none" />
                                 </div>
                             </div>
                             <div className="space-y-2">
                                 <label className="text-[10px] font-black uppercase text-gray-500">Cliente</label>
-                                <input type="text" value={clientName} onChange={e => setClientName(e.target.value)} placeholder="Pesquisar cliente..." className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl px-4 py-3 text-sm focus:ring-1 focus:ring-primary outline-none" />
+                                <input type="text" value={clientName} onChange={e => setClientName(e.target.value)} placeholder="Pesquisar cliente..." className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl px-4 py-3 text-sm focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary outline-none" />
                             </div>
                             <div className="space-y-2">
                                 <label className="text-[10px] font-black uppercase text-gray-500">Profissional</label>
-                                <select value={prof} onChange={e => setProf(e.target.value)} className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl px-4 py-3 text-sm focus:ring-1 focus:ring-primary outline-none">
+                                <select value={prof} onChange={e => setProf(e.target.value)} className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl px-4 py-3 text-sm focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary outline-none">
                                     <option value="">Todos</option>
                                     <option value="Rodrigo">Rodrigo</option>
                                     <option value="Thiago">Thiago</option>
@@ -227,7 +227,7 @@ export default function ConsultaAgendamentos() {
                             </div>
                             <div className="space-y-2">
                                 <label className="text-[10px] font-black uppercase text-gray-500">Status</label>
-                                <select value={status} onChange={e => setStatus(e.target.value)} className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl px-4 py-3 text-sm focus:ring-1 focus:ring-primary outline-none">
+                                <select value={status} onChange={e => setStatus(e.target.value)} className="w-full bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-[#2a2a2c] rounded-xl px-4 py-3 text-sm focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary outline-none">
                                     <option value="">Todos</option>
                                     <option value="CONFIRMED">Confirmado</option>
                                     <option value="PENDING">Pendente</option>
@@ -238,7 +238,7 @@ export default function ConsultaAgendamentos() {
 
                         <div className="p-6 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between">
                             <button onClick={handleClear} className="text-sm font-bold text-gray-400 hover:text-red-500 transition-colors">Limpar Filtros</button>
-                            <button onClick={() => handleSearch()} className="px-8 py-3 bg-primary text-black text-sm font-bold rounded-xl shadow-lg shadow-cyan-500/20 hover:bg-cyan-400 transition-all">
+                            <button onClick={() => handleSearch()} className="px-8 py-3 text-sm font-bold rounded-xl shadow-lg shadow-cyan-500/20 transition-all bg-cyan-700 hover:bg-cyan-800 text-white dark:bg-primary dark:hover:bg-cyan-400 dark:text-black">
                                 Pesquisar
                             </button>
                         </div>

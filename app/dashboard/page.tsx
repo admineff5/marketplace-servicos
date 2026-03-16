@@ -111,7 +111,7 @@ export default function DashboardIndex() {
                         </div>
                     ))
                 ) : kpis.map((kpi, index) => (
-                    <div key={index} className="bg-white dark:bg-[#111] p-4 sm:p-5 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col justify-between hover:shadow-md hover:border-primary/20 transition-all group">
+                    <div key={index} className="bg-white dark:bg-[#111] p-4 sm:p-5 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col justify-between hover:shadow-md hover:border-cyan-600/20 dark:hover:border-cyan-600 dark:hover:border-cyan-600/20 dark:border-primary/20 transition-all group">
                         <div className="flex justify-between items-start mb-2">
                             <h3 className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm font-semibold">{kpi.title}</h3>
                         </div>
@@ -198,7 +198,7 @@ export default function DashboardIndex() {
 
                         <Link
                             href="/dashboard/relatorios"
-                            className="relative z-10 w-full bg-primary hover:bg-cyan-400 text-black font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.02] shadow-sm dark:shadow-lg dark:shadow-cyan-500/20"
+                            className="relative z-10 w-full font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.02] shadow-sm dark:shadow-lg dark:shadow-cyan-500/20 bg-cyan-700 hover:bg-cyan-800 text-white dark:bg-primary dark:hover:bg-cyan-400 dark:text-black"
                         >
                             Ir para Relatórios <ArrowUpRight className="w-5 h-5" />
                         </Link>
