@@ -479,6 +479,14 @@ export default function AgendaPage() {
                                                 </div>
 
                                                 <div className="flex items-center gap-2 sm:mt-0 mt-2 sm:border-t-0 border-t border-gray-100 dark:border-gray-800 sm:pt-0 pt-3">
+                                                    {(apt.status === 'PENDING' || apt.status === 'PENDENTE') && (
+                                                        <button 
+                                                            onClick={(e) => approveAppointment(apt.id, e)} 
+                                                            className="px-3 py-1.5 text-xs font-semibold bg-green-100 text-green-700 dark:bg-green-500/10 dark:text-green-400 rounded-md hover:bg-green-200 dark:hover:bg-green-500/20 transition-colors"
+                                                        >
+                                                            Aprovar
+                                                        </button>
+                                                    )}
                                                     {apt.phone && (
                                                         <button onClick={(e) => { e.stopPropagation(); window.open(apt.phone, '_blank'); }} className="px-3 py-1.5 text-xs font-semibold bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400 rounded-md hover:bg-green-100 dark:hover:bg-green-500/20 transition-colors">
                                                             WhatsApp
