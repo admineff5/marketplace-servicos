@@ -5,6 +5,17 @@ import { Plus, ChevronLeft, ChevronRight, X, User, Edit2, Trash2, Mail, MoreVert
 const WEEKDAYS = ["DOM.", "SEG.", "TER.", "QUA.", "QUI.", "SEX.", "SÁB."];
 const MONTHS = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
+const formatTimeLocal = (dateStr: any) => {
+    if (!dateStr) return '--:--';
+    return new Date(dateStr).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+};
+
+const formatEndTimeLocal = (dateStr: any, duration: number = 30) => {
+    if (!dateStr) return '--:--';
+    const d = new Date(dateStr);
+    return new Date(d.getTime() + duration * 60000).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+};
+
 export default function AgendaPage() {
     const [appointments, setAppointments] = useState<any[]>([]);
     const [professionals, setProfessionals] = useState<any[]>([]);
