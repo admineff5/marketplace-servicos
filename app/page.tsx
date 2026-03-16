@@ -427,7 +427,7 @@ export default function Home() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Ex: Preciso de um corte degradê perto de mim hoje à tarde..."
-                  className="w-full rounded-2xl bg-white/5 border border-white/10 px-14 py-5 text-white placeholder-gray-500 focus:border-primary/50 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-primary/50 transition-all shadow-2xl"
+                  className="w-full rounded-2xl bg-white/5 border border-white/10 px-14 py-5 text-white placeholder-gray-500 focus:border-cyan-800/80 dark:focus:border-primary/50 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-cyan-800/80 dark:focus:ring-primary/50 transition-all shadow-2xl"
                 />
                 <button className="absolute right-3 top-3 bottom-3 rounded-xl bg-primary px-8 text-black font-bold hover:bg-cyan-400 transition-colors flex items-center gap-2 shadow-[0_0_15px_rgba(0,255,255,0.3)]">
                   Buscar
@@ -442,7 +442,7 @@ export default function Home() {
                     key={cat.name}
                     onClick={() => setActiveCategory(cat.name)}
                     className={`flex-shrink-0 flex items-center gap-2.5 px-6 py-3 rounded-full border transition-all ${activeCategory === cat.name
-                        ? "bg-primary/20 border-primary text-white dark:text-primary shadow-[0_0_10px_rgba(0,255,255,0.2)]"
+                        ? "bg-cyan-800/10 border-cyan-800 dark:bg-primary/20 dark:border-primary text-white dark:text-primary shadow-[0_0_10px_rgba(0,255,255,0.2)]"
                         : "bg-transparent border-white/10 text-gray-300 hover:border-white/30 hover:bg-white/5 hover:text-cyan-700 dark:hover:text-white"
                       } `}
                   >
@@ -478,7 +478,7 @@ export default function Home() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="O que você quer agendar hoje?"
-                  className="w-full rounded-xl bg-white/5 px-10 py-2.5 text-white text-sm placeholder-gray-400 border border-white/10 focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/50 focus:bg-white/10 transition-all"
+                  className="w-full rounded-xl bg-white/5 px-10 py-2.5 text-white text-sm placeholder-gray-400 border border-white/10 focus:border-cyan-800/80 dark:focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-cyan-800/80 dark:focus:ring-primary/50 focus:bg-white/10 transition-all"
                 />
               </div>
 
@@ -489,7 +489,7 @@ export default function Home() {
                     key={cat.name}
                     onClick={() => setActiveCategory(cat.name)}
                     className={`flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full border transition-all ${activeCategory === cat.name
-                        ? "bg-primary/20 border-primary text-white dark:text-primary"
+                        ? "bg-cyan-800/10 border-cyan-800 dark:bg-primary/20 dark:border-primary text-white dark:text-primary"
                         : "bg-transparent border-white/10 text-gray-300 hover:bg-white/5 hover:text-cyan-700 dark:hover:text-white"
                       } `}
                   >
@@ -668,7 +668,7 @@ export default function Home() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
               {/* Passo 1 */}
-              <div className="group relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0d1117] p-8 text-center transition-all hover:border-primary/40 hover:shadow-[0_0_30px_rgba(0,255,255,0.06)]">
+              <div className="group relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0d1117] p-8 text-center transition-all hover:border-cyan-800/80 dark:hover:border-primary/50 hover:shadow-[0_0_30px_rgba(0,255,255,0.06)]">
                 <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
                   <Search className="h-7 w-7 text-cyan-700 dark:text-primary" />
                 </div>
@@ -680,7 +680,7 @@ export default function Home() {
               </div>
 
               {/* Passo 2 */}
-              <div className="group relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0d1117] p-8 text-center transition-all hover:border-primary/40 hover:shadow-[0_0_30px_rgba(0,255,255,0.06)]">
+              <div className="group relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0d1117] p-8 text-center transition-all hover:border-cyan-800/80 dark:hover:border-primary/50 hover:shadow-[0_0_30px_rgba(0,255,255,0.06)]">
                 <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
                   <CalendarDays className="h-7 w-7 text-cyan-700 dark:text-primary" />
                 </div>
@@ -692,7 +692,7 @@ export default function Home() {
               </div>
 
               {/* Passo 3 */}
-              <div className="group relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0d1117] p-8 text-center transition-all hover:border-primary/40 hover:shadow-[0_0_30px_rgba(0,255,255,0.06)]">
+              <div className="group relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0d1117] p-8 text-center transition-all hover:border-cyan-800/80 dark:hover:border-primary/50 hover:shadow-[0_0_30px_rgba(0,255,255,0.06)]">
                 <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
                   <CheckCircle2 className="h-7 w-7 text-cyan-700 dark:text-primary" />
                 </div>
@@ -1122,7 +1122,7 @@ export default function Home() {
                       value={clientNote}
                       onChange={(e) => setClientNote(e.target.value)}
                       placeholder="Ex: Preciso que tirem apenas as pontas, tenho alergia a tal produto..."
-                      className="w-full bg-gray-50 dark:bg-[#151516] border border-gray-100 dark:border-[#2a2a2c] rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all resize-none h-24"
+                      className="w-full bg-gray-50 dark:bg-[#151516] border border-gray-100 dark:border-[#2a2a2c] rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:border-cyan-800/80 dark:focus:border-primary/50 focus:ring-1 focus:ring-cyan-800/80 dark:focus:ring-primary/50 transition-all resize-none h-24"
                     />
                   </div>
                 </div>
