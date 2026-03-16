@@ -120,15 +120,7 @@ export default function DashboardIndex() {
                                 {maskValue(kpi.value)}
                             </p>
 
-                            <div className="flex items-center gap-1 mt-1 opacity-80">
-                                {kpi.isPositive ?
-                                    <ArrowUpRight className="w-3 h-3 text-emerald-500" /> :
-                                    <ArrowDownRight className="w-3 h-3 text-red-500" />
-                                }
-                                <span className={`text-[10px] sm:text-xs font-bold ${kpi.isPositive ? 'text-emerald-500' : 'text-red-500'}`}>
-                                    {kpi.trend}
-                                </span>
-                            </div>
+                            
                         </div>
                     </div>
                 ))}
