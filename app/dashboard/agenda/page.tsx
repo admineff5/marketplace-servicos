@@ -202,8 +202,8 @@ export default function AgendaPage() {
                                     key={i} 
                                     onClick={() => dt && setSelectedMiniDate(dt === selectedMiniDate ? null : dt)}
                                     className={`w-6 h-6 flex items-center justify-center rounded-full mx-auto cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-all
-                                        ${isToday(dt) && selectedMiniDate !== dt ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 font-semibold' : ''}
-                                        ${selectedMiniDate === dt ? 'bg-cyan-700 hover:bg-cyan-800 text-white dark:bg-primary dark:hover:bg-cyan-400 dark:text-black font-bold shadow-md scale-105' : ''}
+                                        ${isToday(dt) && dt !== null && selectedMiniDate !== dt ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 font-semibold' : ''}
+                                        ${selectedMiniDate === dt && dt !== null ? 'bg-cyan-700 hover:bg-cyan-800 text-white dark:bg-primary dark:hover:bg-cyan-400 dark:text-black font-bold shadow-md scale-105' : ''}
                                     `}
                                 >
                                     {dt}
