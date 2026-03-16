@@ -39,7 +39,7 @@ const SIDEBAR_LINKS = [
     { name: "Serviços", href: "/dashboard/servicos", icon: Scissors },
     { name: "Produtos", href: "/dashboard/produtos", icon: Package },
     { name: "Relatórios", href: "/dashboard/relatorios", icon: FileText },
-    { name: "Configurações", href: "/dashboard/config", icon: Building },
+    { name: "Perfil da Loja", href: "/dashboard/config", icon: Building },
 ];
 
 // Notifications and Profile moved to dynamic fetch via API
