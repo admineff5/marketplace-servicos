@@ -46,12 +46,7 @@ export default function DashboardIndex() {
                 const activeApts = Array.isArray(aptData) 
                     ? aptData.filter((a: any) => {
                         const isCancelled = a.status === 'CANCELLED' || a.status === 'CANCELADO' || a.status === 'CANCEL';
-                        if (isCancelled) return false;
-                        
-                        const aptDate = new Date(a.date);
-                        const now = new Date();
-                        now.setHours(0,0,0,0); // Considera hoje o dia inteiro
-                        return aptDate >= now;
+                        return !isCancelled;
                     })
                     : [];
                 setRecentAppointments(activeApts.slice(0, 5));
