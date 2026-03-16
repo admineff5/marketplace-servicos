@@ -299,9 +299,19 @@ export default function AgendaPage() {
                             </div>
                             {agendaLayout === "calendar" && <h2 className="text-xl font-normal text-gray-800 dark:text-gray-200 ml-2">{headerTitle}</h2>}
                             {agendaLayout === "list" && (
-                                <h2 className="text-xl font-normal text-gray-800 dark:text-gray-200 ml-2">
-                                    {selectedMiniDate ? `Agendamentos - ${selectedMiniDate} de ${MONTHS[month]}` : "Próximos Agendamentos"}
-                                </h2>
+                                <div className="flex items-center gap-3">
+                                    <h2 className="text-xl font-normal text-gray-800 dark:text-gray-200 ml-2">
+                                        {selectedMiniDate ? `Agendamentos - ${selectedMiniDate} de ${MONTHS[month]}` : "Próximos Agendamentos"}
+                                    </h2>
+                                    {selectedMiniDate && (
+                                        <button 
+                                            onClick={() => setSelectedMiniDate(null)} 
+                                            className="px-3 py-1 text-xs font-semibold bg-cyan-700 text-white dark:bg-primary dark:text-black rounded-xl hover:shadow-md transition-all flex items-center gap-1"
+                                        >
+                                            ✕ Ver Todos
+                                        </button>
+                                    )}
+                                </div>
                             )}
                         </div>
                         <div className="flex items-center gap-4">
