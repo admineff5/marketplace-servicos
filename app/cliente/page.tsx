@@ -181,7 +181,7 @@ export default function ClienteDashboard() {
                                 <div className="absolute top-3 right-3">
                                     {item.status === 'cancelled' ? (
                                         <span className="px-2.5 py-1 text-xs font-bold rounded-full shadow-sm backdrop-blur-sm bg-red-600 text-white">
-                                            Recusado pela Loja
+                                            Cancelado pela Loja
                                         </span>
                                     ) : (
                                         <span className={`px-2.5 py-1 text-xs font-bold rounded-full shadow-sm backdrop-blur-sm ${item.status === 'confirmed' ? 'bg-green-500/90 text-white' : 'bg-yellow-500/90 text-black'}`}>
