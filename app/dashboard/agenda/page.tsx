@@ -431,7 +431,7 @@ export default function AgendaPage() {
                                                         aptDay === day.date &&
                                                         aptMonth === month &&
                                                         aptYear === year &&
-                                                        (selectedPros.length === 0 || selectedPros.includes(apt.employeeId) || selectedPros.includes(apt.employee?.id) || selectedPros.includes(apt.prof)) &&
+                                                        (selectedPros.includes(apt.employeeId) || selectedPros.includes(apt.employee?.id) || selectedPros.includes(apt.prof)) &&
                                                         apt.status !== 'CANCELLED' && apt.status !== 'CANCELADO'
                                                     );
                                                 });
