@@ -15,6 +15,8 @@ export default function ClienteDashboard() {
     const [stats, setStats] = useState({ scheduled: 0, completed: 0, totalSpent: 0 });
     const [isLoading, setIsLoading] = useState(true);
     const [archivedIds, setArchivedIds] = useState<string[]>([]);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [clientStatusFilter, setClientStatusFilter] = useState("");
 
     useEffect(() => {
         fetchData();
@@ -140,8 +142,8 @@ export default function ClienteDashboard() {
                 </div>
             </div>
 
-            {/* Tabs */}
-            <div className="border-b border-gray-200 dark:border-gray-800">
+            {/* Tabs e Filtros */}
+            <div className="border-b border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <nav className="-mb-px flex space-x-8" aria-label="Tabs">
                     <button
                         onClick={() => setActiveTab("upcoming")}
@@ -162,12 +164,40 @@ export default function ClienteDashboard() {
                         Histórico e Recibos
                     </button>
                 </nav>
+                
+                {/* Filtros em Linha */}
+                <div className="flex items-center gap-2 pb-3 sm:pb-0">
+                    <div className="relative flex-1 sm:flex-none">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                        <input 
+                            type="text" 
+                            placeholder="Pesquisar..." 
+                            value={searchTerm}
+                            onChange={e => setSearchTerm(e.target.value)}
+                            className="w-full sm:w-60 pl-9 pr-4 py-2 text-sm bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-gray-800 rounded-xl focus:outline-none focus:ring-1 focus:ring-cyan-600 transition-all text-gray-900 dark:text-white"
+                        />
+                    </div>
+                    <select 
+                        value={clientStatusFilter}
+                        onChange={e => setClientStatusFilter(e.target.value)}
+                        className="py-2 px-3 text-sm bg-gray-50 dark:bg-[#1a1a1c] border border-gray-200 dark:border-gray-800 rounded-xl focus:outline-none focus:ring-1 focus:ring-cyan-600 transition-all text-gray-900 dark:text-white"
+                    >
+                        <option value="">Status</option>
+                        <option value="confirmed">Confirmado</option>
+                        <option value="cancelled">Cancelado</option>
+                        {activeTab === "past" && <option value="completed">Realizado</option>}
+                    </select>
+                </div>
             </div>
 
             {/* List Container */}
             <div className={activeTab === "upcoming" ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" : "space-y-4"}>
                 {activeTab === "upcoming" ? (
-                    upcoming.filter(item => !archivedIds.includes(item.id)).map(item => (
+                    upcoming.filter(item => {
+                        const matchesSearch = item.service.toLowerCase().includes(searchTerm.toLowerCase()) || item.company.toLowerCase().includes(searchTerm.toLowerCase());
+                        const matchesStatus = !clientStatusFilter || item.status === clientStatusFilter;
+                        return matchesSearch && matchesStatus && !archivedIds.includes(item.id);
+                    }).map(item => (
                         <div key={item.id} className="bg-white dark:bg-[#111] border border-gray-100 dark:border-gray-800 rounded-2xl shadow-sm hover:shadow-md transition-all flex flex-col overflow-hidden group">
                             {/* Banner / Imagem do Estabelecimento */}
                             <div className="h-40 w-full relative bg-gray-200 dark:bg-gray-800">
@@ -254,7 +284,11 @@ export default function ClienteDashboard() {
                         </div>
                     ))
                 ) : (
-                    past.map(item => (
+                    past.filter(item => {
+                        const matchesSearch = item.service.toLowerCase().includes(searchTerm.toLowerCase()) || item.company.toLowerCase().includes(searchTerm.toLowerCase());
+                        const matchesStatus = !clientStatusFilter || item.status === clientStatusFilter;
+                        return matchesSearch && matchesStatus;
+                    }).map(item => (
                         <div key={item.id} className="bg-white dark:bg-[#111] border border-gray-100 dark:border-gray-800 rounded-2xl p-5 shadow-sm transition-all hover:shadow-md flex flex-col sm:flex-row gap-5 relative opacity-85 hover:opacity-100">
                             {/* Image */}
                             <div className="w-full sm:w-20 h-24 sm:h-20 rounded-xl overflow-hidden shrink-0 border border-gray-200 dark:border-gray-800 grayscale">
