@@ -435,7 +435,7 @@ export default function GestaoServicosPage() {
                                 <div>
                                     <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5 uppercase tracking-wider flex items-center justify-between">
                                         Duração
-                                        <span className="text-[10px] text-gray-400 font-normal normal-case">Opcional</span>
+                                        <span className="text-[10px] text-green-500 font-bold normal-case bg-green-500/10 px-1 py-0.5 rounded">Opcional</span>
                                     </label>
                                     <div className="relative">
                                         <input
