@@ -81,7 +81,6 @@ export default function Home() {
         const res = await fetch("/api/companies");
         const data = await res.json();
         if (Array.isArray(data)) {
-          // Remover disponibilidade mockada e usar dados reais
           setCompanies(data);
         }
       } catch (err) {
@@ -91,6 +90,10 @@ export default function Home() {
       }
     };
     fetchCompanies();
+    
+    // Polling: Atualização Automática a cada 30 segundos
+    const interval = setInterval(fetchCompanies, 30000);
+    return () => clearInterval(interval);
   }, []);
   // Handle Rebooking Parameter
   useEffect(() => {
@@ -307,7 +310,8 @@ export default function Home() {
 
   const closeModal = () => setSelectedCompany(null);
 
-  const activeProfessionalData = selectedCompany?.staff?.find(
+  const openCompanyData = companies.find((c: any) => c.id === selectedCompany?.id) || selectedCompany;
+  const activeProfessionalData = openCompanyData?.staff?.find(
     (p: any) => p.id === selectedProfessional,
   );
 
