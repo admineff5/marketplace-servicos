@@ -352,7 +352,7 @@ export default function GestaoServicosPage() {
                                                                 onClick={() => setSelectedCategory(cat)}
                                                                 className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-[#1a1a1c] transition-colors text-left group"
                                                             >
-                                                                <span className="text-sm font-semibold text-gray-700 dark:text-gray-200 group-hover:text-primary">{cat}</span>
+                                                                <span className="text-sm font-semibold text-gray-700 dark:text-gray-200 group-hover:text-cyan-700 dark:group-hover:text-primary">{cat}</span>
                                                                 <ChevronDown className="w-4 h-4 text-gray-400 -rotate-90" />
                                                             </button>
                                                         ))}
@@ -366,7 +366,7 @@ export default function GestaoServicosPage() {
                                                                 onClick={() => applySuggestion(srv)}
                                                                 className="p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-[#1a1a1c] cursor-pointer transition-colors group"
                                                             >
-                                                                <div className="font-semibold text-sm text-gray-900 dark:text-white group-hover:text-cyan-700 dark:hover:text-primary transition-colors">{srv.name}</div>
+                                                                <div className="font-semibold text-sm text-gray-900 dark:text-white group-hover:text-cyan-700 dark:group-hover:text-primary transition-colors">{srv.name}</div>
                                                                 <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">{srv.description}</p>
                                                             </div>
                                                         ))}
