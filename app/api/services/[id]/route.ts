@@ -12,7 +12,7 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
             data: {
                 name,
                 price: parseFloat(price),
-                duration: parseInt(duration),
+                duration: duration ? parseInt(duration as any) : null,
             }
         });
 

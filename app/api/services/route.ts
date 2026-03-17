@@ -54,7 +54,7 @@ export async function POST(request: Request) {
                 name,
                 description,
                 price: parseFloat(price),
-                duration: parseInt(duration),
+                duration: duration ? parseInt(duration as any) : null,
                 companyId: company.id
             }
         });

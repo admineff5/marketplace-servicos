@@ -84,14 +84,14 @@ export default function GestaoServicosPage() {
     };
 
     const handleSave = async () => {
-        if (!formName || !formPrice || !formDuration) return;
+        if (!formName || !formPrice) return;
 
         const payload = {
             name: formName,
             description: formDescription,
             price: (parseFloat(formPrice) || 0) / 100,
             promoPrice: formPromoPrice ? (parseFloat(formPromoPrice) || 0) / 100 : null,
-            duration: parseInt(formDuration)
+            duration: formDuration ? parseInt(formDuration) : null
         };
 
         try {
@@ -131,7 +131,7 @@ export default function GestaoServicosPage() {
         setFormDescription(service.description || "");
         setFormPrice(service.price ? (service.price * 100).toFixed(0) : "");
         setFormPromoPrice(service.promoPrice ? (service.promoPrice * 100).toFixed(0) : "");
-        setFormDuration(service.duration.toString());
+        setFormDuration(service.duration ? service.duration.toString() : "");
         setIsModalOpen(true);
     };
 
@@ -228,7 +228,7 @@ export default function GestaoServicosPage() {
                                             )}
                                         </td>
                                         <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
-                                            {srv.duration} min
+                                            {srv.duration ? `${srv.duration} min` : "-"}
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex items-center justify-end gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
@@ -433,8 +433,9 @@ export default function GestaoServicosPage() {
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5 uppercase tracking-wider">
-                                        Duração *
+                                    <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5 uppercase tracking-wider flex items-center justify-between">
+                                        Duração
+                                        <span className="text-[10px] text-gray-400 font-normal normal-case">Opcional</span>
                                     </label>
                                     <div className="relative">
                                         <input
@@ -460,7 +461,7 @@ export default function GestaoServicosPage() {
                             </button>
                             <button
                                 onClick={handleSave}
-                                disabled={!formName || !formPrice || !formDuration}
+                                disabled={!formName || !formPrice}
                                 className="flex items-center gap-2 px-6 py-2.5 text-sm font-bold rounded-xl shadow-lg shadow-cyan-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-cyan-700 hover:bg-cyan-800 text-white dark:bg-primary dark:hover:bg-cyan-400 dark:text-black"
                             >
                                 <Check className="w-4 h-4" />

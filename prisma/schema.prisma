@@ -91,7 +91,7 @@ model Service {
   description  String?
   price        Float
   promoPrice   Float?
-  duration     Int
+  duration     Int?
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   company      Company       @relation(fields: [companyId], references: [id])
