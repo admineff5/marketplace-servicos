@@ -75,7 +75,10 @@ export default function ConsultaAgendamentos() {
         return results.filter(item => {
             const matchesClient = !appliedFilters.clientName || item.client.toLowerCase().includes(appliedFilters.clientName.toLowerCase());
             const matchesProf = !appliedFilters.prof || item.prof === appliedFilters.prof;
-            const matchesStatus = !appliedFilters.status || item.status === appliedFilters.status;
+            const matchesStatus = !appliedFilters.status || 
+                (appliedFilters.status === "CANCELLED_LOJA" ? (item.status === "CANCELLED" && item.comment) :
+                 appliedFilters.status === "CANCELLED_CLIENTE" ? (item.status === "CANCELLED" && !item.comment) :
+                 item.status === appliedFilters.status);
             const matchesTitle = !appliedFilters.service || item.title.toLowerCase().includes(appliedFilters.service.toLowerCase());
 
             // Filtro de data range no frontend se necessário (API atual filtra por dia)
@@ -231,7 +234,8 @@ export default function ConsultaAgendamentos() {
                                     <option value="">Todos</option>
                                     <option value="CONFIRMED">Confirmado</option>
                                     <option value="PENDING">Pendente</option>
-                                    <option value="CANCELLED">Cancelado</option>
+                                    <option value="CANCELLED_LOJA">Cancelado pela Loja</option>
+                                    <option value="CANCELLED_CLIENTE">Cancelado pelo Cliente</option>
                                 </select>
                             </div>
                         </div>

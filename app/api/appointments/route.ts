@@ -79,7 +79,7 @@ export async function GET(request: Request) {
                 title: `${apt.service?.name || "Serviço"} - ${apt.user?.name || "Cliente"}`,
                 value: apt.service?.price || 0,
                 status: apt.status,
-                comment: apt.comment || "",
+                comment: apt.comment,
                 date: apt.date,
                 dot: "bg-cyan-500", // Default color
                 color: "text-cyan-700 dark:text-primary",
