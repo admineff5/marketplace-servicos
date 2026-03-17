@@ -52,8 +52,8 @@ export async function GET() {
 
 
         const now = new Date();
-        const upcoming = appointments.filter((a: any) => new Date(a.date) > now && a.status !== 'CANCELLED');
-        const past = appointments.filter((a: any) => new Date(a.date) <= now || a.status === 'CANCELLED' || a.status === 'COMPLETED');
+        const upcoming = appointments.filter((a: any) => new Date(a.date) > now && (a.status !== 'CANCELLED' || (a.status === 'CANCELLED' && a.comment !== null)));
+        const past = appointments.filter((a: any) => new Date(a.date) <= now || (a.status === 'CANCELLED' && a.comment === null) || a.status === 'COMPLETED');
 
         const stats = {
             scheduled: upcoming.length,

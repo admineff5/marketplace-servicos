@@ -14,6 +14,7 @@ export default function ClienteDashboard() {
     const [past, setPast] = useState<any[]>([]);
     const [stats, setStats] = useState({ scheduled: 0, completed: 0, totalSpent: 0 });
     const [isLoading, setIsLoading] = useState(true);
+    const [archivedIds, setArchivedIds] = useState<string[]>([]);
 
     useEffect(() => {
         fetchData();
@@ -166,7 +167,7 @@ export default function ClienteDashboard() {
             {/* List Container */}
             <div className={activeTab === "upcoming" ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" : "space-y-4"}>
                 {activeTab === "upcoming" ? (
-                    upcoming.map(item => (
+                    upcoming.filter(item => !archivedIds.includes(item.id)).map(item => (
                         <div key={item.id} className="bg-white dark:bg-[#111] border border-gray-100 dark:border-gray-800 rounded-2xl shadow-sm hover:shadow-md transition-all flex flex-col overflow-hidden group">
                             {/* Banner / Imagem do Estabelecimento */}
                             <div className="h-40 w-full relative bg-gray-200 dark:bg-gray-800">
@@ -178,9 +179,15 @@ export default function ClienteDashboard() {
                                 />
                                 {/* Status Sticker */}
                                 <div className="absolute top-3 right-3">
-                                    <span className={`px-2.5 py-1 text-xs font-bold rounded-full shadow-sm backdrop-blur-sm ${item.status === 'confirmed' ? 'bg-green-500/90 text-white' : 'bg-yellow-500/90 text-black'}`}>
-                                        {item.status === 'confirmed' ? 'Confirmado' : 'Aguardando'}
-                                    </span>
+                                    {item.status === 'cancelled' ? (
+                                        <span className="px-2.5 py-1 text-xs font-bold rounded-full shadow-sm backdrop-blur-sm bg-red-600 text-white">
+                                            Recusado pela Loja
+                                        </span>
+                                    ) : (
+                                        <span className={`px-2.5 py-1 text-xs font-bold rounded-full shadow-sm backdrop-blur-sm ${item.status === 'confirmed' ? 'bg-green-500/90 text-white' : 'bg-yellow-500/90 text-black'}`}>
+                                            {item.status === 'confirmed' ? 'Confirmado' : 'Aguardando'}
+                                        </span>
+                                    )}
                                 </div>
                                 {/* Avatar do Profissional Flutuante */}
                                 {item.employeeImage && (
@@ -196,6 +203,9 @@ export default function ClienteDashboard() {
                                     <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1 line-clamp-1">{item.service}</h3>
                                     <p className="font-bold text-cyan-700 dark:text-primary text-sm mb-4">{item.company}</p>
 
+                                    {item.status === 'cancelled' && item.comment && (
+                                        <p className="text-xs text-red-600 dark:text-red-400 mb-2 italic font-semibold border-l-2 border-red-500 pl-2">Motivo da recusa: "{item.comment}"</p>
+                                    )}
                                     <div className="grid grid-cols-2 gap-2 text-xs font-semibold text-gray-600 dark:text-gray-400">
                                         <div className="flex items-center gap-1.5 bg-gray-50 dark:bg-[#1a1a1c] px-2 py-2 rounded-lg border border-gray-100 dark:border-gray-800/50">
                                             <Calendar className="w-3.5 h-3.5 text-cyan-600" />
@@ -225,8 +235,17 @@ export default function ClienteDashboard() {
 
                                     <div className="flex flex-col gap-2">
                                         <div className="flex gap-2 w-full">
-                                            <button onClick={() => handleCancel(item.id)} className="flex-1 px-3 py-2 border border-red-200 dark:border-red-900/40 bg-red-50/50 dark:bg-red-950/20 rounded-xl text-xs font-bold text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors">Cancelar</button>
-                                            <button onClick={() => handleRebook(item)} className="flex-1 px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-xl text-xs font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">Reagendar</button>
+                                            {item.status !== 'cancelled' ? (
+                                                <>
+                                                    <button onClick={() => handleCancel(item.id)} className="flex-1 px-3 py-2 border border-red-200 dark:border-red-900/40 bg-red-50/50 dark:bg-red-950/20 rounded-xl text-xs font-bold text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors">Cancelar</button>
+                                                    <button onClick={() => handleRebook(item)} className="flex-1 px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-xl text-xs font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">Reagendar</button>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <button onClick={() => handleRebook(item)} className="flex-1 px-3 py-2 border border-gray-100 bg-gray-50 text-gray-800 font-bold rounded-xl text-xs hover:bg-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-700 transition-all">Reagendar</button>
+                                                    <button onClick={() => setArchivedIds([...archivedIds, item.id])} className="flex-1 px-3 py-2 border border-blue-200 dark:border-blue-900/40 bg-blue-50/50 dark:bg-blue-950/20 rounded-xl text-xs font-semibold text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors">Arquivar</button>
+                                                </>
+                                            )}
                                         </div>
                                         <button onClick={() => window.open(item.mapsLink || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.address)}`, '_blank')} className="w-full px-3 py-2.5 bg-cyan-500/10 text-cyan-700 dark:bg-primary/20 dark:text-primary border border-cyan-600/30 dark:border-primary/30 rounded-xl text-xs font-bold hover:bg-cyan-700 hover:text-white dark:hover:bg-primary dark:hover:text-black transition-colors flex items-center justify-center gap-1.5">Ver Rota</button>
                                     </div>
