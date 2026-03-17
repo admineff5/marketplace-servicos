@@ -8,13 +8,14 @@ export async function PUT(
     try {
         const { id } = await params;
         const body = await request.json();
-        const { status, date } = body;
+        const { status, date, comment } = body;
 
         const appointment = await prisma.appointment.update({
             where: { id },
             data: {
                 status,
                 date: date ? new Date(date) : undefined,
+                comment: comment !== undefined ? comment : undefined,
             },
         });
 
