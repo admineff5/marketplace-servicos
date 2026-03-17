@@ -533,7 +533,7 @@ export default function AgendaPage() {
                                                         <div className="flex items-center gap-3 mb-1">
                                                             <h3 className="text-base font-bold text-gray-900 dark:text-white">{formatTimeLocal(apt.date)} - {apt.title || 'Serviço'}</h3>
                                                             <span className={`px-2 py-0.5 text-[10px] font-bold uppercase rounded-md ${getStatusStyle(apt.status)}`}>
-                                                                {translateStatus(apt.status || 'Confirmado')}
+                                                                {apt.status === 'CANCELLED' ? (apt.comment ? 'Cancelado pela Loja' : 'Cancelado pelo Cliente') : translateStatus(apt.status || 'Confirmado')}
                                                             </span>
                                                         </div>
                                                         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-600 dark:text-gray-400">
