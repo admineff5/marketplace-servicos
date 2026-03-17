@@ -173,7 +173,7 @@ export default function ConsultaAgendamentos() {
                                             >
                                                 {row.status === 'CONFIRMED' ? 'Confirmado' : 
                                                  row.status === 'PENDING' ? 'Pendente' : 
-                                                 row.status === 'CANCELLED' ? 'Cancelado' : 
+                                                  row.status === 'CANCELLED' ? (row.comment ? 'Cancelado pela Loja' : 'Cancelado pelo Cliente') : 
                                                  row.status === 'COMPLETED' ? 'Concluído' : row.status}
                                             </span>
                                         </td>
