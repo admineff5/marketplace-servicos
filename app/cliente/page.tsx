@@ -248,6 +248,9 @@ export default function ClienteDashboard() {
                                     <div>
                                         <h3 className="text-md font-bold text-gray-900 dark:text-white mb-0.5">{item.service}</h3>
                                         <p className="font-medium text-gray-500 text-sm">{item.company}</p>
+                                        {item.status === 'cancelled' && item.comment && (
+                                            <p className="text-xs text-red-600 dark:text-red-400 mt-1.5 italic font-semibold border-l-2 border-red-500 pl-2">Motivo: "{item.comment}"</p>
+                                        )}
                                     </div>
                                     <div className="flex flex-col items-end gap-2">
                                         <span className={`px-2.5 py-1 text-xs font-bold rounded-full ${item.status === 'cancelled' ? 'bg-red-500/10 text-red-600' : 'bg-green-500/10 text-green-600'}`}>

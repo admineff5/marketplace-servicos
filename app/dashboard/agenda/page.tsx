@@ -55,6 +55,8 @@ export default function AgendaPage() {
     const [searchQuery, setSearchQuery] = useState("");
     const [listFilter, setListFilter] = useState<"Proximos" | "Todos">("Proximos");
     const [selectedMiniDate, setSelectedMiniDate] = useState<number | null>(null);
+    const [rejectingId, setRejectingId] = useState<string | null>(null);
+    const [rejectReason, setRejectReason] = useState<string>("");
     const [startDate, setStartDate] = useState<string>("");
     const [endDate, setEndDate] = useState<string>("");
 
@@ -98,6 +100,26 @@ export default function AgendaPage() {
     };
 
     const closeModal = () => setSelectedAppointment(null);
+
+    const handleReject = async () => {
+        if (!rejectingId) return;
+        try {
+            const res = await fetch(`/api/appointments/${rejectingId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: 'CANCELLED', comment: rejectReason })
+            });
+            if (res.ok) {
+                setRejectingId(null);
+                setRejectReason("");
+                fetchData();
+            } else {
+                alert("Erro ao recusar o agendamento.");
+            }
+        } catch (error) {
+            console.error("Erro na recusa:", error);
+        }
+    };
 
     const approveAppointment = async (id: string, e: any) => {
         e.stopPropagation();
@@ -529,12 +551,20 @@ export default function AgendaPage() {
 
                                                 <div className="flex items-center gap-2 sm:mt-0 mt-2 sm:border-t-0 border-t border-gray-100 dark:border-gray-800 sm:pt-0 pt-3">
                                                     {(apt.status === 'PENDING' || apt.status === 'PENDENTE') && (
-                                                        <button 
-                                                            onClick={(e) => approveAppointment(apt.id, e)} 
-                                                            className="px-3 py-1.5 text-xs font-semibold bg-green-100 text-green-700 dark:bg-green-500/10 dark:text-green-400 rounded-md hover:bg-green-200 dark:hover:bg-green-500/20 transition-colors"
-                                                        >
-                                                            Aprovar
-                                                        </button>
+                                                        <div className="flex gap-2">
+                                                            <button 
+                                                                onClick={(e) => approveAppointment(apt.id, e)} 
+                                                                className="px-3 py-1.5 text-xs font-semibold bg-green-100 text-green-700 dark:bg-green-500/10 dark:text-green-400 rounded-md hover:bg-green-200 dark:hover:bg-green-500/20 transition-colors"
+                                                            >
+                                                                Aprovar
+                                                            </button>
+                                                            <button 
+                                                                onClick={(e) => { e.stopPropagation(); setRejectingId(apt.id); setRejectReason(""); }} 
+                                                                className="px-3 py-1.5 text-xs font-semibold bg-red-100 text-red-700 dark:bg-red-500/10 dark:text-red-400 rounded-md hover:bg-red-200 dark:hover:bg-red-500/20 transition-colors"
+                                                            >
+                                                                Recusar
+                                                            </button>
+                                                        </div>
                                                     )}
                                                     {apt.phone && (
                                                         <button onClick={(e) => { e.stopPropagation(); window.open(apt.phone, '_blank'); }} className="px-3 py-1.5 text-xs font-semibold bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400 rounded-md hover:bg-green-100 dark:hover:bg-green-500/20 transition-colors">
@@ -560,6 +590,38 @@ export default function AgendaPage() {
                 </div>
 
                 
+                {/* MODAL DE RECUSA */}
+                {rejectingId && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setRejectingId(null)}>
+                        <div className="bg-white dark:bg-[#1a1a1c] p-6 rounded-2xl border border-gray-200 dark:border-gray-800 w-full max-w-md shadow-2xl animate-in fade-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">Recusar Agendamento</h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Escreva o motivo da recusa. O cliente receberá essa justificativa.</p>
+                            <textarea 
+                                rows={4}
+                                value={rejectReason}
+                                onChange={e => setRejectReason(e.target.value)}
+                                placeholder="Exemplo: Horário indisponível por motivos de força maior..."
+                                className="w-full bg-gray-50 dark:bg-[#151516] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-600 transition-all resize-none mb-4"
+                            />
+                            <div className="flex items-center justify-end gap-3">
+                                <button 
+                                    onClick={() => setRejectingId(null)}
+                                    className="px-4 py-2 text-sm font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors"
+                                >
+                                    Cancelar
+                                </button>
+                                <button 
+                                    onClick={handleReject}
+                                    disabled={!rejectReason.trim()}
+                                    className="px-4 py-2 text-sm font-bold bg-red-600 hover:bg-red-700 text-white rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-red-500/20"
+                                >
+                                    Recusar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {selectedAppointment && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-transparent backdrop-blur-sm" onClick={closeModal}>
                         <div
@@ -659,7 +721,24 @@ export default function AgendaPage() {
                                     </div>
                                 </div>
 
-                                <div className="flex gap-4 mt-6 items-center text-sm text-gray-700 dark:text-gray-400 pt-4 border-t border-gray-100 dark:border-gray-800/50">
+                                {(selectedAppointment.status === 'PENDING' || selectedAppointment.status === 'PENDENTE') && (
+                                        <div className="flex gap-2 w-full mt-4">
+                                            <button 
+                                                onClick={(e) => { approveAppointment(selectedAppointment.id, e); closeModal(); }} 
+                                                className="flex-1 py-2.5 text-sm font-bold bg-green-600 hover:bg-green-700 text-white rounded-xl shadow-lg shadow-green-500/20 transition-all text-center"
+                                            >
+                                                Aprovar
+                                            </button>
+                                            <button 
+                                                onClick={(e) => { e.stopPropagation(); setRejectingId(selectedAppointment.id); setRejectReason(""); closeModal(); }} 
+                                                className="flex-1 py-2.5 text-sm font-bold bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-lg shadow-red-500/20 transition-all text-center"
+                                            >
+                                                Recusar
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    <div className="flex gap-4 mt-6 items-center text-sm text-gray-700 dark:text-gray-400 pt-4 border-t border-gray-100 dark:border-gray-800/50">
                                     <CalendarIcon className="w-5 h-5 text-gray-400 shrink-0" />
                                     <div>
                                         <p className="font-medium text-gray-900 dark:text-gray-200">Agenda_{selectedAppointment?.prof || 'Geral'}</p>
