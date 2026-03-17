@@ -35,7 +35,6 @@ const SIDEBAR_LINKS = [
     { name: "Tarefas", href: "/dashboard/tarefas", icon: ListTodo },
     { name: "Consulta Agendamentos", href: "/dashboard/consulta", icon: SearchCheck },
     { name: "Feriados / Ausências", href: "/dashboard/bloqueios", icon: CalendarOff },
-    { name: "Leads", href: "/dashboard/leads", icon: Target },
     { name: "Clientes", href: "/dashboard/clientes", icon: Users },
     { name: "Profissionais", href: "/dashboard/profissionais", icon: UserSquare2 },
     { name: "Serviços", href: "/dashboard/servicos", icon: Scissors },
