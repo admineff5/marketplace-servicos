@@ -307,7 +307,7 @@ export default function ClienteDashboard() {
                                     </div>
                                     <div className="flex flex-col items-end gap-2">
                                         <span className={`px-2.5 py-1 text-xs font-bold rounded-full ${item.status === 'cancelled' ? 'bg-red-500/10 text-red-600' : 'bg-green-500/10 text-green-600'}`}>
-                                            {item.status === 'cancelled' ? 'Cancelado' : 'Realizado'}
+                                            {item.status === 'cancelled' ? (item.comment ? 'Cancelado pela Loja' : 'Cancelado pelo Cliente') : 'Realizado'}
                                         </span>
                                         <div className="flex items-center gap-1.5 bg-gray-50 dark:bg-[#1a1a1c] px-3 py-1.5 rounded-lg border border-gray-100 dark:border-gray-800">
                                             <Calendar className="w-3.5 h-3.5 text-gray-500" />
