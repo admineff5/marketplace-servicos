@@ -184,7 +184,8 @@ export default function ClienteDashboard() {
                     >
                         <option value="">Status</option>
                         <option value="confirmed">Confirmado</option>
-                        <option value="cancelled">Cancelado</option>
+                        <option value="cancelled_loja">Cancelado pela Loja</option>
+                        <option value="cancelled_cliente">Cancelado pelo Cliente</option>
                         {activeTab === "past" && <option value="completed">Realizado</option>}
                     </select>
                 </div>
@@ -195,7 +196,10 @@ export default function ClienteDashboard() {
                 {activeTab === "upcoming" ? (
                     upcoming.filter(item => {
                         const matchesSearch = item.service.toLowerCase().includes(searchTerm.toLowerCase()) || item.company.toLowerCase().includes(searchTerm.toLowerCase());
-                        const matchesStatus = !clientStatusFilter || item.status === clientStatusFilter;
+                        const matchesStatus = !clientStatusFilter || 
+                            (clientStatusFilter === "cancelled_loja" ? (item.status === "cancelled" && item.comment) :
+                             clientStatusFilter === "cancelled_cliente" ? (item.status === "cancelled" && !item.comment) :
+                             item.status === clientStatusFilter);
                         return matchesSearch && matchesStatus && !archivedIds.includes(item.id);
                     }).map(item => (
                         <div key={item.id} className="bg-white dark:bg-[#111] border border-gray-100 dark:border-gray-800 rounded-2xl shadow-sm hover:shadow-md transition-all flex flex-col overflow-hidden group">
@@ -286,7 +290,10 @@ export default function ClienteDashboard() {
                 ) : (
                     past.filter(item => {
                         const matchesSearch = item.service.toLowerCase().includes(searchTerm.toLowerCase()) || item.company.toLowerCase().includes(searchTerm.toLowerCase());
-                        const matchesStatus = !clientStatusFilter || item.status === clientStatusFilter;
+                        const matchesStatus = !clientStatusFilter || 
+                            (clientStatusFilter === "cancelled_loja" ? (item.status === "cancelled" && item.comment) :
+                             clientStatusFilter === "cancelled_cliente" ? (item.status === "cancelled" && !item.comment) :
+                             item.status === clientStatusFilter);
                         return matchesSearch && matchesStatus;
                     }).map(item => (
                         <div key={item.id} className="bg-white dark:bg-[#111] border border-gray-100 dark:border-gray-800 rounded-2xl p-5 shadow-sm transition-all hover:shadow-md flex flex-col sm:flex-row gap-5 relative opacity-85 hover:opacity-100">
