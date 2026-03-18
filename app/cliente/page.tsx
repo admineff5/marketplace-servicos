@@ -14,7 +14,21 @@ export default function ClienteDashboard() {
     const [past, setPast] = useState<any[]>([]);
     const [stats, setStats] = useState({ scheduled: 0, completed: 0, totalSpent: 0 });
     const [isLoading, setIsLoading] = useState(true);
-    const [archivedIds, setArchivedIds] = useState<string[]>([]);
+    const [archivedIds, setArchivedIds] = useState<string[]>(() => {
+        if (typeof window !== 'undefined') {
+            const saved = localStorage.getItem("archived_appointments");
+            return saved ? JSON.parse(saved) : [];
+        }
+        return [];
+    });
+
+    const handleArchive = (id: string) => {
+        const next = [...archivedIds, id];
+        setArchivedIds(next);
+        if (typeof window !== 'undefined') {
+            localStorage.setItem("archived_appointments", JSON.stringify(next));
+        }
+    };
     const [searchTerm, setSearchTerm] = useState("");
     const [clientStatusFilter, setClientStatusFilter] = useState("");
 
@@ -277,7 +291,7 @@ export default function ClienteDashboard() {
                                             ) : (
                                                 <>
                                                     <button onClick={() => handleRebook(item)} className="flex-1 px-3 py-2 border border-gray-100 bg-gray-50 text-gray-800 font-bold rounded-xl text-xs hover:bg-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-700 transition-all">Reagendar</button>
-                                                    <button onClick={() => setArchivedIds([...archivedIds, item.id])} className="flex-1 px-3 py-2 border border-blue-200 dark:border-blue-900/40 bg-blue-50/50 dark:bg-blue-950/20 rounded-xl text-xs font-semibold text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors">Arquivar</button>
+                                                    <button onClick={() => handleArchive(item.id)} className="flex-1 px-3 py-2 border border-blue-200 dark:border-blue-900/40 bg-blue-50/50 dark:bg-blue-950/20 rounded-xl text-xs font-semibold text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors">Arquivar</button>
                                                 </>
                                             )}
                                         </div>
