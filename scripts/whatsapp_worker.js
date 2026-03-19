@@ -141,15 +141,62 @@ async function startSession(companyId) {
         });
 
         try {
+            // 🏢 Busca os Dados Completos da Empresa
+            const company = await prisma.company.findUnique({
+                where: { id: companyId },
+                include: { locations: true, services: true, employees: true }
+            });
+
+            // ❓ Busca o FAQ (Respostas Personalizadas)
             const answers = await prisma.companyAnswer.findMany({
                 where: { companyId },
                 include: { question: true }
             });
 
-            let rulesContext = `Você é um assistente de IA. Responda educadamente utilizando este FAQ como base:\n`;
-            if (answers.length > 0) {
-                answers.forEach(ans => { rulesContext += `- ${ans.question.question}: ${ans.answer}\n`; });
+            if (!company) return; // Se a empresa não existir, cancela
+
+            // 🧠 Constrói as regras e o contexto da IA
+            let rulesContext = `Você é uma secretária e assistente virtual educada representeando a empresa "${company.name}".\n`;
+            rulesContext += `Nicho de atuação: ${company.niche}\n\n`;
+
+            rulesContext += `Siga rigorosamente as seguintes instruções para responder:\n`;
+            rulesContext += `- **Seja curta e objetiva**: Não mande textos gigantescos.\n`;
+            rulesContext += `- **Agendamentos**: Se o cliente quiser agendar, informe que ele deve fazer isso acessando nossa página principal ou app, onde pode escolher o profissional e horário em tempo real.\n`;
+            rulesContext += `- **Informações**: Use APENAS os dados abaixo para responder o cliente. Se não souber algo, peça para ele aguardar um atendente humano.\n\n`;
+
+            rulesContext += `--- 📍 DADOS DA EMPRESA ---\n\n`;
+
+            if (company.locations.length > 0) {
+                rulesContext += `Endereços / Localizações:\n`;
+                company.locations.forEach(loc => {
+                    rulesContext += `- ${loc.name}: ${loc.address}, ${loc.number} - ${loc.neighborhood}, ${loc.city}/${loc.state} (CEP: ${loc.cep})${loc.mapsLink ? ` [Mapa: ${loc.mapsLink}]` : ''}\n`;
+                });
+                rulesContext += `\n`;
             }
+
+            if (company.services.length > 0) {
+                rulesContext += `Serviços e Preços:\n`;
+                company.services.forEach(svc => {
+                    rulesContext += `- ${svc.name}: R$ ${svc.price}${svc.duration ? ` (${svc.duration} min)` : ''}${svc.description ? ` - ${svc.description}` : ''}\n`;
+                });
+                rulesContext += `\n`;
+            }
+
+            if (company.employees.length > 0) {
+                rulesContext += `Profissionais / Equipe:\n`;
+                company.employees.forEach(emp => {
+                    rulesContext += `- ${emp.name}${emp.role ? ` (${emp.role})` : ''}${emp.hours ? ` - Horário: ${emp.hours}` : ''}\n`;
+                });
+                rulesContext += `\n`;
+            }
+
+            if (answers.length > 0) {
+                rulesContext += `Informações Adicionais (FAQ):\n`;
+                answers.forEach(ans => { rulesContext += `- ${ans.question.question}: ${ans.answer}\n`; });
+                rulesContext += `\n`;
+            }
+
+            rulesContext += `\n--- FIM DOS DADOS ---\n`;
 
             // 🤖 Chamada ao Gemini 2.5 Flash
             const response = await ai.models.generateContent({
