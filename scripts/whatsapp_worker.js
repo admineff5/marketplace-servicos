@@ -31,7 +31,7 @@ async function startSession(companyId) {
     const sock = makeWASocket({
         auth: state,
         printQRInTerminal: false, // Desativado para não poluir o terminal, salvamos no banco
-        logger: pino({ level: 'silent' }),
+        logger: pino({ level: 'error' }), // ALTERADO PARA VER ERRO 405
     });
 
     // Salva o socket e o status no mapa em memória
@@ -44,7 +44,22 @@ async function startSession(companyId) {
     sock.ev.on('connection.update', async (update) => {
         const { connection, lastDisconnect, qr } = update;
 
-
+        if (qr) {
+            console.log(`[WhatsApp] [${companyId}] Novo QR Code Gerado. Gravando no banco...`);
+            
+            try {
+                // Converte a string do QR Code em uma Imagem Base64 para exibir na tela direto como <img>
+                const qrImage = await require('qrcode').toDataURL(qr, { width: 300 });
+                
+                await prisma.whatsappSession.upsert({
+                    where: { companyId },
+                    update: { qrCode: qrImage, status: 'QRCODE' },
+                    create: { companyId, qrCode: qrImage, status: 'QRCODE' }
+                });
+            } catch (qrErr) {
+                console.error("[WhatsApp] Erro ao gerar Imagem do QR Code:", qrErr);
+            }
+        }
 
         if (connection === 'open') {
             const myNumber = sock.user.id.split(':')[0]; // Ex: 5511999998888
