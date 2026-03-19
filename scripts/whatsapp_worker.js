@@ -152,11 +152,13 @@ async function startSession(companyId) {
 
             let rulesContext = `Você é uma secretária virtual educada da empresa "${company.name}".\n`;
             rulesContext += `Nicho: ${company.niche}\n\n`;
+            rulesContext += `Data de Hoje: ${new Date().toLocaleDateString('pt-BR')} (Use para deduzir o ano)\n\n`;
 
             if (dbUser) { rulesContext += `O cliente atual é **${dbUser.name}**. Trate-o pelo nome.\n`; } 
             else { rulesContext += `Este cliente não possui cadastro com o telefone ${senderNum}. Pergunte o nome dele primeiro para registrá-lo.\n`; }
 
             rulesContext += `Instruções rigorosas:\n`;
+            rulesContext += `- **ASSUMA O ANO**: Se o cliente disser "20/03", assuma o ano atual ${new Date().getFullYear()}. Não pergunte o ano.\n`;
             rulesContext += `- **PASSO A PASSO**: Faça APENAS UMA pergunta por vez. Aguarde a resposta antes de prosseguir.\n`;
             rulesContext += `- **Sinalização de Listas**: Se for oferecer opções (Serviço, Unidade ou Profissional), responda usando o prefixo "LISTA:" seguido dos nomes exatos separados por vírgula no final da mensagem.\n`;
             rulesContext += `Exemplo: "Qual serviço deseja? LISTA: Corte de Cabelo, Barba"\n\n`;
@@ -168,7 +170,8 @@ async function startSession(companyId) {
             }
             if (company.services.length > 0) {
                 rulesContext += `\nServiços:\n`;
-                company.services.forEach(s => { rulesContext += `- ${s.name} (id: ${s.id}): R$ ${s.price}\n`; });
+                const uniqueServices = Array.from(new Map(company.services.map(s => [s.name, s])).values());
+                uniqueServices.forEach(s => { rulesContext += `- ${s.name} (id: ${s.id}): R$ ${s.price}\n`; });
             }
             if (company.employees.length > 0) {
                 rulesContext += `\nEquipe:\n`;
@@ -183,7 +186,8 @@ async function startSession(companyId) {
                 ]
             }];
 
-            const history = await prisma.whatsappMessage.findMany({ where: { companyId, senderNum }, orderBy: { timestamp: 'desc' }, take: 6 });
+            // 🧠 HISTÓRICO EXPANDIDO (para não esquecer os primeiros passos)
+            const history = await prisma.whatsappMessage.findMany({ where: { companyId, senderNum }, orderBy: { timestamp: 'desc' }, take: 15 });
             let contents = history.reverse().map(m => ({ role: m.from === 'CLIENT' ? 'user' : 'model', parts: [{ text: m.content }] }));
             if (contents.length === 0 || contents[contents.length - 1].parts[0].text !== text) { contents.push({ role: 'user', parts: [{ text: text }] }); }
 
@@ -200,7 +204,6 @@ async function startSession(companyId) {
 
             const reply = response.text;
 
-            // 📱 FORMATO 100% BLINDADO: Opções Numeradas em Texto
             if (reply.includes("LISTA:")) {
                 const parts = reply.split("LISTA:");
                 const textBefore = parts[0].trim();
