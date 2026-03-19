@@ -15,6 +15,10 @@ export default function MensagensPage() {
     // 🕵️‍♀️ Agrupa mensagens por Cliente (senderNum)
     const chats = messages.reduce((acc: any, msg: any) => {
         const chatKey = msg.senderNum; 
+        
+        // ⚠️ Ignora mensagens de 'AI' antigas que ficaram órfãs no banco
+        if (chatKey === 'AI' || !chatKey) return acc; 
+
         if (!acc[chatKey]) {
             acc[chatKey] = {
                 senderNum: chatKey,
@@ -30,6 +34,13 @@ export default function MensagensPage() {
 
     const chatList = Object.values(chats).sort((a: any, b: any) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
+    // 🔄 Auto-seleciona a primeira conversa na carga inicial
+    useEffect(() => {
+        if (!selectedChat && chatList.length > 0) {
+            setSelectedChat((chatList[0] as any).senderNum);
+        }
+    }, [messages, selectedChat, chatList]);
+
     const loadData = async () => {
         try {
             const res = await fetch("/api/dashboard/whatsapp");
@@ -41,12 +52,6 @@ export default function MensagensPage() {
                 setMyNumber(data.session.number);
                 setIsConnected(data.session.status === "CONNECTED");
                 setMessages(data.messages || []);
-
-                // Auto-seleciona o primeiro chat se nenhum estiver selecionado
-                if (!selectedChat && data.messages?.length > 0) {
-                    const firstChat = data.messages[0].senderNum;
-                    setSelectedChat(firstChat);
-                }
             }
         } catch (error) {
             console.error("Erro ao carregar sessão WhatsApp:", error);
@@ -160,7 +165,7 @@ export default function MensagensPage() {
                                             : "border-transparent hover:bg-gray-50 dark:hover:bg-[#161616]"
                                     }`}
                                 >
-                                    <div className="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 font-bold text-x font-bold">
+                                    <div className="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 font-bold text-xs">
                                         {chat.senderName.substring(0, 1).toUpperCase()}
                                     </div>
                                     <div className="flex-1 overflow-hidden">
