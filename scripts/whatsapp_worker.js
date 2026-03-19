@@ -151,18 +151,7 @@ async function startSession(companyId) {
                 answers.forEach(ans => { rulesContext += `- ${ans.question.question}: ${ans.answer}\n`; });
             }
 
-            // 🤖 Chamada ao Gemini 2.5 Flash
-            const response = await ai.models.generateContent({
-                model: 'gemini-2.5-flash',
-                contents: text,
-                config: {
-                    systemInstruction: rulesContext,
-                }
-            });
 
-
-
-        } catch (error) {
             console.error(`[WhatsApp] [${companyId}] Erro Gemini:`, error);
         }
     });
