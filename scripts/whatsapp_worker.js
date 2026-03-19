@@ -117,16 +117,27 @@ async function startSession(companyId) {
 
         if (connection === 'close') {
             const statusCode = lastDisconnect?.error?.output?.statusCode;
-            const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
+            const shouldReconnect = statusCode !== DisconnectReason.loggedOut && statusCode !== 515; // 515 stream-error forces wipe
             const currentSession = sessions.get(companyId) || { retries: 0 };
             const currentRetries = currentSession.retries + 1;
 
+            console.log(`[WhatsApp] [${companyId}] Conexão fechada. Status: ${statusCode}`);
+
+            // ⚠️ Se falhar repetidamente ou der erro de stream (515), limpa cache para poder ler o QR Code
             if (shouldReconnect && currentRetries <= 3) {
                 sessions.set(companyId, { ...currentSession, status: 'DISCONNECTED', retries: currentRetries });
                 setTimeout(() => { startSession(companyId); }, 5000);
             } else {
-                await prisma.whatsappSession.update({ where: { companyId }, data: { status: shouldReconnect ? 'ERROR' : 'DISCONNECTED', qrCode: null } });
-                sessions.delete(companyId);
+                console.log(`[WhatsApp] [${companyId}] ❌ Forçando reset de sessão para gerar novo QR Code.`);
+                
+                await prisma.whatsappSession.update({ where: { companyId }, data: { status: 'QRCODE', qrCode: null } });
+                
+                if (fs.existsSync(authDir)) {
+                    fs.rmSync(authDir, { recursive: true, force: true });
+                }
+                
+                sessions.delete(companyId); 
+                setTimeout(() => { startSession(companyId); }, 2000); 
             }
         }
     });
@@ -186,7 +197,6 @@ async function startSession(companyId) {
                 ]
             }];
 
-            // 🧠 HISTÓRICO EXPANDIDO (para não esquecer os primeiros passos)
             const history = await prisma.whatsappMessage.findMany({ where: { companyId, senderNum }, orderBy: { timestamp: 'desc' }, take: 15 });
             let contents = history.reverse().map(m => ({ role: m.from === 'CLIENT' ? 'user' : 'model', parts: [{ text: m.content }] }));
             if (contents.length === 0 || contents[contents.length - 1].parts[0].text !== text) { contents.push({ role: 'user', parts: [{ text: text }] }); }
@@ -212,7 +222,6 @@ async function startSession(companyId) {
                 if (options.length > 0) {
                     let numberedList = options.map((opt, i) => `${i + 1}️⃣  ${opt}`).join("\n");
                     const finalList = `${textBefore}\n\n${numberedList}\n\n*Responda apenas com o número da opção desejada!*`;
-                    
                     await sock.sendMessage(senderJid, { text: finalList });
                     await prisma.whatsappMessage.create({ data: { companyId, from: 'AI', senderName: 'Assistente IA', senderNum: senderNum, content: finalList } });
                     return;
