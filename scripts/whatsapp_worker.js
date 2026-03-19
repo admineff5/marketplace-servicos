@@ -1,4 +1,4 @@
-const { default: makeWASocket, useMultiFileAuthState, DisconnectReason } = require('@whiskeysockets/baileys');
+const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
 const { PrismaClient } = require('@prisma/client');
 const { OpenAI } = require('openai');
 const pino = require('pino');
@@ -30,10 +30,13 @@ async function startSession(companyId) {
     }
 
     const { state, saveCreds } = await useMultiFileAuthState(authDir);
+    const { version } = await fetchLatestBaileysVersion(); // Busca versão atualizada
 
     const sock = makeWASocket({
         auth: state,
         printQRInTerminal: false,
+        version, // Evita Erro 405
+        browser: ['Chrome (Linux)', 'Chrome', '120.0.0'], // Simula Chrome
         logger: pino({ level: 'error' }), 
     });
 
