@@ -151,7 +151,23 @@ async function startSession(companyId) {
                 answers.forEach(ans => { rulesContext += `- ${ans.question.question}: ${ans.answer}\n`; });
             }
 
+            // 🤖 Chamada ao Gemini 2.5 Flash
+            const response = await ai.models.generateContent({
+                model: 'gemini-2.5-flash',
+                contents: text,
+                config: {
+                    systemInstruction: rulesContext,
+                }
+            });
 
+            const reply = response.text;
+            await sock.sendMessage(senderJid, { text: reply });
+
+            await prisma.whatsappMessage.create({
+                data: { companyId, from: 'AI', senderName: 'Assistente IA', senderNum: senderNum, content: reply }
+            });
+
+        } catch (error) {
             console.error(`[WhatsApp] [${companyId}] Erro Gemini:`, error);
         }
     });
