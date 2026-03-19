@@ -1,14 +1,14 @@
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys');
 const { PrismaClient } = require('@prisma/client');
-const { OpenAI } = require('openai');
+const { GoogleGenAI } = require('@google/genai');
 const pino = require('pino');
 const fs = require('fs');
 const path = require('path');
 
-// Inicializa Prisma e OpenAI
+// Inicializa Prisma e Gemini
 const prisma = new PrismaClient();
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY, 
+const ai = new GoogleGenAI({
+    apiKey: process.env.GEMINI_API_KEY, 
 });
 
 const sessions = new Map(); 
@@ -30,13 +30,13 @@ async function startSession(companyId) {
     }
 
     const { state, saveCreds } = await useMultiFileAuthState(authDir);
-    const { version } = await fetchLatestBaileysVersion(); // Busca versão atualizada
+    const { version } = await fetchLatestBaileysVersion(); 
 
     const sock = makeWASocket({
         auth: state,
         printQRInTerminal: false,
-        version, // Evita Erro 405
-        browser: ['Chrome (Linux)', 'Chrome', '120.0.0'], // Simula Chrome
+        version, 
+        browser: ['Chrome (Linux)', 'Chrome', '120.0.0'], 
         logger: pino({ level: 'error' }), 
     });
 
@@ -72,7 +72,7 @@ async function startSession(companyId) {
                 data: { status: 'CONNECTED', qrCode: null, number: myNumber }
             });
 
-            sessions.set(companyId, { sock, status: 'CONNECTED', retries: 0 }); // Reseta Contador
+            sessions.set(companyId, { sock, status: 'CONNECTED', retries: 0 }); 
         }
 
         if (connection === 'close') {
@@ -137,18 +137,21 @@ async function startSession(companyId) {
                 include: { question: true }
             });
 
-            let rulesContext = `Você é um assistente de IA. Responda educadamente:\n`;
+            let rulesContext = `Você é um assistente de IA. Responda educadamente utilizando este FAQ como base:\n`;
             if (answers.length > 0) {
                 answers.forEach(ans => { rulesContext += `- ${ans.question.question}: ${ans.answer}\n`; });
             }
 
-            const completion = await openai.chat.completions.create({
-                model: "gpt-4o",
-                messages: [{ role: "system", content: rulesContext }, { role: "user", content: text }],
-                max_tokens: 500
+            // 🤖 Chamada ao Gemini 2.5 Flash
+            const response = await ai.models.generateContent({
+                model: 'gemini-2.5-flash',
+                contents: text,
+                config: {
+                    systemInstruction: rulesContext,
+                }
             });
 
-            const reply = completion.choices[0].message.content;
+            const reply = response.text;
             await sock.sendMessage(senderJid, { text: reply });
 
             await prisma.whatsappMessage.create({
@@ -156,7 +159,7 @@ async function startSession(companyId) {
             });
 
         } catch (error) {
-            console.error(`[WhatsApp] [${companyId}] Erro OpenAI:`, error);
+            console.error(`[WhatsApp] [${companyId}] Erro Gemini:`, error);
         }
     });
 }
