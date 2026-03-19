@@ -8,10 +8,10 @@ const path = require('path');
 // Inicializa Prisma e OpenAI
 const prisma = new PrismaClient();
 const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY, // Exige OPENAI_API_KEY no .env
+    apiKey: process.env.OPENAI_API_KEY, 
 });
 
-const sessions = new Map(); // Mapa para gerenciar múltiplas lojas: { companyId: { sock, status, retries } }
+const sessions = new Map(); 
 
 /**
  * 🟢 Inicia ou recupera uma conexão de WhatsApp para uma empresa
@@ -19,7 +19,6 @@ const sessions = new Map(); // Mapa para gerenciar múltiplas lojas: { companyId
 async function startSession(companyId) {
     if (sessions.has(companyId)) {
         const current = sessions.get(companyId);
-        // Só recria se for Disconnected ou se houver Erro (retentativas)
         if (current.status !== 'DISCONNECTED' && current.status !== 'ERROR') return;
     }
 
@@ -73,13 +72,22 @@ async function startSession(companyId) {
             sessions.set(companyId, { sock, status: 'CONNECTED', retries: 0 }); // Reseta Contador
         }
 
+        if (connection === 'close') {
+            const statusCode = lastDisconnect?.error?.output?.statusCode;
+            const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
 
+            console.log(`[WhatsApp] [${companyId}] Conexão fechada. Motivo: ${statusCode}.`);
+            
+            if (lastDisconnect?.error) {
+                console.log(`[WhatsApp] [${companyId}] Erro Técnico Detalhado:`, lastDisconnect?.error);
+            }
+
+            const currentSession = sessions.get(companyId) || { retries: 0 };
             const currentRetries = currentSession.retries + 1;
 
             if (shouldReconnect && currentRetries <= 3) {
                 console.log(`[WhatsApp] [${companyId}] Tentando reconectar (${currentRetries}/3) em 5s...`);
                 
-                // Atualiza o mapa com o status desligado mas PRESERVANDO as retentativas
                 sessions.set(companyId, { ...currentSession, status: 'DISCONNECTED', retries: currentRetries });
                 
                 setTimeout(() => {
