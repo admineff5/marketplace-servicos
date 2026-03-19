@@ -160,12 +160,7 @@ async function startSession(companyId) {
                 }
             });
 
-            const reply = response.text;
-            await sock.sendMessage(senderJid, { text: reply });
 
-            await prisma.whatsappMessage.create({
-                data: { companyId, from: 'AI', senderName: 'Assistente IA', senderNum: 'AI', content: reply }
-            });
 
         } catch (error) {
             console.error(`[WhatsApp] [${companyId}] Erro Gemini:`, error);
