@@ -19,6 +19,7 @@ const sessions = new Map(); // Mapa para gerenciar múltiplas lojas: { companyId
 async function startSession(companyId) {
     if (sessions.has(companyId)) {
         const current = sessions.get(companyId);
+        // Só recria se for Disconnected ou se houver Erro (retentativas)
         if (current.status !== 'DISCONNECTED' && current.status !== 'ERROR') return;
     }
 
@@ -34,7 +35,7 @@ async function startSession(companyId) {
     const sock = makeWASocket({
         auth: state,
         printQRInTerminal: false,
-        logger: pino({ level: 'error' }), // Continua logando erros reais
+        logger: pino({ level: 'error' }), 
     });
 
     const sessionData = { sock, status: 'INITIALIZING', retries: (sessions.get(companyId)?.retries || 0) };
@@ -83,15 +84,14 @@ async function startSession(companyId) {
 
             if (shouldReconnect && currentRetries <= 3) {
                 console.log(`[WhatsApp] [${companyId}] Tentando reconectar (${currentRetries}/3) em 5s...`);
-                sessions.set(companyId, { ...currentSession, retries: currentRetries });
+                
+                // Atualiza o mapa com o status desligado mas PRESERVANDO as retentativas
+                sessions.set(companyId, { ...currentSession, status: 'DISCONNECTED', retries: currentRetries });
                 
                 setTimeout(() => {
-                    // Limpa instâncias velhas antes de reconectar
-                    sessions.delete(companyId);
                     startSession(companyId);
                 }, 5000);
             } else {
-                // Esgotou tentativas ou foi Logout
                 const finalStatus = shouldReconnect ? 'ERROR' : 'DISCONNECTED';
                 console.log(`[WhatsApp] [${companyId}] ❌ Parando tentativas. Status Final: ${finalStatus}`);
 
