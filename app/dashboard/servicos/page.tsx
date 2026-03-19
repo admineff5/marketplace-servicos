@@ -231,17 +231,17 @@ export default function GestaoServicosPage() {
                                             {srv.duration ? `${srv.duration} min` : "-"}
                                         </td>
                                         <td className="px-6 py-4 text-right">
-                                            <div className="flex items-center justify-end gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <div className="flex items-center justify-end gap-2 transition-opacity">
                                                 <button 
                                                     onClick={() => handleEdit(srv)}
-                                                    className="p-2 text-gray-400 hover:text-cyan-700 dark:hover:text-primary hover: /10 rounded-lg transition-colors bg-cyan-700 hover:bg-cyan-800 text-white dark:bg-primary dark:hover:bg-cyan-400 dark:text-black" 
+                                                    className="p-2 text-white bg-cyan-700 hover:bg-cyan-800 dark:bg-primary dark:hover:bg-cyan-400 dark:text-black rounded-lg transition-colors" 
                                                     title="Editar Serviço"
                                                 >
                                                     <Edit2 className="w-4 h-4" />
                                                 </button>
                                                 <button 
                                                     onClick={() => handleDelete(srv.id)}
-                                                    className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors" 
+                                                    className="p-2 text-gray-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors" 
                                                     title="Excluir Serviço"
                                                 >
                                                     <Trash2 className="w-4 h-4" />
