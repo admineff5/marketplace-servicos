@@ -146,7 +146,6 @@ async function startSession(companyId) {
 
         try {
             const company = await prisma.company.findUnique({ where: { id: companyId }, include: { locations: true, services: true, employees: true } });
-            const answers = await prisma.companyAnswer.findMany({ where: { companyId }, include: { question: true } });
             if (!company) return;
 
             const dbUser = await prisma.user.findFirst({ where: { OR: [{ phone: senderNum }, { phone: `+55${senderNum}` }] } });
@@ -159,8 +158,7 @@ async function startSession(companyId) {
 
             rulesContext += `Instruções rigorosas:\n`;
             rulesContext += `- **PASSO A PASSO**: Faça APENAS UMA pergunta por vez. Aguarde a resposta antes de prosseguir.\n`;
-            rulesContext += `- **Sugestão de Fluxo**: 1. Serviço -> 2. Unidade/Localização -> 3. Profissional -> 4. Data/Hora.\n`;
-            rulesContext += `- **FORMATO DE LISTA (IMPORTANTÍSSIMO)**: Se for oferecer opções (Serviço, Unidade ou Profissional), responda usando o prefixo "LISTA:" seguido dos nomes exatos separados por vírgula no final da mensagem.\n`;
+            rulesContext += `- **Sinalização de Listas**: Se for oferecer opções (Serviço, Unidade ou Profissional), responda usando o prefixo "LISTA:" seguido dos nomes exatos separados por vírgula no final da mensagem.\n`;
             rulesContext += `Exemplo: "Qual serviço deseja? LISTA: Corte de Cabelo, Barba"\n\n`;
 
             rulesContext += `--- 📍 DADOS DA EMPRESA ---\n\n`;
@@ -185,7 +183,6 @@ async function startSession(companyId) {
                 ]
             }];
 
-            // 🧠 HISTÓRICO DE MENSAGENS (MEMÓRIA)
             const history = await prisma.whatsappMessage.findMany({ where: { companyId, senderNum }, orderBy: { timestamp: 'desc' }, take: 6 });
             let contents = history.reverse().map(m => ({ role: m.from === 'CLIENT' ? 'user' : 'model', parts: [{ text: m.content }] }));
             if (contents.length === 0 || contents[contents.length - 1].parts[0].text !== text) { contents.push({ role: 'user', parts: [{ text: text }] }); }
@@ -203,19 +200,18 @@ async function startSession(companyId) {
 
             const reply = response.text;
 
-            // 📱 PARSER DE LISTA (BOTÃO)
+            // 📱 FORMATO 100% BLINDADO: Opções Numeradas em Texto
             if (reply.includes("LISTA:")) {
                 const parts = reply.split("LISTA:");
                 const textBefore = parts[0].trim();
                 const options = parts[1].split(",").map(o => o.trim()).filter(Boolean);
 
                 if (options.length > 0) {
-                    await sock.sendMessage(senderJid, {
-                        text: textBefore || "Escolha uma opção:",
-                        buttonText: "Selecionar",
-                        sections: [{ title: "Opções disponíveis", rows: options.map(o => ({ title: o, rowId: o })) }]
-                    });
-                    await prisma.whatsappMessage.create({ data: { companyId, from: 'AI', senderName: 'Assistente IA', senderNum: senderNum, content: reply } });
+                    let numberedList = options.map((opt, i) => `${i + 1}️⃣  ${opt}`).join("\n");
+                    const finalList = `${textBefore}\n\n${numberedList}\n\n*Responda apenas com o número da opção desejada!*`;
+                    
+                    await sock.sendMessage(senderJid, { text: finalList });
+                    await prisma.whatsappMessage.create({ data: { companyId, from: 'AI', senderName: 'Assistente IA', senderNum: senderNum, content: finalList } });
                     return;
                 }
             }
