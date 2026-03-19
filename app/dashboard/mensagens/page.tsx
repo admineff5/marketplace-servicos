@@ -10,6 +10,25 @@ export default function MensagensPage() {
     const [myNumber, setMyNumber] = useState<string | null>(null);
     const [messages, setMessages] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [selectedChat, setSelectedChat] = useState<string | null>(null);
+
+    // 🕵️‍♀️ Agrupa mensagens por Cliente (senderNum)
+    const chats = messages.reduce((acc: any, msg: any) => {
+        const chatKey = msg.senderNum; 
+        if (!acc[chatKey]) {
+            acc[chatKey] = {
+                senderNum: chatKey,
+                senderName: msg.senderName && msg.senderName !== 'Assistente IA' ? msg.senderName : "Cliente",
+                lastMessage: msg.content,
+                timestamp: msg.timestamp,
+                items: []
+            };
+        }
+        acc[chatKey].items.push(msg);
+        return acc;
+    }, {});
+
+    const chatList = Object.values(chats).sort((a: any, b: any) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
     const loadData = async () => {
         try {
@@ -22,6 +41,12 @@ export default function MensagensPage() {
                 setMyNumber(data.session.number);
                 setIsConnected(data.session.status === "CONNECTED");
                 setMessages(data.messages || []);
+
+                // Auto-seleciona o primeiro chat se nenhum estiver selecionado
+                if (!selectedChat && data.messages?.length > 0) {
+                    const firstChat = data.messages[0].senderNum;
+                    setSelectedChat(firstChat);
+                }
             }
         } catch (error) {
             console.error("Erro ao carregar sessão WhatsApp:", error);
@@ -76,10 +101,7 @@ export default function MensagensPage() {
                         <div className="p-4 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/50 rounded-xl text-xs text-red-600 dark:text-red-400 text-left flex gap-3">
                             <AlertTriangle className="w-5 h-5 shrink-0" />
                             <div className="space-y-1">
-                                <p className="font-bold">Falha na Conexão (Erro 405)</p>
-                                <p className="text-[10px] leading-relaxed">
-                                    O servidor não conseguiu fechar o handshake com o WhatsApp. Isso é comum na **Oracle Cloud** devido a bloqueios de saída de rede. Verifique se as portas 443 (HTTPS) e 5222 estão liberadas nas *Security Lists*.
-                                </p>
+                                <p className="font-bold">Falha na Conexão</p>
                             </div>
                         </div>
                     )}
@@ -90,9 +112,6 @@ export default function MensagensPage() {
                             <p className="text-xs text-center text-gray-500 font-mediumLeading">
                                 Abra o WhatsApp {">"} Dispositivos Conectados {">"} Escaneie o QR Code.
                             </p>
-                            <span className="text-[10px] text-cyan-600 dark:text-primary font-bold animate-bounce mt-2">
-                                Aguardando leitura... ⏳
-                            </span>
                         </div>
                     ) : (
                         <button
@@ -113,26 +132,43 @@ export default function MensagensPage() {
         );
     }
 
+    const currentChatMessages = selectedChat && chats[selectedChat] ? chats[selectedChat].items : [];
+    const currentChatName = selectedChat && chats[selectedChat] ? chats[selectedChat].senderName : "Conversa";
+
     return (
         <div className="h-[calc(100vh-140px)] flex border border-gray-100 dark:border-gray-800 bg-white dark:bg-[#111] rounded-2xl shadow-xl overflow-hidden animate-in fade-in">
             <div className="w-80 border-r border-gray-100 dark:border-gray-800 flex flex-col">
                 <header className="p-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between text-gray-900 dark:text-white">
                     <h2 className="font-bold text-base flex items-center gap-2">
                         <Bot className="w-5 h-5 text-cyan-600 dark:text-primary" />
-                        Mensagens Recentes
+                        Conversas
                     </h2>
-                    <span className="text-[10px] bg-green-500/10 text-green-600 dark:text-green-400 font-bold px-2 py-0.5 rounded-full">Online</span>
                 </header>
 
                 <div className="flex-1 overflow-y-auto">
-                    {messages.length === 0 ? (
-                        <div className="p-4 text-center text-gray-400 text-xs">Aguardando as primeiras mensagens chegarem...</div>
+                    {chatList.length === 0 ? (
+                        <div className="p-4 text-center text-gray-400 text-xs">Nenhuma conversa recente</div>
                     ) : (
                         <div className="p-2 space-y-1">
-                            <div className="p-3 bg-cyan-50/20 dark:bg-cyan-900/10 rounded-xl cursor-not-allowed">
-                                <h4 className="text-xs font-bold text-gray-800 dark:text-gray-200">Painel de Logs</h4>
-                                <p className="text-[10px] text-gray-500 mt-1">Exibindo as últimas 20 mensagens em tempo real processadas pela IA.</p>
-                            </div>
+                            {chatList.map((chat: any) => (
+                                <button
+                                    key={chat.senderNum}
+                                    onClick={() => setSelectedChat(chat.senderNum)}
+                                    className={`w-full p-3 rounded-xl text-left border transition-all flex items-center gap-3 ${
+                                        selectedChat === chat.senderNum
+                                            ? "bg-cyan-50 border-cyan-100 dark:bg-cyan-900/20 dark:border-cyan-800"
+                                            : "border-transparent hover:bg-gray-50 dark:hover:bg-[#161616]"
+                                    }`}
+                                >
+                                    <div className="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 font-bold text-x font-bold">
+                                        {chat.senderName.substring(0, 1).toUpperCase()}
+                                    </div>
+                                    <div className="flex-1 overflow-hidden">
+                                        <h4 className="text-xs font-bold text-gray-800 dark:text-gray-200 truncate">{chat.senderName}</h4>
+                                        <p className="text-[10px] text-gray-400 truncate mt-0.5">{chat.lastMessage}</p>
+                                    </div>
+                                </button>
+                            ))}
                         </div>
                     )}
                 </div>
@@ -151,19 +187,19 @@ export default function MensagensPage() {
             <div className="flex-1 flex flex-col h-full bg-gray-50/20 dark:bg-[#0a0a0a]">
                 <header className="p-4 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-[#111] flex justify-between items-center">
                     <div>
-                        <h3 className="text-sm font-bold text-gray-900 dark:text-white">Conversa do Sistema</h3>
-                        <p className="text-[10px] text-gray-400">Total de {messages.length} logs recentes</p>
+                        <h3 className="text-sm font-bold text-gray-900 dark:text-white">{currentChatName}</h3>
+                        <p className="text-[10px] text-gray-400">{selectedChat}</p>
                     </div>
                 </header>
 
                 <div className="flex-1 p-6 overflow-y-auto space-y-4 custom-scrollbar">
-                    {messages.length === 0 ? (
+                    {currentChatMessages.length === 0 ? (
                         <div className="h-full flex flex-col items-center justify-center text-gray-500 gap-2">
                             <Bot className="w-12 h-12 text-gray-300 animate-bounce" />
-                            <p className="text-xs">Nenhuma mensagem registrada hoje.</p>
+                            <p className="text-xs">Inicie uma conversa para visualizar.</p>
                         </div>
                     ) : (
-                        [...messages].reverse().map((msg) => (
+                        [...currentChatMessages].reverse().map((msg) => (
                             <div 
                                 key={msg.id} 
                                 className={`flex flex-col ${msg.from === "CLIENT" ? "items-start" : "items-end"}`}
