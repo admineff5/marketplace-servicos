@@ -1,31 +1,64 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { MessageSquareCode, QrCode, CheckCircle2, Bot, User, Send, Smartphone } from "lucide-react";
-
-const MOCK_MESSAGES = [
-    { id: 1, sender: "CLIENT", senderName: "Mariana Silva", senderNum: "+55 11 99999-8888", content: "Olá, tem horário para amanhã?", timestamp: "10:30", type: "text" },
-    { id: 2, sender: "AI", senderName: "Atendente IA", senderNum: "AI", content: "Olá Mariana! Sim, temos horários disponíveis amanhã. Você gostaria de realizar qual procedimento? Temos Limpeza de Pele às 14h e Design de Sobrancelha às 16h.", timestamp: "10:31", type: "text" },
-    { id: 3, sender: "CLIENT", senderName: "Mariana Silva", senderNum: "+55 11 99999-8888", content: "Limpeza de pele de preferência", timestamp: "10:32", type: "text" },
-    { id: 4, sender: "AI", senderName: "Atendente IA", senderNum: "AI", content: "Perfeito! Consegui agendar sua Limpeza de Pele para amanhã, dia 19/03 às 14:00. Posso confirmar?", timestamp: "10:32", type: "text" },
-    { id: 5, sender: "CLIENT", senderName: "Mariana Silva", senderNum: "+55 11 99999-8888", content: "Pode sim, obrigada!", timestamp: "10:33", type: "text" },
-    { id: 6, sender: "AI", senderName: "Atendente IA", senderNum: "AI", content: "Agendamento CONFIRMADO! ✅ Nos vemos amanhã às 14h na Clínica Estética. Qualquer dúvida estou à disposição!", timestamp: "10:33", type: "text" },
-];
+import { MessageSquareCode, CheckCircle2, Bot, User, Send, Smartphone, Loader2, Power } from "lucide-react";
 
 export default function MensagensPage() {
     const [isConnected, setIsConnected] = useState(false);
-    const [showQrCode, setShowQrCode] = useState(false);
-    const [selectedChat, setSelectedChat] = useState<string | null>(null);
+    const [qrCode, setQrCode] = useState<string | null>(null);
+    const [status, setStatus] = useState<"DISCONNECTED" | "QRCODE" | "CONNECTED" | "DISCONNECTING">("DISCONNECTED");
+    const [myNumber, setMyNumber] = useState<string | null>(null);
+    const [messages, setMessages] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    // Conectar simulação
-    const handleSimulateConnection = () => {
-        setShowQrCode(true);
-        setTimeout(() => {
-            setIsConnected(true);
-            setShowQrCode(false);
-            setSelectedChat("+55 11 99999-8888");
-        }, 3000); // 3 segundos simulando leitura de QR Code
+    const loadData = async () => {
+        try {
+            const res = await fetch("/api/dashboard/whatsapp");
+            const data = await res.json();
+            
+            if (data && !data.error) {
+                setStatus(data.session.status);
+                setQrCode(data.session.qrCode);
+                setMyNumber(data.session.number);
+                setIsConnected(data.session.status === "CONNECTED");
+                setMessages(data.messages || []);
+            }
+        } catch (error) {
+            console.error("Erro ao carregar sessão WhatsApp:", error);
+        } finally {
+            setLoading(false);
+        }
     };
+
+    // Polling a cada 4 segundos para atualizar status da conexão/mensagens em tempo real
+    useEffect(() => {
+        loadData();
+        const interval = setInterval(loadData, 4000);
+        return () => clearInterval(interval);
+    }, []);
+
+    const handleAction = async (action: "CONNECT" | "DISCONNECT") => {
+        try {
+            await fetch("/api/dashboard/whatsapp", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ action })
+            });
+
+            // Força um reload instantâneo para feedback visual
+            loadData();
+        } catch (error) {
+            console.error(`Erro ao disparar ação ${action}:`, error);
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <Loader2 className="w-8 h-8 animate-spin text-cyan-600 dark:text-primary" />
+            </div>
+        );
+    }
 
     if (!isConnected) {
         return (
@@ -36,29 +69,35 @@ export default function MensagensPage() {
                     </div>
                     
                     <div className="space-y-2">
-                        <h1 className="text-xl font-bold text-gray-900 dark:text-white">Conecte o seu WhatsApp</h1>
+                        <h1 className="text-xl font-bold text-gray-900 dark:text-white">Ative a sua IA no WhatsApp</h1>
                         <p className="text-gray-500 dark:text-gray-400 text-sm">
-                            Para que a IA responda aos seus clientes em tempo real, você precisa linkar o WhatsApp da sua loja no nosso painel.
+                            Conecte o número da sua loja. Lembre-se que você precisa estar rodando o script `scripts/whatsapp_worker.js` no servidor para o robô Processar a conexão!
                         </p>
                     </div>
 
-                    {showQrCode ? (
+                    {status === "QRCODE" && qrCode ? (
                         <div className="p-4 bg-gray-50 dark:bg-[#161618] rounded-2xl flex flex-col items-center space-y-4 border border-gray-100 dark:border-gray-800">
-                            <QrCode className="w-44 h-44 text-gray-800 dark:text-gray-200" />
-                            <p className="text-xs text-center text-gray-500 font-medium">
-                                Abra o WhatsApp {">"} Dispositivos Conectados {">"} Conectar um Dispositivo.
+                            {/* Imagem do QR Code em Base64 gerada pelo script */}
+                            <img src={qrCode} alt="WhatsApp QR Code" className="w-56 h-56 rounded-lg shadow-md border-2 border-white dark:border-gray-600" />
+                            <p className="text-xs text-center text-gray-500 font-mediumLeading">
+                                Abra o WhatsApp {">"} Dispare Conectados {">"} Escaneie o QR Code.
                             </p>
                             <span className="text-[10px] text-cyan-600 dark:text-primary font-bold animate-bounce mt-2">
-                                Simulando Leitura de QR Code... ⏳
+                                Aguardando leitura... ⏳
                             </span>
                         </div>
                     ) : (
                         <button
-                            onClick={handleSimulateConnection}
+                            onClick={() => handleAction("CONNECT")}
+                            disabled={status === "QRCODE"}
                             className="w-full py-3 px-6 bg-cyan-600 dark:bg-primary text-white font-bold rounded-xl shadow-lg hover:bg-cyan-700 dark:hover:bg-primary/90 hover:scale-[1.02] active:scale-95 transition-all text-sm flex items-center justify-center gap-2"
                         >
-                            <QrCode className="w-4 h-4" />
-                            Gerar QR Code de Conexão
+                            {status === "QRCODE" ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                                <Smartphone className="w-4 h-4" />
+                            )}
+                            {status === "QRCODE" ? "Gerando QR Code..." : "Iniciar Conexão/Gerar QR Code"}
                         </button>
                     )}
                 </div>
@@ -66,81 +105,77 @@ export default function MensagensPage() {
         );
     }
 
+    // Se estiver conectado, renderiza os Logs de Mensagens de forma linda
     return (
         <div className="h-[calc(100vh-140px)] flex border border-gray-100 dark:border-gray-800 bg-white dark:bg-[#111] rounded-2xl shadow-xl overflow-hidden animate-in fade-in">
             {/* Sidebar de Chats */}
             <div className="w-80 border-r border-gray-100 dark:border-gray-800 flex flex-col">
                 <header className="p-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between text-gray-900 dark:text-white">
-                    <h2 className="font-bold text-lg flex items-center gap-2">
+                    <h2 className="font-bold text-base flex items-center gap-2">
                         <Bot className="w-5 h-5 text-cyan-600 dark:text-primary" />
-                        Conversas IA
+                        Mensagens Recentes
                     </h2>
                     <span className="text-[10px] bg-green-500/10 text-green-600 dark:text-green-400 font-bold px-2 py-0.5 rounded-full">Online</span>
                 </header>
 
                 <div className="flex-1 overflow-y-auto">
-                    {["+55 11 99999-8888"].map((phone) => (
-                        <button
-                            key={phone}
-                            onClick={() => setSelectedChat(phone)}
-                            className={`w-full p-4 flex items-center gap-3 border-b border-gray-50 dark:border-gray-800 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-800/10 transition-colors ${selectedChat === phone ? 'bg-cyan-50/50 dark:bg-cyan-900/10' : ''}`}
-                        >
-                            <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-400">
-                                <User className="w-5 h-5" />
+                    {messages.length === 0 ? (
+                        <div className="p-4 text-center text-gray-400 text-xs">Aguardando as primeiras mensagens chegarem...</div>
+                    ) : (
+                        <div className="p-2 space-y-1">
+                            <div className="p-3 bg-cyan-50/20 dark:bg-cyan-900/10 rounded-xl cursor-not-allowed">
+                                <h4 className="text-xs font-bold text-gray-800 dark:text-gray-200">Painel de Logs</h4>
+                                <p className="text-[10px] text-gray-500 mt-1">Exibindo as últimas 20 mensagens em tempo real processadas pela IA.</p>
                             </div>
-                            <div className="flex-1 text-left">
-                                <h3 className="text-sm font-bold text-gray-900 dark:text-white">Mariana Silva</h3>
-                                <p className="text-xs text-gray-500 truncate">{MOCK_MESSAGES[MOCK_MESSAGES.length-1].content}</p>
-                            </div>
-                        </button>
-                    ))}
+                        </div>
+                    )}
+                </div>
+
+                <div className="p-4 border-t border-gray-100 dark:border-gray-800">
+                    <button 
+                        onClick={() => handleAction("DISCONNECT")}
+                        className="w-full flex items-center justify-center gap-2 py-2.5 bg-red-50 hover:bg-red-100 dark:bg-red-950/20 dark:hover:bg-red-900/40 text-red-600 dark:text-red-400 rounded-xl text-xs font-bold transition-all"
+                    >
+                        <Power className="w-4 h-4" />
+                        Desativar IA no WhatsApp
+                    </button>
                 </div>
             </div>
 
-            {/* Area de Conversa */}
-            <div className="flex-1 flex flex-col h-full">
-                <header className="p-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-3 bg-gray-50/50 dark:bg-[#161618]">
-                    <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center text-gray-500">
-                        <User className="w-5 h-5" />
-                    </div>
+            {/* Are de Mensagens Logs */}
+            <div className="flex-1 flex flex-col h-full bg-gray-50/20 dark:bg-[#0a0a0a]">
+                <header className="p-4 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-[#111] flex justify-between items-center">
                     <div>
-                        <h3 className="text-sm font-bold text-gray-900 dark:text-white">Mariana Silva</h3>
-                        <p className="text-xs text-cyan-600 dark:text-primary font-bold flex items-center gap-1">
-                            <Bot className="w-3 h-3" /> Assistente IA respondendo...
-                        </p>
+                        <h3 className="text-sm font-bold text-gray-900 dark:text-white">Conversa do Sistema</h3>
+                        <p className="text-[10px] text-gray-400">Total de {messages.length} logs recentes</p>
                     </div>
                 </header>
 
-                <div className="flex-1 p-6 overflow-y-auto space-y-4 custom-scrollbar bg-gray-50/20 dark:bg-[#0a0a0a]">
-                    {MOCK_MESSAGES.map((msg) => (
-                        <div 
-                            key={msg.id} 
-                            className={`flex flex-col ${msg.sender === "CLIENT" ? "items-start" : "items-end"}`}
-                        >
-                            <div className={`max-w-md p-3.5 rounded-2xl text-sm shadow-sm ${
-                                msg.sender === "CLIENT" 
-                                    ? "bg-white dark:bg-[#18181a] border border-gray-100 dark:border-gray-800 text-gray-800 dark:text-gray-100 rounded-tl-none" 
-                                    : "bg-cyan-600 dark:bg-primary text-white rounded-tr-none"
-                            }`}>
-                                {msg.content}
-                            </div>
-                            <span className="text-[10px] text-gray-400 mt-1 px-1">
-                                {msg.sender === "AI" ? "IA Atendente" : "Cliente"} • {msg.timestamp}
-                            </span>
+                <div className="flex-1 p-6 overflow-y-auto space-y-4 custom-scrollbar">
+                    {messages.length === 0 ? (
+                        <div className="h-full flex flex-col items-center justify-center text-gray-500 gap-2">
+                            <Bot className="w-12 h-12 text-gray-300 animate-bounce" />
+                            <p className="text-xs">Nenhuma mensagem registrada hoje.</p>
                         </div>
-                    ))}
-                </div>
-
-                <div className="p-4 border-t border-gray-100 dark:border-gray-800 flex gap-2">
-                    <input 
-                        type="text" 
-                        placeholder="A IA está no controle. Digite algo para assumir o chat..." 
-                        disabled 
-                        className="flex-1 px-4 py-2.5 bg-gray-100 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-800 rounded-xl text-sm text-gray-400 cursor-not-allowed"
-                    />
-                    <button disabled className="p-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed">
-                        <Send className="w-4 h-4" />
-                    </button>
+                    ) : (
+                        [...messages].reverse().map((msg) => (
+                            <div 
+                                key={msg.id} 
+                                className={`flex flex-col ${msg.from === "CLIENT" ? "items-start" : "items-end"}`}
+                            >
+                                <div className={`max-w-md p-3.5 rounded-2xl text-sm shadow-sm ${
+                                    msg.from === "CLIENT" 
+                                        ? "bg-white dark:bg-[#18181a] border border-gray-100 dark:border-gray-800 text-gray-800 dark:text-gray-100 rounded-tl-none" 
+                                        : "bg-cyan-600 dark:bg-primary text-white rounded-tr-none"
+                                }`}>
+                                    {msg.content}
+                                </div>
+                                <span className="text-[10px] text-gray-400 mt-1 px-1">
+                                    {msg.from === "CLIENT" ? (msg.senderName || "Cliente") : "Assistente IA"} • {new Date(msg.timestamp).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                                </span>
+                            </div>
+                        ))
+                    )}
                 </div>
             </div>
         </div>
