@@ -73,13 +73,7 @@ async function startSession(companyId) {
             sessions.set(companyId, { sock, status: 'CONNECTED', retries: 0 }); // Reseta Contador
         }
 
-        if (connection === 'close') {
-            const statusCode = lastDisconnect?.error?.output?.statusCode;
-            const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
 
-            console.log(`[WhatsApp] [${companyId}] Conexão fechada. Motivo: ${statusCode}.`);
-
-            const currentSession = sessions.get(companyId) || { retries: 0 };
             const currentRetries = currentSession.retries + 1;
 
             if (shouldReconnect && currentRetries <= 3) {
