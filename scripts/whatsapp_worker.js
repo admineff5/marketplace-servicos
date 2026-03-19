@@ -117,13 +117,12 @@ async function startSession(companyId) {
 
         if (connection === 'close') {
             const statusCode = lastDisconnect?.error?.output?.statusCode;
-            const shouldReconnect = statusCode !== DisconnectReason.loggedOut && statusCode !== 515; // 515 stream-error forces wipe
+            const shouldReconnect = statusCode !== DisconnectReason.loggedOut && statusCode !== 515; 
             const currentSession = sessions.get(companyId) || { retries: 0 };
             const currentRetries = currentSession.retries + 1;
 
             console.log(`[WhatsApp] [${companyId}] Conexão fechada. Status: ${statusCode}`);
 
-            // ⚠️ Se falhar repetidamente ou der erro de stream (515), limpa cache para poder ler o QR Code
             if (shouldReconnect && currentRetries <= 3) {
                 sessions.set(companyId, { ...currentSession, status: 'DISCONNECTED', retries: currentRetries });
                 setTimeout(() => { startSession(companyId); }, 5000);
@@ -133,11 +132,19 @@ async function startSession(companyId) {
                 await prisma.whatsappSession.update({ where: { companyId }, data: { status: 'QRCODE', qrCode: null } });
                 
                 if (fs.existsSync(authDir)) {
-                    fs.rmSync(authDir, { recursive: true, force: true });
+                    try { fs.rmSync(authDir, { recursive: true, force: true }); } catch {}
                 }
                 
-                sessions.delete(companyId); 
-                setTimeout(() => { startSession(companyId); }, 2000); 
+                // 🛑 CORREÇÃO: Mantém no Map para que o loop de monitoramento não duplique a conexão!
+                sessions.set(companyId, { status: 'RESTARTING', retries: 0 }); 
+
+                setTimeout(() => { 
+                    const check = sessions.get(companyId);
+                    if (check && check.status === 'RESTARTING') {
+                        sessions.delete(companyId); 
+                        startSession(companyId); 
+                    }
+                }, 3000); 
             }
         }
     });
@@ -241,7 +248,9 @@ async function monitorSessions() {
             const db = await prisma.whatsappSession.findMany();
             for (const r of db) {
                 if (r.status === 'DISCONNECTING') { const a = sessions.get(r.companyId); if (a?.sock) { try { await a.sock.logout(); } catch {} } } 
-                else if (r.status === 'QRCODE' || r.status === 'CONNECTED') { if (!sessions.has(r.companyId)) startSession(r.companyId); }
+                else if (r.status === 'QRCODE' || r.status === 'CONNECTED') { 
+                    if (!sessions.has(r.companyId)) startSession(r.companyId); 
+                }
             }
         } catch {}
     }, 5000);
