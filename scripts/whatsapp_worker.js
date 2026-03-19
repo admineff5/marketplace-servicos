@@ -5,6 +5,15 @@ const pino = require('pino');
 const fs = require('fs');
 const path = require('path');
 
+// 🛠️ Carrega variáveis do arquivo .env nativamente (Node 20+)
+if (typeof process.loadEnvFile === 'function') {
+    try {
+        process.loadEnvFile(path.join(__dirname, '../.env'));
+    } catch (e) {
+        // Ignora se não houver .env ou outro erro
+    }
+}
+
 // Inicializa Prisma e Gemini
 const prisma = new PrismaClient();
 const ai = new GoogleGenAI({
