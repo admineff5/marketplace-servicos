@@ -94,19 +94,16 @@ sudo systemctl start postgresql-17 && sudo systemctl restart nginx && cd /data/w
 ---
 
 # Subir o site com as alteracoes no GIT
+# Só dar git pull + npm run build + pm2 restart all no servidor!
+
+
 
 ```bash
 cd /data/www/agendaja
-# Se der erro de conflito no git pull, use o comando abaixo para forçar a versão do GitHub:
+git pull             
+# Se der erro de conflito no git pull, use o comando abaixo para forçar a versão do GitHub:   
 git fetch origin main
 git reset --hard origin/main
-npx prisma generate
-npm run build
-pm2 restart agendaja
-```
-```bash
-cd /caminho/do/projeto
-git pull
 npm install          # ← importante para instalar o bcrypt
 npx prisma generate
 npm run build

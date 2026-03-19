@@ -48,6 +48,11 @@ model Company {
   legalName String?
   imageUrl  String?
   appointments Appointment[]
+
+  // Relações do Assistente Whatsapp
+  whatsappSession  WhatsappSession?
+  companyAnswers   CompanyAnswer[]
+  whatsappMessages WhatsappMessage[]
 }
 
 model Location {
@@ -211,4 +216,51 @@ model Block {
   updatedAt  DateTime @updatedAt
   company    Company  @relation(fields: [companyId], references: [id])
   employee   Employee? @relation(fields: [employeeId], references: [id])
+}
+
+// ==========================================
+// 🤖 TABELAS ASSISTENTE WHATSAPP IA
+// ==========================================
+
+model WhatsappSession {
+  id        String   @id @default(uuid())
+  companyId String   @unique
+  status    String   @default("DISCONNECTED") // CONNECTED, QRCODE, DISCONNECTED
+  qrCode    String?  @db.Text
+  number    String?
+  updatedAt DateTime @updatedAt
+  company   Company  @relation(fields: [companyId], references: [id])
+}
+
+model NicheQuestion {
+  id        String   @id @default(uuid())
+  niche     String   // "ESTETICA", "BARBEARIA", etc
+  question  String
+  order     Int      @default(0)
+  answers   CompanyAnswer[]
+}
+
+model CompanyAnswer {
+  id         String        @id @default(uuid())
+  companyId  String
+  questionId String
+  answer     String        @db.Text
+  updatedAt  DateTime      @updatedAt
+  company    Company       @relation(fields: [companyId], references: [id])
+  question   NicheQuestion @relation(fields: [questionId], references: [id])
+
+  @@unique([companyId, questionId])
+}
+
+model WhatsappMessage {
+  id         String   @id @default(uuid())
+  companyId  String
+  from       String   // "CLIENT", "AI", "STAFF"
+  senderName String?
+  senderNum  String   // Telefone do cliente
+  content    String   @db.Text
+  timestamp  DateTime @default(now())
+  company    Company  @relation(fields: [companyId], references: [id])
+
+  @@index([senderNum])
 }

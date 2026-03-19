@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "memory-mcp": {
+      "command": "python",
+      "cwd": "${workspaceFolder}",
+      "args": [
+        "memory_mcp_simple.py"
+      ],
+      "autoStart": true
+    }
+  }
+}

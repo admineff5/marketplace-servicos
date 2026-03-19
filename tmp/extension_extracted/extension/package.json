@@ -1,0 +1,96 @@
+{
+  "name": "ide-memory-system-anderson",
+  "displayName": "AI Memory System - 三层智能记忆插件",
+  "description": "基于OpenClaw三层记忆架构的智能记忆系统，支持智能筛选、自动检索、压缩整理和可视化界面。让AI助手拥有长期记忆能力！",
+  "version": "1.6.0",
+  "publisher": "anderson-memory-tech",
+  "author": {
+    "name": "Anderson Memory Technology",
+    "email": "contact@anderson-memory.tech",
+    "url": "https://anderson-memory.tech"
+  },
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "AI",
+    "Programming Languages", 
+    "Other",
+    "MCP"
+  ],
+  "keywords": [
+    "memory",
+    "ai",
+    "mcp",
+    "intelligent",
+    "smart",
+    "recall",
+    "retrieval",
+    "tool-selection",
+    "automation"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anderson-memory-tech/memory-mcp-server"
+  },
+  "bugs": {
+    "url": "https://github.com/anderson-memory-tech/memory-mcp-server/issues"
+  },
+  "homepage": "https://github.com/anderson-memory-tech/memory-mcp-server",
+  "galleryBanner": {
+    "color": "#1e1e1e",
+    "theme": "dark"
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./memory_mcp_simple.py",
+  "contributes": {
+    "configuration": {
+      "title": "Memory MCP Server",
+      "properties": {
+        "memoryMCP.autoStart": {
+          "type": "boolean",
+          "default": true,
+          "description": "是否自动启动记忆MCP服务器"
+        },
+        "memoryMCP.projectRoot": {
+          "type": "string",
+          "default": "${workspaceFolder}",
+          "description": "项目根目录路径"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "memoryMCP.start",
+        "title": "启动记忆MCP服务器",
+        "category": "Memory MCP"
+      },
+      {
+        "command": "memoryMCP.status",
+        "title": "查看记忆系统状态",
+        "category": "Memory MCP"
+      },
+      {
+        "command": "memoryMCP.reload",
+        "title": "重新加载记忆系统",
+        "category": "Memory MCP"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "echo '编译完成'",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.60.0",
+    "@types/node": "16.x"
+  },
+  "dependencies": {},
+  "extensionPack": [],
+  "extensionDependencies": []
+}

@@ -1,0 +1,41 @@
+# 虚拟环境
+.venv/
+venv/
+ENV/
+env/
+
+# Python 缓存
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# 记忆数据（用户数据不应被版本控制）
+.memory/
+.memory_backup/
+learnings/       # 如果包含个人反思记录，建议忽略
+*.db
+*.sqlite3
+
+# 快照
+*.snapshot.json
+*.snapshots/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 本地配置文件
+.trae/mcp.json    # 如果包含敏感路径，建议忽略，但可保留示例
+config_local.yaml
+
+# 日志
+logs/
+*.log
+
+# 其他
+.DS_Store

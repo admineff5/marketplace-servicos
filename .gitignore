@@ -49,3 +49,9 @@ manutencao/Key_access_tmp_oci/
 manutencao/bot_config.json
 manutencao/fix_key_perms.ps1
 scripts/__pycache__/
+.memory/
+.ldr_memory/
+learnings/
+memory_backup/
+memory_mcp_simple.py
+requirements.txt

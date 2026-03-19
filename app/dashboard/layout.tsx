@@ -26,7 +26,9 @@ import {
     CalendarOff,
     Target,
     FileText,
-    Globe
+    Globe,
+    HelpCircle,
+    MessageSquareCode
 } from "lucide-react";
 
 const SIDEBAR_LINKS = [
@@ -39,11 +41,11 @@ const SIDEBAR_LINKS = [
     { name: "Profissionais", href: "/dashboard/profissionais", icon: UserSquare2 },
     { name: "Serviços", href: "/dashboard/servicos", icon: Scissors },
     { name: "Produtos", href: "/dashboard/produtos", icon: Package },
+    { name: "FAQ Assistente", href: "/dashboard/faq", icon: HelpCircle },
+    { name: "Conversas IA", href: "/dashboard/mensagens", icon: MessageSquareCode },
     { name: "Relatórios", href: "/dashboard/relatorios", icon: FileText },
     { name: "Perfil da Loja", href: "/dashboard/config", icon: Building },
 ];
-
-// Notifications and Profile moved to dynamic fetch via API
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
@@ -198,7 +200,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                         </div>
                                         <div className="max-h-[70vh] overflow-y-auto">
                                             {notifications.length > 0 ? (
-                                                notifications.map((notif) => (
+                                                notifications.map((notif: any) => (
                                                     <div key={notif.id} className="p-4 border-b border-gray-100 dark:border-gray-800 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer group">
                                                         <div className="flex justify-between items-start mb-1">
                                                             <span className={`text-[10px] font-bold uppercase tracking-widest ${notif.type === 'error' ? 'text-red-500' : notif.type === 'warning' ? 'text-amber-500' : 'text-cyan-600 dark:text-primary'}`}>
