@@ -11,13 +11,16 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY, // Exige OPENAI_API_KEY no .env
 });
 
-const sessions = new Map(); // Mapa para gerenciar múltiplas lojas/sessões ativas
+const sessions = new Map(); // Mapa para gerenciar múltiplas lojas: { companyId: { sock, status, retries } }
 
 /**
  * 🟢 Inicia ou recupera uma conexão de WhatsApp para uma empresa
  */
 async function startSession(companyId) {
-    if (sessions.has(companyId)) return;
+    if (sessions.has(companyId)) {
+        const current = sessions.get(companyId);
+        if (current.status !== 'DISCONNECTED' && current.status !== 'ERROR') return;
+    }
 
     console.log(`[WhatsApp] Iniciando sessão para Company: ${companyId}`);
 
@@ -30,27 +33,23 @@ async function startSession(companyId) {
 
     const sock = makeWASocket({
         auth: state,
-        printQRInTerminal: false, // Desativado para não poluir o terminal, salvamos no banco
-        logger: pino({ level: 'error' }), // ALTERADO PARA VER ERRO 405
+        printQRInTerminal: false,
+        logger: pino({ level: 'error' }), // Continua logando erros reais
     });
 
-    // Salva o socket e o status no mapa em memória
-    sessions.set(companyId, { sock, status: 'INITIALIZING' });
+    const sessionData = { sock, status: 'INITIALIZING', retries: (sessions.get(companyId)?.retries || 0) };
+    sessions.set(companyId, sessionData);
 
-    // Atualiza credenciais sempre que houver alteração (tokens de sessão)
     sock.ev.on('creds.update', saveCreds);
 
-    // 🔄 Monitorar Mudanças de Conexão (QR Code, Conectado, Caiu)
+    // 🔄 Monitorar Mudanças de Conexão
     sock.ev.on('connection.update', async (update) => {
         const { connection, lastDisconnect, qr } = update;
 
         if (qr) {
-            console.log(`[WhatsApp] [${companyId}] Novo QR Code Gerado. Gravando no banco...`);
-            
+            console.log(`[WhatsApp] [${companyId}] Novo QR Code Gerado.`);
             try {
-                // Converte a string do QR Code em uma Imagem Base64 para exibir na tela direto como <img>
                 const qrImage = await require('qrcode').toDataURL(qr, { width: 300 });
-                
                 await prisma.whatsappSession.upsert({
                     where: { companyId },
                     update: { qrCode: qrImage, status: 'QRCODE' },
@@ -62,37 +61,46 @@ async function startSession(companyId) {
         }
 
         if (connection === 'open') {
-            const myNumber = sock.user.id.split(':')[0]; // Ex: 5511999998888
-            console.log(`[WhatsApp] [${companyId}] ✅ Conectado com Sucesso! Numero: ${myNumber}`);
+            const myNumber = sock.user.id.split(':')[0];
+            console.log(`[WhatsApp] [${companyId}] ✅ Conectado! Numero: ${myNumber}`);
 
             await prisma.whatsappSession.update({
                 where: { companyId },
                 data: { status: 'CONNECTED', qrCode: null, number: myNumber }
             });
 
-            sessions.set(companyId, { sock, status: 'CONNECTED' });
+            sessions.set(companyId, { sock, status: 'CONNECTED', retries: 0 }); // Reseta Contador
         }
 
         if (connection === 'close') {
             const statusCode = lastDisconnect?.error?.output?.statusCode;
             const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
 
-            console.log(`[WhatsApp] [${companyId}] Conexão fechada. Motivo: ${statusCode}. Reconectando: ${shouldReconnect}`);
+            console.log(`[WhatsApp] [${companyId}] Conexão fechada. Motivo: ${statusCode}.`);
 
-            if (shouldReconnect) {
-                // Tenta reconectar em 5 segundos
-                sessions.delete(companyId);
-                setTimeout(() => startSession(companyId), 5000);
+            const currentSession = sessions.get(companyId) || { retries: 0 };
+            const currentRetries = currentSession.retries + 1;
+
+            if (shouldReconnect && currentRetries <= 3) {
+                console.log(`[WhatsApp] [${companyId}] Tentando reconectar (${currentRetries}/3) em 5s...`);
+                sessions.set(companyId, { ...currentSession, retries: currentRetries });
+                
+                setTimeout(() => {
+                    // Limpa instâncias velhas antes de reconectar
+                    sessions.delete(companyId);
+                    startSession(companyId);
+                }, 5000);
             } else {
-                // Foi logout (Usuário desconectou pelo Dashboard)
-                console.log(`[WhatsApp] [${companyId}] ❌ Desconectado permanentemente.`);
+                // Esgotou tentativas ou foi Logout
+                const finalStatus = shouldReconnect ? 'ERROR' : 'DISCONNECTED';
+                console.log(`[WhatsApp] [${companyId}] ❌ Parando tentativas. Status Final: ${finalStatus}`);
+
                 await prisma.whatsappSession.update({
                     where: { companyId },
-                    data: { status: 'DISCONNECTED', qrCode: null }
+                    data: { status: finalStatus, qrCode: null }
                 });
 
-                // Deleta pasta de credenciais localmente
-                if (fs.existsSync(authDir)) {
+                if (finalStatus === 'DISCONNECTED' && fs.existsSync(authDir)) {
                     fs.rmSync(authDir, { recursive: true, force: true });
                 }
                 sessions.delete(companyId);
@@ -100,7 +108,7 @@ async function startSession(companyId) {
         }
     });
 
-    // 📩 Monitorar Mensagens Recebidas (Interação com a IA)
+    // 📩 Monitorar Mensagens
     sock.ev.on('messages.upsert', async (m) => {
         if (m.type !== 'notify') return;
 
@@ -112,79 +120,42 @@ async function startSession(companyId) {
         const senderName = message.pushName || "Cliente";
 
         let text = message.message.conversation || message.message.extendedTextMessage?.text;
+        if (!text) return;
 
-        if (!text) return; // Se for áudio, imagem, ignora por agora para não quebrar a lógica
-
-        console.log(`[WhatsApp] [${companyId}] Mensagem de ${senderName} (${senderNum}): ${text}`);
-
-        // Salva a mensagem do Cliente no banco (Para o Dashboard)
         await prisma.whatsappMessage.create({
-            data: {
-                companyId,
-                from: 'CLIENT',
-                senderName,
-                senderNum,
-                content: text
-            }
+            data: { companyId, from: 'CLIENT', senderName, senderNum, content: text }
         });
 
-        // 🧠 Chamar OpenAI para Responder
         try {
-            // 1. Busca Perguntas e Respostas do FAQ salva pela empresa
             const answers = await prisma.companyAnswer.findMany({
                 where: { companyId },
                 include: { question: true }
             });
 
-            // 2. Constrói o Prompt com as regras que o empresário respondeu
-            let rulesContext = `Você é um assistente de IA da empresa. Você deve responder educadamente no WhatsApp.
-Aqui estão as regras, dúvidas e procedimentos da nossa empresa que você DEVE seguir rigorosamente:\n`;
-
+            let rulesContext = `Você é um assistente de IA. Responda educadamente:\n`;
             if (answers.length > 0) {
-                answers.forEach(ans => {
-                    rulesContext += `- ${ans.question.question}: ${ans.answer}\n`;
-                });
-            } else {
-                rulesContext += "- Nenhuma regra cadastrada. Seja educado e pegue os dados para retornarmos mais tarde.\n";
+                answers.forEach(ans => { rulesContext += `- ${ans.question.question}: ${ans.answer}\n`; });
             }
 
-            // 3. Executa a requisição do GPT-4o
             const completion = await openai.chat.completions.create({
                 model: "gpt-4o",
-                messages: [
-                    { role: "system", content: rulesContext },
-                    { role: "user", content: text }
-                ],
+                messages: [{ role: "system", content: rulesContext }, { role: "user", content: text }],
                 max_tokens: 500
             });
 
             const reply = completion.choices[0].message.content;
-
-            console.log(`[WhatsApp] [${companyId}] 🤖 Resposta da IA: ${reply}`);
-
-            // Envia no WhatsApp de volta
             await sock.sendMessage(senderJid, { text: reply });
 
-            // Salva a resposta da IA no Dashboard
             await prisma.whatsappMessage.create({
-                data: {
-                    companyId,
-                    from: 'AI',
-                    senderName: 'Assistente IA',
-                    senderNum: 'AI',
-                    content: reply
-                }
+                data: { companyId, from: 'AI', senderName: 'Assistente IA', senderNum: 'AI', content: reply }
             });
 
         } catch (error) {
-            console.error(`[WhatsApp] [${companyId}] Erro ao chamar OpenAI ou enviar mensagem:`, error);
+            console.error(`[WhatsApp] [${companyId}] Erro OpenAI:`, error);
         }
     });
 }
 
-/**
- * 🔄 Loop global de rastreamento de sessões no banco de dados
- */
 async function monitorSessions() {
     console.log("[WhatsApp] Monitorando sessões no banco de dados...");
 
@@ -195,27 +166,22 @@ async function monitorSessions() {
             for (const row of dbSessions) {
                 const { companyId, status } = row;
 
-                // 1. Se o banco diz para desconectar
                 if (status === 'DISCONNECTING' || status === 'DISCONNECTED') {
                     const active = sessions.get(companyId);
-                    if (active && active.status === 'CONNECTED') {
-                        console.log(`[WhatsApp] [${companyId}] Desconectando via ordem do banco...`);
-                        await active.sock.logout();
+                    if (active && active.sock) {
+                        try { await active.sock.logout(); } catch {}
                     }
                 } 
-                // 2. Se a sessão está habilitada no banco mas não está ativa na memória
-                else if (status === 'QRCODE' || status === 'CONNECTED' || status === 'DISCONNECTED') {
-                    // Se não está na memória (worker caiu e voltou) ou empresário mandou ligar
+                else if (status === 'QRCODE' || status === 'CONNECTED') {
                     if (!sessions.has(companyId)) {
                         startSession(companyId);
                     }
                 }
             }
         } catch (error) {
-            console.error("[WhatsApp] Erro no Loop de monitoramento:", error);
+            console.error("[WhatsApp] Erro monitoramento:", error);
         }
-    }, 5000); // Roda a cada 5 segundos
+    }, 5000);
 }
 
-// Inicia o processo
 monitorSessions();

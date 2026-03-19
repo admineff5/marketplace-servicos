@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { MessageSquareCode, CheckCircle2, Bot, User, Send, Smartphone, Loader2, Power } from "lucide-react";
+import { MessageSquareCode, CheckCircle2, Bot, User, Send, Smartphone, Loader2, Power, AlertTriangle } from "lucide-react";
 
 export default function MensagensPage() {
     const [isConnected, setIsConnected] = useState(false);
     const [qrCode, setQrCode] = useState<string | null>(null);
-    const [status, setStatus] = useState<"DISCONNECTED" | "QRCODE" | "CONNECTED" | "DISCONNECTING">("DISCONNECTED");
+    const [status, setStatus] = useState<"DISCONNECTED" | "QRCODE" | "CONNECTED" | "DISCONNECTING" | "ERROR">("DISCONNECTED");
     const [myNumber, setMyNumber] = useState<string | null>(null);
     const [messages, setMessages] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -30,7 +30,6 @@ export default function MensagensPage() {
         }
     };
 
-    // Polling a cada 4 segundos para atualizar status da conexão/mensagens em tempo real
     useEffect(() => {
         loadData();
         const interval = setInterval(loadData, 4000);
@@ -44,8 +43,6 @@ export default function MensagensPage() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ action })
             });
-
-            // Força um reload instantâneo para feedback visual
             loadData();
         } catch (error) {
             console.error(`Erro ao disparar ação ${action}:`, error);
@@ -75,12 +72,23 @@ export default function MensagensPage() {
                         </p>
                     </div>
 
+                    {status === "ERROR" && (
+                        <div className="p-4 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/50 rounded-xl text-xs text-red-600 dark:text-red-400 text-left flex gap-3">
+                            <AlertTriangle className="w-5 h-5 shrink-0" />
+                            <div className="space-y-1">
+                                <p className="font-bold">Falha na Conexão (Erro 405)</p>
+                                <p className="text-[10px] leading-relaxed">
+                                    O servidor não conseguiu fechar o handshake com o WhatsApp. Isso é comum na **Oracle Cloud** devido a bloqueios de saída de rede. Verifique se as portas 443 (HTTPS) e 5222 estão liberadas nas *Security Lists*.
+                                </p>
+                            </div>
+                        </div>
+                    )}
+
                     {status === "QRCODE" && qrCode ? (
                         <div className="p-4 bg-gray-50 dark:bg-[#161618] rounded-2xl flex flex-col items-center space-y-4 border border-gray-100 dark:border-gray-800">
-                            {/* Imagem do QR Code em Base64 gerada pelo script */}
                             <img src={qrCode} alt="WhatsApp QR Code" className="w-56 h-56 rounded-lg shadow-md border-2 border-white dark:border-gray-600" />
                             <p className="text-xs text-center text-gray-500 font-mediumLeading">
-                                Abra o WhatsApp {">"} Dispare Conectados {">"} Escaneie o QR Code.
+                                Abra o WhatsApp {">"} Dispositivos Conectados {">"} Escaneie o QR Code.
                             </p>
                             <span className="text-[10px] text-cyan-600 dark:text-primary font-bold animate-bounce mt-2">
                                 Aguardando leitura... ⏳
@@ -97,7 +105,7 @@ export default function MensagensPage() {
                             ) : (
                                 <Smartphone className="w-4 h-4" />
                             )}
-                            {status === "QRCODE" ? "Gerando QR Code..." : "Iniciar Conexão/Gerar QR Code"}
+                            {status === "QRCODE" ? "Gerando QR Code..." : status === "ERROR" ? "Tentar Novamente" : "Iniciar Conexão/Gerar QR Code"}
                         </button>
                     )}
                 </div>
@@ -105,10 +113,8 @@ export default function MensagensPage() {
         );
     }
 
-    // Se estiver conectado, renderiza os Logs de Mensagens de forma linda
     return (
         <div className="h-[calc(100vh-140px)] flex border border-gray-100 dark:border-gray-800 bg-white dark:bg-[#111] rounded-2xl shadow-xl overflow-hidden animate-in fade-in">
-            {/* Sidebar de Chats */}
             <div className="w-80 border-r border-gray-100 dark:border-gray-800 flex flex-col">
                 <header className="p-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between text-gray-900 dark:text-white">
                     <h2 className="font-bold text-base flex items-center gap-2">
@@ -142,7 +148,6 @@ export default function MensagensPage() {
                 </div>
             </div>
 
-            {/* Are de Mensagens Logs */}
             <div className="flex-1 flex flex-col h-full bg-gray-50/20 dark:bg-[#0a0a0a]">
                 <header className="p-4 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-[#111] flex justify-between items-center">
                     <div>
