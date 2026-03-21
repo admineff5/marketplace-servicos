@@ -25,8 +25,10 @@ export async function POST(request: Request) {
         }
 
         // 🔗 Normalização do Telefone para Parear com o WhatsApp (Adiciona 55 se faltar)
+        const hasPlus = phone.trim().startsWith("+");
         let normalizedPhone = cleanPhone;
-        if (normalizedPhone.length <= 11 && !normalizedPhone.startsWith("55")) {
+        
+        if (!hasPlus && normalizedPhone.length <= 11 && !normalizedPhone.startsWith("55")) {
             normalizedPhone = `55${normalizedPhone}`;
         }
 

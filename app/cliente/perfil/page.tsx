@@ -54,9 +54,12 @@ export default function PerfilCliente() {
         if (!tempPhone.trim()) return;
         setIsSaving(true);
         try {
+            const hasPlus = tempPhone.trim().startsWith("+");
             const cleanPhone = tempPhone.replace(/\D/g, "");
             let normalizedPhone = cleanPhone;
-            if (normalizedPhone.length <= 11 && !normalizedPhone.startsWith("55")) {
+
+            // 🔗 Só força 55 se o usuário NÃO colocou o sinal de + no início
+            if (!hasPlus && normalizedPhone.length <= 11 && !normalizedPhone.startsWith("55")) {
                 normalizedPhone = `55${normalizedPhone}`;
             }
 
