@@ -3,15 +3,12 @@ import prisma from "@/lib/prisma";
 
 export async function GET() {
     try {
-        const appointments = await prisma.appointment.findMany({
-            include: { 
-                employee: { select: { id: true, name: true, companyId: true } },
-                user: { select: { id: true, name: true } }
-            },
-            orderBy: { date: 'asc' }
+        const users = await prisma.user.findMany({
+            where: { name: { contains: 'Rodrigo', mode: 'insensitive' } },
+            select: { id: true, name: true, phone: true, role: true, email: true }
         });
-        return NextResponse.json(appointments);
+        return NextResponse.json({ success: true, users });
     } catch (error: any) {
-        return NextResponse.json({ error: error.message });
+        return NextResponse.json({ success: false, error: error.message });
     }
 }

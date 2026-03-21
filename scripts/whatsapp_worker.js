@@ -226,7 +226,14 @@ async function startSession(companyId) {
             const company = await prisma.company.findUnique({ where: { id: companyId }, include: { locations: true, services: true, employees: true } });
             if (!company) return;
 
-            const dbUser = await prisma.user.findFirst({ where: { OR: [{ phone: senderNum }, { phone: `+55${senderNum}` }] } });
+            let dbUser = await prisma.user.findFirst({ where: { OR: [{ phone: senderNum }, { phone: `+55${senderNum}` }] } });
+
+            if (!dbUser && senderName && senderName !== "Cliente") {
+                dbUser = await prisma.user.findFirst({ where: { name: senderName, role: 'CLIENT' } });
+                if (dbUser) {
+                    await prisma.user.update({ where: { id: dbUser.id }, data: { phone: senderNum } });
+                }
+            }
 
             let rulesContext = `Você é uma secretária virtual educada da empresa "${company.name}".\n`;
             rulesContext += `Nicho: ${company.niche}\n\n`;
@@ -311,7 +318,31 @@ async function startSession(companyId) {
     });
 }
 
+let hasMigrated = false;
+
 async function monitorSessions() {
+    // 🧹 Migração Automática Rodrigo Machado (Um por início do Robô)
+    if (!hasMigrated) {
+        hasMigrated = true;
+        try {
+            const trueClient = await prisma.user.findFirst({ where: { email: 'rodrigoamac@gmail.com' } });
+            const duplicateClient = await prisma.user.findFirst({ where: { phone: '20505111720572' } });
+
+            if (trueClient && duplicateClient) {
+                await prisma.appointment.updateMany({
+                    where: { userId: duplicateClient.id },
+                    data: { userId: trueClient.id }
+                });
+                await prisma.user.delete({ where: { id: duplicateClient.id } });
+                await prisma.user.update({
+                    where: { id: trueClient.id },
+                    data: { phone: '20505111720572' }
+                });
+                console.log('✅ [Migration] Rodrigo Machado migrado com sucesso!');
+            }
+        } catch (e) { console.error('❌ [Migration] Erro:', e.message); }
+    }
+
     // 🧹 Limpa os QR Codes antigos do banco ao iniciar o script para evitar exibir imagem quebrada
     try {
         await prisma.whatsappSession.updateMany({
