@@ -117,6 +117,12 @@ export default function MensagensPage() {
                             <p className="text-xs text-center text-gray-500 font-mediumLeading">
                                 Abra o WhatsApp {">"} Dispositivos Conectados {">"} Escaneie o QR Code.
                             </p>
+                            <button
+                                onClick={() => handleAction("DISCONNECT")}
+                                className="mt-2 text-xs text-red-600 hover:text-red-700 underline font-medium cursor-pointer"
+                            >
+                                Cancelar / Renovar QR Code
+                            </button>
                         </div>
                     ) : (
                         <button
