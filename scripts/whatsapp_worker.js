@@ -90,7 +90,20 @@ async function registrarCliente(nome, clientPhone) {
         });
 
         if (!user) {
-             user = await prisma.user.findFirst({ where: { name: nome, role: 'CLIENT' } });
+             const nameParts = nome.split(' ').filter(String);
+             if (nameParts.length >= 1) {
+                 const firstName = nameParts[0];
+                 const lastName = nameParts[nameParts.length - 1];
+                 user = await prisma.user.findFirst({
+                      where: {
+                          AND: [
+                              { name: { contains: firstName, mode: 'insensitive' } },
+                              { name: { contains: lastName, mode: 'insensitive' } }
+                          ],
+                          role: 'CLIENT'
+                      }
+                 });
+             }
         }
 
         if (user) {
@@ -229,9 +242,23 @@ async function startSession(companyId) {
             let dbUser = await prisma.user.findFirst({ where: { OR: [{ phone: senderNum }, { phone: `+55${senderNum}` }] } });
 
             if (!dbUser && senderName && senderName !== "Cliente") {
-                dbUser = await prisma.user.findFirst({ where: { name: senderName, role: 'CLIENT' } });
-                if (dbUser) {
-                    await prisma.user.update({ where: { id: dbUser.id }, data: { phone: senderNum } });
+                const nameParts = senderName.split(' ').filter(String);
+                if (nameParts.length >= 1) {
+                    const firstName = nameParts[0];
+                    const lastName = nameParts[nameParts.length - 1];
+                    dbUser = await prisma.user.findFirst({
+                        where: {
+                            AND: [
+                                { name: { contains: firstName, mode: 'insensitive' } },
+                                { name: { contains: lastName, mode: 'insensitive' } }
+                            ],
+                            role: 'CLIENT'
+                        }
+                    });
+
+                    if (dbUser) {
+                        await prisma.user.update({ where: { id: dbUser.id }, data: { phone: senderNum } });
+                    }
                 }
             }
 
