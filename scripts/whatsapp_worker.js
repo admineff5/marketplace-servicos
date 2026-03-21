@@ -117,7 +117,7 @@ async function startSession(companyId) {
 
         if (connection === 'close') {
             const statusCode = lastDisconnect?.error?.output?.statusCode;
-            const shouldReconnect = statusCode !== DisconnectReason.loggedOut && statusCode !== 515; 
+            const shouldReconnect = statusCode !== DisconnectReason.loggedOut; 
             const currentSession = sessions.get(companyId) || { retries: 0 };
             const currentRetries = currentSession.retries + 1;
 
