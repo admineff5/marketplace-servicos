@@ -89,9 +89,13 @@ async function registrarCliente(nome, clientPhone) {
             where: { OR: [{ phone: clientPhone }, { phone: `+55${clientPhone}` }] }
         });
 
+        if (!user) {
+             user = await prisma.user.findFirst({ where: { name: nome, role: 'CLIENT' } });
+        }
+
         if (user) {
-            await prisma.user.update({ where: { id: user.id }, data: { name: nome } });
-            return `✅ Nome do cliente atualizado para **${nome}** no sistema!`;
+            await prisma.user.update({ where: { id: user.id }, data: { name: nome, phone: clientPhone } });
+            return `✅ Cadastro vinculado ao seu perfil existente **${nome}**!`;
         }
 
         await prisma.user.create({
@@ -115,7 +119,7 @@ async function criarAgendamento(employeeId, serviceId, locationId, clientPhone, 
         });
 
         if (!user) {
-            return "Erro: Você não possui cadastro no site com este telefone. Por favor, cadastre-se primeiro!";
+            return "Erro: Você não possui cadastro no site com este telefone. Por favor, escreva seu nome completo para que eu possa te registrar!";
         }
 
         await prisma.appointment.create({
@@ -210,8 +214,8 @@ async function startSession(companyId) {
         const message = m.messages[0];
         if (!message.message || message.key.fromMe) return;
 
-        const senderJid = message.key.remoteJid;
-        const senderNum = senderJid.split('@')[0];
+        const senderJid = message.remoteJid || message.key.remoteJid;
+        const senderNum = senderJid.split('@')[0].split(':')[0];
         const senderName = message.pushName || "Cliente";
         let text = message.message.conversation || message.message.extendedTextMessage?.text;
         if (!text) return;
