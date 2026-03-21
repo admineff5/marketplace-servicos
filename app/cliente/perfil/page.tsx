@@ -23,6 +23,10 @@ export default function PerfilCliente() {
     const [isEditingName, setIsEditingName] = useState(false);
     const [tempName, setTempName] = useState("");
 
+    // Edit Phone
+    const [isEditingPhone, setIsEditingPhone] = useState(false);
+    const [tempPhone, setTempPhone] = useState("");
+
     const handleSaveName = async () => {
         if (!tempName.trim()) return;
         setIsSaving(true);
@@ -38,6 +42,35 @@ export default function PerfilCliente() {
                 setMessage({ type: "success", text: "Nome atualizado com sucesso!" });
             } else {
                 setMessage({ type: "error", text: "Erro ao atualizar nome." });
+            }
+        } catch (err) {
+            setMessage({ type: "error", text: "Erro na requisição." });
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const handleSavePhone = async () => {
+        if (!tempPhone.trim()) return;
+        setIsSaving(true);
+        try {
+            const cleanPhone = tempPhone.replace(/\D/g, "");
+            let normalizedPhone = cleanPhone;
+            if (normalizedPhone.length <= 11 && !normalizedPhone.startsWith("55")) {
+                normalizedPhone = `55${normalizedPhone}`;
+            }
+
+            const res = await fetch("/api/user/profile", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ phone: normalizedPhone })
+            });
+            if (res.ok) {
+                setUser({ ...user, phone: normalizedPhone });
+                setIsEditingPhone(false);
+                setMessage({ type: "success", text: "Telefone atualizado com sucesso!" });
+            } else {
+                setMessage({ type: "error", text: "Erro ao atualizar telefone." });
             }
         } catch (err) {
             setMessage({ type: "error", text: "Erro na requisição." });
@@ -321,6 +354,37 @@ export default function PerfilCliente() {
                                     <p className="text-sm dark:text-gray-200">{censorCPF(user?.cpf)}</p>
                                     <ShieldCheck className="w-4 h-4 text-green-500" />
                                 </div>
+                            </div>
+                            <div className="p-3 bg-gray-50 dark:bg-[#080808] rounded-2xl cursor-pointer group/item" onClick={() => { setIsEditingPhone(true); setTempPhone(user?.phone || ""); }}>
+                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-tighter mb-1">Celular / WhatsApp</label>
+                                {isEditingPhone ? (
+                                    <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                                        <input 
+                                            type="text" 
+                                            value={tempPhone} 
+                                            onChange={(e) => setTempPhone(e.target.value)} 
+                                            className="px-2 py-1 flex-1 text-sm rounded bg-gray-100 dark:bg-[#1a1a1c] border border-gray-200 dark:border-gray-800 focus:outline-none dark:text-white"
+                                            autoFocus
+                                            onKeyDown={(e) => e.key === 'Enter' && handleSavePhone()}
+                                            placeholder="(00) 00000-0000"
+                                            disabled={isSaving}
+                                        />
+                                        <button onClick={(e) => { e.stopPropagation(); handleSavePhone(); }} disabled={isSaving} className="text-green-500 hover:text-green-600">
+                                            <CheckCircle2 className="w-4 h-4" />
+                                        </button>
+                                        <button onClick={(e) => { e.stopPropagation(); setIsEditingPhone(false); }} disabled={isSaving} className="text-red-500 hover:text-red-600">
+                                            <X className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center justify-between">
+                                        <p className="text-sm dark:text-gray-200">{user?.phone || "Não informado"}</p>
+                                        <div className="flex items-center gap-1">
+                                            <Edit className="w-3.5 h-3.5 text-gray-400 opacity-0 group-hover/item:opacity-100 transition-opacity" />
+                                            <Phone className="w-4 h-4 text-cyan-700 dark:text-primary" />
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

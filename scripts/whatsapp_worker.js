@@ -203,7 +203,7 @@ async function startSession(companyId) {
             rulesContext += `Instruções rigorosas:\n`;
             rulesContext += `- **ASSUMA O ANO**: Se o cliente disser "20/03", assuma o ano atual ${new Date().getFullYear()}. Não pergunte o ano.\n`;
             rulesContext += `- **PASSO A PASSO**: Faça APENAS UMA pergunta por vez. Aguarde a resposta antes de prosseguir.\n`;
-            rulesContext += `- **CADASTRO**: Se o cliente te informar o Nome Completo e não tiver cadastro, você DEVE acionar a ferramenta \`registrarCliente\` com o nome dele imediatamente!\n`;
+            rulesContext += `- **CADASTRO**: Se o cliente te informar o Nome Completo e não tiver cadastro, você **DEVE** acionar a ferramenta \`registrarCliente\` com o nome dele imediatamente! **NUNCA** responda recusando o agendamento antes de tentar cadastrá-lo.\n`;
             rulesContext += `- **Sinalização de Listas**: Se for oferecer opções (Serviço, Unidade ou Profissional), responda usando o prefixo "LISTA:" seguido dos nomes exatos separados por vírgula no final da mensagem.\n`;
             rulesContext += `Exemplo: "Qual serviço deseja? LISTA: Corte de Cabelo, Barba"\n\n`;
 
