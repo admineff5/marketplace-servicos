@@ -223,7 +223,7 @@ export default function MensagensPage() {
                             <p className="text-xs">Inicie uma conversa para visualizar.</p>
                         </div>
                     ) : (
-                        <div className="w-full flex flex-col gap-2">
+                        <div className="w-full flex flex-col gap-3 px-6">
                             {[...currentChatMessages].reverse().map((msg) => (
                                 <div 
                                     key={msg.id} 
