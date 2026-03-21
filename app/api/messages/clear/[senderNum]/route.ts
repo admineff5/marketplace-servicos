@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-export async function DELETE(req: Request, { params }: { params: { senderNum: string } }) {
-    const { senderNum } = params;
+export async function DELETE(req: Request, { params }: { params: Promise<{ senderNum: string }> }) {
+    const { senderNum } = await params;
     try {
         await prisma.whatsappMessage.deleteMany({
             where: { senderNum }

@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
-    const { id } = params;
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
     try {
         // 1. Apaga agendamentos vinculados para evitar erro de Foreign Key
         await prisma.appointment.deleteMany({ where: { userId: id } });
