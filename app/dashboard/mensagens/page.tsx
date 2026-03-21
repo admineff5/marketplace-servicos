@@ -154,7 +154,7 @@ export default function MensagensPage() {
     const currentChatName = selectedChat && chats[selectedChat] ? chats[selectedChat].senderName : "Conversa";
 
     return (
-        <div className="w-[94%] max-w-5xl mx-auto h-[calc(100vh-140px)] flex border border-gray-100 dark:border-gray-800 bg-white dark:bg-[#111] rounded-2xl shadow-xl overflow-hidden animate-in fade-in">
+        <div className="w-[94%] max-w-6xl mx-auto h-[calc(100vh-140px)] flex border border-gray-100 dark:border-gray-800 bg-white dark:bg-[#111] rounded-2xl shadow-xl overflow-hidden animate-in fade-in">
             <div className="w-64 border-r border-gray-100 dark:border-gray-800 flex flex-col">
                 <header className="p-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between text-gray-900 dark:text-white">
                     <h2 className="font-bold text-base flex items-center gap-2">
@@ -223,7 +223,7 @@ export default function MensagensPage() {
                             <p className="text-xs">Inicie uma conversa para visualizar.</p>
                         </div>
                     ) : (
-                        <div className="w-full flex flex-col gap-3 px-6">
+                        <div className="w-full flex flex-col gap-3 px-4">
                             {[...currentChatMessages].reverse().map((msg) => (
                                 <div 
                                     key={msg.id} 
