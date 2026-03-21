@@ -23,6 +23,23 @@ export async function GET() {
             where: { companyId: company.id }
         });
 
+        // ⏱️ Timeout de QR Code: Se estiver travado em QRCODE por mais de 2 minutos, expira.
+        // Isso resolve o caso do QR Code ficar "preso" se o worker cair ou a conexão falhar.
+        if (whatsapp && whatsapp.status === "QRCODE" && whatsapp.updatedAt) {
+            const updatedAtTime = new Date(whatsapp.updatedAt).getTime();
+            const now = Date.now();
+            const diffMinutes = (now - updatedAtTime) / 1000 / 60;
+
+            if (diffMinutes > 2) { 
+                await prisma.whatsappSession.update({
+                    where: { id: whatsapp.id },
+                    data: { status: "DISCONNECTED", qrCode: null }
+                });
+                whatsapp.status = "DISCONNECTED";
+                whatsapp.qrCode = null;
+            }
+        }
+
         // 2. Busca logs de Mensagens do Dia
         const messages = await prisma.whatsappMessage.findMany({
             where: { companyId: company.id },

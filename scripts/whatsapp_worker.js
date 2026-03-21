@@ -243,16 +243,68 @@ async function startSession(companyId) {
 }
 
 async function monitorSessions() {
+    // 🧹 Limpa os QR Codes antigos do banco ao iniciar o script para evitar exibir imagem quebrada
+    try {
+        await prisma.whatsappSession.updateMany({
+            where: { status: 'QRCODE' },
+            data: { qrCode: null }
+        });
+        console.log('[WhatsApp] Limpeza inicial de QR Codes concluída.');
+    } catch (err) { }
+
     setInterval(async () => {
         try {
             const db = await prisma.whatsappSession.findMany();
+
+            // 🛑 Sincroniza Memória com DB: Para sessões que foram deslogadas fora do worker
+            for (const [companyId, session] of sessions.entries()) {
+                const dbSession = db.find(r => r.companyId === companyId);
+                if (!dbSession || dbSession.status === 'DISCONNECTED') {
+                    console.log(`[WhatsApp] [${companyId}] Parando sessão em memória (Status DB).`);
+                    if (session.sock) { 
+                        try { await session.sock.logout(); } catch {} 
+                    }
+                    sessions.delete(companyId);
+                }
+            }
+
             for (const r of db) {
-                if (r.status === 'DISCONNECTING') { const a = sessions.get(r.companyId); if (a?.sock) { try { await a.sock.logout(); } catch {} } } 
-                else if (r.status === 'QRCODE' || r.status === 'CONNECTED') { 
+                if (r.status === 'DISCONNECTING') { 
+                    const a = sessions.get(r.companyId); 
+                    if (a?.sock) { 
+                        try { await a.sock.logout(); } catch {} 
+                    } 
+                    await prisma.whatsappSession.update({ 
+                        where: { companyId: r.companyId }, 
+                        data: { status: 'DISCONNECTED', qrCode: null } 
+                    });
+                    sessions.delete(r.companyId);
+                } 
+                else if (r.status === 'QRCODE') {
+                    // ⏱️ Timeout de QR Code: 2 minutos sem atualização (updatedAt)
+                    const updatedAtTime = new Date(r.updatedAt).getTime();
+                    const now = Date.now();
+                    const diffMinutes = (now - updatedAtTime) / 1000 / 60;
+
+                    if (diffMinutes > 2) {
+                        console.log(`[WhatsApp] [${r.companyId}] QR Code expirado por inatividade.`);
+                        await prisma.whatsappSession.update({
+                            where: { id: r.id },
+                            data: { status: 'DISCONNECTED', qrCode: null }
+                        });
+                        const a = sessions.get(r.companyId);
+                        if (a?.sock) { try { await a.sock.logout(); } catch {} }
+                        sessions.delete(r.companyId);
+                        continue; // Pula para o próximo
+                    }
+
+                    if (!sessions.has(r.companyId)) startSession(r.companyId); 
+                }
+                else if (r.status === 'CONNECTED') { 
                     if (!sessions.has(r.companyId)) startSession(r.companyId); 
                 }
             }
-        } catch {}
+        } catch (err) { }
     }, 5000);
 }
 
