@@ -29,6 +29,23 @@ export default function GestaoClientesPage() {
     const maskPhone = (value: string) => {
         if (!value) return "";
         const val = value.replace(/\D/g, "");
+
+        // 🇺🇸 Número dos EUA (1 + 10 dígitos) — Ex: 18633312019
+        if (val.startsWith("1") && val.length === 11) {
+            return `+1 (${val.slice(1,4)}) ${val.slice(4,7)}-${val.slice(7)}`;
+        }
+
+        // 🇧🇷 Número do Brasil com 55 (55 + 11 dígitos) — Ex: 5511988888888
+        if (val.startsWith("55") && val.length >= 12) {
+            const inner = val.slice(2);
+            if (inner.length === 11) {
+                return `+55 (${inner.slice(0,2)}) ${inner.slice(2,7)}-${inner.slice(7)}`;
+            } else if (inner.length === 10) {
+                return `+55 (${inner.slice(0,2)}) ${inner.slice(2,6)}-${inner.slice(6)}`;
+            }
+            return `+${val}`;
+        }
+
         if (val.length <= 10) {
             return val.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, "($1) $2-$3");
         }

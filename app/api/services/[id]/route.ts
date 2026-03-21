@@ -25,11 +25,25 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
 export async function DELETE(request: Request, context: { params: Promise<{ id: string }> }) {
     try {
         const { id } = await context.params;
+
+        // 🔍 Verifica se existem agendamentos vinculados a este serviço
+        const count = await prisma.appointment.count({
+            where: { serviceId: id }
+        });
+
+        if (count > 0) {
+            return NextResponse.json({ 
+                error: `Não é possível excluir. Existem ${count} agendamento(s) vinculado(s) a este serviço.` 
+            }, { status: 400 });
+        }
+
         await prisma.service.delete({
             where: { id }
         });
+
         return NextResponse.json({ success: true });
     } catch (error) {
-        return NextResponse.json({ error: "Erro ao excluir" }, { status: 500 });
+        console.error("Delete Service Error:", error);
+        return NextResponse.json({ error: "Erro interno ao excluir serviço" }, { status: 500 });
     }
 }

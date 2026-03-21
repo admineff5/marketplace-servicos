@@ -91,7 +91,7 @@ async function criarAgendamento(employeeId, serviceId, locationId, clientPhone, 
             data: {
                 companyId, employeeId, serviceId, locationId, userId: user.id,
                 date: new Date(`${dateTimeStr}:00.000Z`),
-                status: 'CONFIRMED'
+                status: 'PENDING' // 👈 Agora cai como pendente para aprovação no painel
             }
         });
 

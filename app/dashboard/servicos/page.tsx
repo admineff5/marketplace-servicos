@@ -118,9 +118,15 @@ export default function GestaoServicosPage() {
         if (window.confirm("Deseja realmente excluir este serviço?")) {
             try {
                 const res = await fetch(`/api/services/${id}`, { method: 'DELETE' });
-                if (res.ok) fetchData();
+                if (res.ok) {
+                    fetchData();
+                } else {
+                    const data = await res.json();
+                    alert(data.error || "Erro ao excluir serviço.");
+                }
             } catch (error) {
                 console.error("Erro ao excluir:", error);
+                alert("Falha na comunicação com o servidor.");
             }
         }
     };
