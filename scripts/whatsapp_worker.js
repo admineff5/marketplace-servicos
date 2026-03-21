@@ -86,28 +86,17 @@ async function consultarDisponibilidade(employeeId, dateStr) {
 async function registrarCliente(nome, clientPhone) {
     try {
         let user = await prisma.user.findFirst({
-            where: { OR: [{ phone: clientPhone }, { phone: `+55${clientPhone}` }] }
+            where: {
+                OR: [
+                    { phone: clientPhone },
+                    { phone: { contains: clientPhone } },
+                    { phone: { in: [clientPhone, clientPhone.substring(0, 11), clientPhone.substring(0, 12)] } }
+                ],
+                role: 'CLIENT'
+            }
         });
 
-        if (!user) {
-             const nameParts = nome.split(' ').filter(String);
-             if (nameParts.length >= 1) {
-                 const firstName = nameParts[0];
-                 const lastName = nameParts[nameParts.length - 1];
-                 user = await prisma.user.findFirst({
-                      where: {
-                          AND: [
-                              { name: { contains: firstName, mode: 'insensitive' } },
-                              { name: { contains: lastName, mode: 'insensitive' } }
-                          ],
-                          role: 'CLIENT'
-                      }
-                 });
-             }
-        }
-
         if (user) {
-            await prisma.user.update({ where: { id: user.id }, data: { name: nome, phone: clientPhone } });
             return `✅ Cadastro vinculado ao seu perfil existente **${nome}**!`;
         }
 
@@ -121,14 +110,21 @@ async function registrarCliente(nome, clientPhone) {
             }
         });
 
-        return `✅ Cliente **${nome}** cadastrado com sucesso no sistema para agendamentos!`;
-    } catch (err) { return `Erro ao registrar: ${err.message}`; }
+        return `✅ Cadastro realizado com sucesso para **${nome}**!`;
+    } catch (err) { return `Erro: ${err.message}`; }
 }
 
 async function criarAgendamento(employeeId, serviceId, locationId, clientPhone, dateTimeStr, companyId) {
     try {
         let user = await prisma.user.findFirst({
-            where: { OR: [{ phone: clientPhone }, { phone: `+55${clientPhone}` }] }
+            where: {
+                OR: [
+                    { phone: clientPhone },
+                    { phone: { contains: clientPhone } },
+                    { phone: { in: [clientPhone, clientPhone.substring(0, 11), clientPhone.substring(0, 12)] } }
+                ],
+                role: 'CLIENT'
+            }
         });
 
         if (!user) {
@@ -239,28 +235,16 @@ async function startSession(companyId) {
             const company = await prisma.company.findUnique({ where: { id: companyId }, include: { locations: true, services: true, employees: true } });
             if (!company) return;
 
-            let dbUser = await prisma.user.findFirst({ where: { OR: [{ phone: senderNum }, { phone: `+55${senderNum}` }] } });
-
-            if (!dbUser && senderName && senderName !== "Cliente") {
-                const nameParts = senderName.split(' ').filter(String);
-                if (nameParts.length >= 1) {
-                    const firstName = nameParts[0];
-                    const lastName = nameParts[nameParts.length - 1];
-                    dbUser = await prisma.user.findFirst({
-                        where: {
-                            AND: [
-                                { name: { contains: firstName, mode: 'insensitive' } },
-                                { name: { contains: lastName, mode: 'insensitive' } }
-                            ],
-                            role: 'CLIENT'
-                        }
-                    });
-
-                    if (dbUser) {
-                        await prisma.user.update({ where: { id: dbUser.id }, data: { phone: senderNum } });
-                    }
+            let dbUser = await prisma.user.findFirst({
+                where: {
+                    OR: [
+                        { phone: senderNum },
+                        { phone: { contains: senderNum } },
+                        { phone: { in: [senderNum, senderNum.substring(0, 11), senderNum.substring(0, 12)] } }
+                    ],
+                    role: 'CLIENT'
                 }
-            }
+            });
 
             let rulesContext = `Você é uma secretária virtual educada da empresa "${company.name}".\n`;
             rulesContext += `Nicho: ${company.niche}\n\n`;
