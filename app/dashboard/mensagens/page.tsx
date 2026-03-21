@@ -65,10 +65,11 @@ export default function MensagensPage() {
                 setMyNumber(data.session.number);
                 setIsConnected(data.session.status === "CONNECTED");
                 const mappedMessages = (data.messages || []).map((msg: any) => {
-                    const realName = data.clientNames && data.clientNames[msg.senderNum];
+                    const profile = data.clientProfiles && data.clientProfiles[msg.senderNum];
                     return {
                         ...msg,
-                        senderName: realName || (msg.senderName && msg.senderName !== 'Assistente IA' ? msg.senderName : "Cliente")
+                        senderName: profile?.name || (msg.senderName && msg.senderName !== 'Assistente IA' ? msg.senderName : "Cliente"),
+                        senderPhone: profile?.phone || msg.senderNum
                     };
                 });
                 setMessages(mappedMessages);
@@ -165,6 +166,7 @@ export default function MensagensPage() {
 
     const currentChatMessages = selectedChat && chats[selectedChat] ? chats[selectedChat].items : [];
     const currentChatName = selectedChat && chats[selectedChat] ? chats[selectedChat].senderName : "Conversa";
+    const currentChatPhone = selectedChat && chats[selectedChat] ? chats[selectedChat].senderPhone : selectedChat;
 
     return (
         <div className="w-[94%] max-w-6xl mx-auto h-[calc(100vh-140px)] flex border border-gray-100 dark:border-gray-800 bg-white dark:bg-[#111] rounded-2xl shadow-xl overflow-hidden animate-in fade-in">
@@ -196,6 +198,7 @@ export default function MensagensPage() {
                                     </div>
                                     <div className="flex-1 overflow-hidden">
                                         <h4 className="text-xs font-bold text-gray-800 dark:text-gray-200 truncate">{chat.senderName}</h4>
+                                        <p className="text-[10px] font-semibold text-cyan-600 dark:text-cyan-400 truncate mt-0.5">{chat.senderPhone || chat.senderNum}</p>
                                         <p className="text-[10px] text-gray-400 truncate mt-0.5">{chat.lastMessage}</p>
                                     </div>
                                 </button>
@@ -225,7 +228,7 @@ export default function MensagensPage() {
                 <header className="p-4 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-[#111] flex justify-between items-center z-10">
                     <div>
                         <h3 className="text-sm font-bold text-gray-900 dark:text-white">{currentChatName}</h3>
-                        <p className="text-[10px] text-gray-400">{selectedChat}</p>
+                        <p className="text-[10px] text-gray-400">{currentChatPhone}</p>
                     </div>
                     {selectedChat && (
                         <button 

@@ -49,22 +49,29 @@ export async function GET() {
             take: 40 // Aumentando a amostragem para pegar mais conversas
         });
 
-        // 🔍 Busca os nomes reais dos clientes na tabela User
+        // 🔍 Busca os nomes reais e telefones dos clientes na tabela User
         const phoneNumbers = [...new Set(messages.map(m => m.senderNum))];
         const dbUsers = await prisma.user.findMany({
-            where: { 
-                OR: [
-                    { phone: { in: phoneNumbers } },
-                    { phone: { in: phoneNumbers.map(n => `+55${n}`) } }
-                ]
-            },
+            where: { role: 'CLIENT' },
             select: { name: true, phone: true }
         });
 
-        const clientNames = dbUsers.reduce((acc: any, u) => {
-            if (u.phone) {
-                const cleanPhone = u.phone.replace('+55', '');
-                acc[cleanPhone] = u.name;
+        const clientProfiles = messages.reduce((acc: any, m) => {
+            const senderNum = m.senderNum;
+            if (!acc[senderNum]) {
+                const user = dbUsers.find(u => {
+                    if (!u.phone) return false;
+                    const cleanPhone = u.phone.replace(/\D/g, '');
+                    const cleanSender = senderNum.replace(/\D/g, '');
+                    return (
+                        cleanPhone === cleanSender ||
+                        cleanPhone.includes(cleanSender.substring(0, 11)) ||
+                        cleanSender.includes(cleanPhone.substring(0, 11))
+                    );
+                });
+                if (user) {
+                    acc[senderNum] = { name: user.name, phone: user.phone };
+                }
             }
             return acc;
         }, {});
@@ -72,7 +79,7 @@ export async function GET() {
         return NextResponse.json({
             session: whatsapp || { status: 'DISCONNECTED', qrCode: null, number: null },
             messages: messages || [],
-            clientNames: clientNames // 👈 Envia mapa de nomes reais
+            clientProfiles: clientProfiles // 👈 Envia mapa de perfis reais
         });
 
     } catch (error) {
