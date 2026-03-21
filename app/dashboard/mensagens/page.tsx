@@ -147,7 +147,7 @@ export default function MensagensPage() {
     const currentChatName = selectedChat && chats[selectedChat] ? chats[selectedChat].senderName : "Conversa";
 
     return (
-        <div className="h-[calc(100vh-140px)] flex border border-gray-100 dark:border-gray-800 bg-white dark:bg-[#111] rounded-2xl shadow-xl overflow-hidden animate-in fade-in">
+        <div className="max-w-5xl mx-auto w-full h-[calc(100vh-140px)] flex border border-gray-100 dark:border-gray-800 bg-white dark:bg-[#111] rounded-2xl shadow-xl overflow-hidden animate-in fade-in">
             <div className="w-80 border-r border-gray-100 dark:border-gray-800 flex flex-col">
                 <header className="p-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between text-gray-900 dark:text-white">
                     <h2 className="font-bold text-base flex items-center gap-2">
@@ -195,9 +195,12 @@ export default function MensagensPage() {
                 </div>
             </div>
 
-            <div className="flex-1 flex flex-col h-full bg-[#efeae2] dark:bg-[#0b1411a] relative overflow-hidden">
+            <div className="flex-1 flex flex-col h-full bg-[#efeae2] dark:bg-[#0b141a] relative overflow-hidden">
                 {/* 📱 Background Doodle WhatsApp */}
-                <div className="absolute inset-0 bg-[url('/bg-whatsapp.png')] bg-repeat bg-center bg-[length:400px] opacity-[0.06] dark:opacity-[0.04] pointer-events-none"></div>
+                <div 
+                    className="absolute inset-0 bg-repeat bg-center bg-[length:400px] opacity-[0.08] dark:opacity-[0.06] pointer-events-none" 
+                    style={{ backgroundImage: "url('/bg-whatsapp.png')" }}
+                ></div>
 
                 <header className="p-4 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-[#111] flex justify-between items-center z-10">
                     <div>
