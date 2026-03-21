@@ -17,8 +17,39 @@ const sessions = new Map();
 
 async function consultarDisponibilidade(employeeId, dateStr) {
     try {
-        const minTime = "09:00";
-        const maxTime = "18:00";
+        const employee = await prisma.employee.findUnique({ where: { id: employeeId } });
+        if (!employee) return "Erro: profissional não encontrado.";
+
+        // 📅 Verificar Dias da Semana (Ex: Segunda a Sexta)
+        const date = new Date(`${dateStr}T00:00:00.000Z`);
+        const dayOfWeek = date.getUTCDay(); // 0=Dom, 1=Seg, ..., 6=Sab
+        
+        function worksOn(hoursStr, day) {
+             const h = hoursStr.toLowerCase();
+             if (h.includes("segunda a sexta")) return day >= 1 && day <= 5;
+             if (h.includes("segunda a sábado")) return day >= 1 && day <= 6;
+             if (h.includes("terça a sábado")) return day >= 2 && day <= 6;
+             if (h.includes("terça a domingo")) return day >= 2 || day === 0;
+             if (h.includes("sábado e domingo")) return day === 0 || day === 6;
+             return true;
+        }
+
+        if (employee.hours && !worksOn(employee.hours, dayOfWeek)) {
+             return `❌ Este profissional não atende neste dia da semana (${dateStr}).`;
+        }
+
+        let minTime = "09:00";
+        let maxTime = "18:00";
+        
+        if (employee.hours && employee.hours.includes("|")) {
+             const h = employee.hours.split("|")[1] || employee.hours;
+             const match = h.match(/(\d{2}:\d{2})\s*-\s*(\d{2}:\d{2})/);
+             if (match) {
+                  minTime = match[1];
+                  maxTime = match[2];
+             }
+        }
+
         const intervalMinutes = 30; 
         
         const appointments = await prisma.appointment.findMany({
@@ -205,7 +236,8 @@ async function startSession(companyId) {
             rulesContext += `- **PASSO A PASSO**: Faça APENAS UMA pergunta por vez. Aguarde a resposta antes de prosseguir.\n`;
             rulesContext += `- **CADASTRO**: Se o cliente te informar o Nome Completo e não tiver cadastro, você **DEVE** acionar a ferramenta \`registrarCliente\` com o nome dele imediatamente! **NUNCA** responda recusando o agendamento antes de tentar cadastrá-lo.\n`;
             rulesContext += `- **Sinalização de Listas**: Se for oferecer opções (Serviço, Unidade ou Profissional), responda usando o prefixo "LISTA:" seguido dos nomes exatos separados por vírgula no final da mensagem.\n`;
-            rulesContext += `Exemplo: "Qual serviço deseja? LISTA: Corte de Cabelo, Barba"\n\n`;
+            rulesContext += `- **VÍNCULO DE UNIDADE**: Ao oferecer profissionais, mostre APENAS os que pertencem à Unidade/Localização que o cliente escolheu.\n`;
+            rulesContext += `Exemplo: "Qual profissional deseja? LISTA: Thiago, Olivia"\n\n`;
 
             rulesContext += `--- 📍 DADOS DA EMPRESA ---\n\n`;
             if (company.locations.length > 0) {
@@ -219,7 +251,10 @@ async function startSession(companyId) {
             }
             if (company.employees.length > 0) {
                 rulesContext += `\nEquipe:\n`;
-                company.employees.forEach(e => { rulesContext += `- ${e.name} (id: ${e.id})${e.hours ? ` - Horário: ${e.hours}` : ''}\n`; });
+                company.employees.forEach(e => { 
+                    const loc = company.locations.find(l => l.id === e.locationId);
+                    rulesContext += `- ${e.name} (id: ${e.id}) - Unidade: ${loc ? loc.name : 'Qualquer'}${e.hours ? ` - Horário: ${e.hours}` : ''}\n`; 
+                });
             }
             rulesContext += `\n--- FIM DOS DADOS ---\n`;
 
