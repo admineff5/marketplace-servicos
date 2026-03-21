@@ -46,12 +46,33 @@ export async function GET() {
         const messages = await prisma.whatsappMessage.findMany({
             where: { companyId: company.id },
             orderBy: { timestamp: 'desc' },
-            take: 20 // Últimas 20 mensagens
+            take: 40 // Aumentando a amostragem para pegar mais conversas
         });
+
+        // 🔍 Busca os nomes reais dos clientes na tabela User
+        const phoneNumbers = [...new Set(messages.map(m => m.senderNum))];
+        const dbUsers = await prisma.user.findMany({
+            where: { 
+                OR: [
+                    { phone: { in: phoneNumbers } },
+                    { phone: { in: phoneNumbers.map(n => `+55${n}`) } }
+                ]
+            },
+            select: { name: true, phone: true }
+        });
+
+        const clientNames = dbUsers.reduce((acc: any, u) => {
+            if (u.phone) {
+                const cleanPhone = u.phone.replace('+55', '');
+                acc[cleanPhone] = u.name;
+            }
+            return acc;
+        }, {});
 
         return NextResponse.json({
             session: whatsapp || { status: 'DISCONNECTED', qrCode: null, number: null },
-            messages: messages || []
+            messages: messages || [],
+            clientNames: clientNames // 👈 Envia mapa de nomes reais
         });
 
     } catch (error) {

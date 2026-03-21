@@ -51,7 +51,14 @@ export default function MensagensPage() {
                 setQrCode(data.session.qrCode);
                 setMyNumber(data.session.number);
                 setIsConnected(data.session.status === "CONNECTED");
-                setMessages(data.messages || []);
+                const mappedMessages = (data.messages || []).map((msg: any) => {
+                    const realName = data.clientNames && data.clientNames[msg.senderNum];
+                    return {
+                        ...msg,
+                        senderName: realName || (msg.senderName && msg.senderName !== 'Assistente IA' ? msg.senderName : "Cliente")
+                    };
+                });
+                setMessages(mappedMessages);
             }
         } catch (error) {
             console.error("Erro ao carregar sessão WhatsApp:", error);

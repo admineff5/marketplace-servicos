@@ -52,6 +52,31 @@ async function consultarDisponibilidade(employeeId, dateStr) {
     } catch (err) { return `Erro: ${err.message}`; }
 }
 
+async function registrarCliente(nome, clientPhone) {
+    try {
+        let user = await prisma.user.findFirst({
+            where: { OR: [{ phone: clientPhone }, { phone: `+55${clientPhone}` }] }
+        });
+
+        if (user) {
+            await prisma.user.update({ where: { id: user.id }, data: { name: nome } });
+            return `✅ Nome do cliente atualizado para **${nome}** no sistema!`;
+        }
+
+        await prisma.user.create({
+            data: {
+                name: nome,
+                email: `${clientPhone}@whatsapp.com`,
+                phone: clientPhone,
+                role: 'CLIENT',
+                password: 'whatsapp_generated_temp_pass'
+            }
+        });
+
+        return `✅ Cliente **${nome}** cadastrado com sucesso no sistema para agendamentos!`;
+    } catch (err) { return `Erro ao registrar: ${err.message}`; }
+}
+
 async function criarAgendamento(employeeId, serviceId, locationId, clientPhone, dateTimeStr, companyId) {
     try {
         let user = await prisma.user.findFirst({
@@ -178,6 +203,7 @@ async function startSession(companyId) {
             rulesContext += `Instruções rigorosas:\n`;
             rulesContext += `- **ASSUMA O ANO**: Se o cliente disser "20/03", assuma o ano atual ${new Date().getFullYear()}. Não pergunte o ano.\n`;
             rulesContext += `- **PASSO A PASSO**: Faça APENAS UMA pergunta por vez. Aguarde a resposta antes de prosseguir.\n`;
+            rulesContext += `- **CADASTRO**: Se o cliente te informar o Nome Completo e não tiver cadastro, você DEVE acionar a ferramenta \`registrarCliente\` com o nome dele imediatamente!\n`;
             rulesContext += `- **Sinalização de Listas**: Se for oferecer opções (Serviço, Unidade ou Profissional), responda usando o prefixo "LISTA:" seguido dos nomes exatos separados por vírgula no final da mensagem.\n`;
             rulesContext += `Exemplo: "Qual serviço deseja? LISTA: Corte de Cabelo, Barba"\n\n`;
 
@@ -200,6 +226,7 @@ async function startSession(companyId) {
             const toolDeclarations = [{
                 functionDeclarations: [
                     { name: "consultarDisponibilidade", description: "Consulta os horários livres de um profissional (YYYY-MM-DD)", parameters: { type: "OBJECT", properties: { employeeId: { type: "STRING" }, date: { type: "STRING", description: "Formato YYYY-MM-DD" } }, required: ["employeeId", "date"] } },
+                    { name: "registrarCliente", description: "Cadastra ou Atualiza o nome do cliente no banco de dados.", parameters: { type: "OBJECT", properties: { nome: { type: "STRING", description: "Nome completo do cliente" } }, required: ["nome"] } },
                     { name: "criarAgendamento", description: "Reserva um horário para o cliente.", parameters: { type: "OBJECT", properties: { employeeId: { type: "STRING" }, serviceId: { type: "STRING" }, locationId: { type: "STRING" }, dateTime: { type: "STRING", description: "ISO YYYY-MM-DDTHH:MM" } }, required: ["employeeId", "serviceId", "locationId", "dateTime"] } }
                 ]
             }];
@@ -213,7 +240,10 @@ async function startSession(companyId) {
             while (response.functionCalls && response.functionCalls.length > 0) {
                 contents.push(response.candidates[0].content);
                 for (const call of response.functionCalls) {
-                    let resData = call.name === 'consultarDisponibilidade' ? await consultarDisponibilidade(call.args.employeeId, call.args.date) : await criarAgendamento(call.args.employeeId, call.args.serviceId, call.args.locationId, senderNum, call.args.dateTime, companyId);
+                    let resData = "";
+                    if (call.name === 'consultarDisponibilidade') { resData = await consultarDisponibilidade(call.args.employeeId, call.args.date); }
+                    else if (call.name === 'registrarCliente') { resData = await registrarCliente(call.args.nome, senderNum); }
+                    else if (call.name === 'criarAgendamento') { resData = await criarAgendamento(call.args.employeeId, call.args.serviceId, call.args.locationId, senderNum, call.args.dateTime, companyId); }
                     contents.push({ role: 'function', parts: [{ functionResponse: { name: call.name, response: { result: resData } } }] });
                 }
                 response = await ai.models.generateContent({ model: 'gemini-2.5-flash', contents, config: { systemInstruction: rulesContext, tools: toolDeclarations } });
