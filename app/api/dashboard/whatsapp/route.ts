@@ -24,13 +24,15 @@ export async function GET() {
         });
 
         // ⏱️ Timeout de QR Code: Se estiver travado em QRCODE por mais de 2 minutos, expira.
-        // Isso resolve o caso do QR Code ficar "preso" se o worker cair ou a conexão falhar.
         if (whatsapp && whatsapp.status === "QRCODE" && whatsapp.updatedAt) {
             const updatedAtTime = new Date(whatsapp.updatedAt).getTime();
             const now = Date.now();
             const diffMinutes = (now - updatedAtTime) / 1000 / 60;
 
-            if (diffMinutes > 2) { 
+            console.log(`[WhatsApp Timeout] Company: ${company.id} - Diff: ${diffMinutes.toFixed(2)} min | DB Status: ${whatsapp.status}`);
+
+            if (diffMinutes > 1.5) { // Reduzindo para 1.5 minutos para ser mais rápido
+                console.log(`[WhatsApp Timeout] 🚨 Expirando QR Code de ${company.id} devido a inatividade.`);
                 await prisma.whatsappSession.update({
                     where: { id: whatsapp.id },
                     data: { status: "DISCONNECTED", qrCode: null }
