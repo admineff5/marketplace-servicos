@@ -98,11 +98,12 @@ export default function GestaoClientesPage() {
         if (!confirm(`Deseja realmente excluir o cliente ${name}? Todos os agendamentos vinculados também serão apagados.`)) return;
         try {
             const res = await fetch(`/api/clients/${id}`, { method: 'DELETE' });
+            const data = await res.json();
             if (res.ok) {
                 alert("Cliente excluído com sucesso!");
                 window.location.reload();
             } else {
-                alert("Erro ao excluir cliente.");
+                alert("Erro ao excluir cliente: " + (data.error || "Desconhecido"));
             }
         } catch (e) { alert("Erro de rede."); }
     };

@@ -7,7 +7,16 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
         // 1. Apaga agendamentos vinculados para evitar erro de Foreign Key
         await prisma.appointment.deleteMany({ where: { userId: id } });
 
-        // 2. Apaga o usuário
+        // 2. Apaga Endereços vinculados
+        await prisma.address.deleteMany({ where: { userId: id } });
+
+        // 3. Apaga Métodos de Pagamento vinculados
+        await prisma.paymentMethod.deleteMany({ where: { userId: id } });
+
+        // 4. Apaga Leads vinculados
+        await prisma.lead.deleteMany({ where: { userId: id } });
+
+        // 5. Apaga o usuário
         await prisma.user.delete({ where: { id } });
 
         return NextResponse.json({ success: true });
