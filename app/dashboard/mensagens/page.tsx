@@ -195,38 +195,43 @@ export default function MensagensPage() {
                 </div>
             </div>
 
-            <div className="flex-1 flex flex-col h-full bg-gray-50/20 dark:bg-[#0a0a0a]">
-                <header className="p-4 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-[#111] flex justify-between items-center">
+            <div className="flex-1 flex flex-col h-full bg-[#efeae2] dark:bg-[#0b1411a] relative overflow-hidden">
+                {/* 📱 Background Doodle WhatsApp */}
+                <div className="absolute inset-0 bg-[url('/bg-whatsapp.png')] bg-repeat bg-center bg-[length:400px] opacity-[0.06] dark:opacity-[0.04] pointer-events-none"></div>
+
+                <header className="p-4 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-[#111] flex justify-between items-center z-10">
                     <div>
                         <h3 className="text-sm font-bold text-gray-900 dark:text-white">{currentChatName}</h3>
                         <p className="text-[10px] text-gray-400">{selectedChat}</p>
                     </div>
                 </header>
 
-                <div className="flex-1 p-6 overflow-y-auto space-y-4 custom-scrollbar">
+                <div className="flex-1 p-6 overflow-y-auto custom-scrollbar z-10">
                     {currentChatMessages.length === 0 ? (
                         <div className="h-full flex flex-col items-center justify-center text-gray-500 gap-2">
                             <Bot className="w-12 h-12 text-gray-300 animate-bounce" />
                             <p className="text-xs">Inicie uma conversa para visualizar.</p>
                         </div>
                     ) : (
-                        [...currentChatMessages].reverse().map((msg) => (
-                            <div 
-                                key={msg.id} 
-                                className={`flex flex-col ${msg.from === "CLIENT" ? "items-start" : "items-end"}`}
-                            >
-                                <div className={`max-w-md p-3.5 rounded-2xl text-sm shadow-sm ${
-                                    msg.from === "CLIENT" 
-                                        ? "bg-white dark:bg-[#18181a] border border-gray-100 dark:border-gray-800 text-gray-800 dark:text-gray-100 rounded-tl-none" 
-                                        : "bg-cyan-600 dark:bg-primary text-white rounded-tr-none"
-                                }`}>
-                                    {msg.content}
+                        <div className="max-w-2xl mx-auto w-full flex flex-col gap-2">
+                            {[...currentChatMessages].reverse().map((msg) => (
+                                <div 
+                                    key={msg.id} 
+                                    className={`flex flex-col ${msg.from === "CLIENT" ? "items-start" : "items-end"}`}
+                                >
+                                    <div className={`max-w-md p-2.5 px-3.5 rounded-xl text-sm shadow-sm ${
+                                        msg.from === "CLIENT" 
+                                            ? "bg-white dark:bg-[#202c33] text-gray-800 dark:text-gray-100 rounded-tl-none" 
+                                            : "bg-[#d9fdd3] dark:bg-[#005c4b] text-gray-800 dark:text-gray-100 rounded-tr-none"
+                                    }`}>
+                                        {msg.content}
+                                    </div>
+                                    <span className="text-[10px] text-gray-400 mt-1 px-1">
+                                        {msg.from === "CLIENT" ? (msg.senderName || "Cliente") : "Assistente IA"} • {new Date(msg.timestamp).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                                    </span>
                                 </div>
-                                <span className="text-[10px] text-gray-400 mt-1 px-1">
-                                    {msg.from === "CLIENT" ? (msg.senderName || "Cliente") : "Assistente IA"} • {new Date(msg.timestamp).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
-                                </span>
-                            </div>
-                        ))
+                            ))}
+                        </div>
                     )}
                 </div>
             </div>
