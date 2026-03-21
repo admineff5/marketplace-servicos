@@ -308,7 +308,7 @@ export default function GestaoProfissionaisPage() {
                                             <div
                                                 key={idx}
                                                 onClick={() => setFormAvatar(av)}
-                                                className={`w-10 h-10 rounded-full border-2 cursor-pointer overflow-hidden transition-all ${formAvatar === av ? 'border-primary ring-2 ring-primary/30 scale-110 shadow-lg' : 'border-transparent hover:border-gray-400'} `}
+                                                className={`w-10 h-10 rounded-full border-2 cursor-pointer overflow-hidden transition-all ${formAvatar === av ? 'border-cyan-700 dark:border-primary ring-2 ring-cyan-700/30 dark:ring-primary/30 scale-110 shadow-lg' : 'border-transparent hover:border-gray-400'} `}
                                             >
                                                 <img src={av} alt="Avatar" className="w-full h-full object-cover" />
                                             </div>
