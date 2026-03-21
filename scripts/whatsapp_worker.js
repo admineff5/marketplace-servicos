@@ -326,7 +326,12 @@ async function monitorSessions() {
         hasMigrated = true;
         try {
             const trueClient = await prisma.user.findFirst({ where: { email: 'rodrigoamac@gmail.com' } });
-            const duplicateClient = await prisma.user.findFirst({ where: { phone: '20505111720572' } });
+            const duplicateClient = await prisma.user.findFirst({ 
+                where: { 
+                    name: 'Rodrigo Machado', 
+                    email: { contains: '@whatsapp.com' } 
+                } 
+            });
 
             if (trueClient && duplicateClient) {
                 await prisma.appointment.updateMany({

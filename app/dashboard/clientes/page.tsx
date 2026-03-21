@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Search, Plus, Users, MessageCircle, Clock, Star, X, Check, ShieldAlert, History } from "lucide-react";
+import { Search, Plus, Users, MessageCircle, Clock, Star, X, Check, ShieldAlert, History, Trash } from "lucide-react";
 
 // Mock Data para Simular Base de Clientes Reais
 const MOCK_CLIENTES = [
@@ -92,6 +92,19 @@ export default function GestaoClientesPage() {
 
     const handleOpenHistory = (client: any) => {
         setSelectedClient(client);
+    };
+
+    const handleDeleteClient = async (id: string, name: string) => {
+        if (!confirm(`Deseja realmente excluir o cliente ${name}? Todos os agendamentos vinculados também serão apagados.`)) return;
+        try {
+            const res = await fetch(`/api/clients/${id}`, { method: 'DELETE' });
+            if (res.ok) {
+                alert("Cliente excluído com sucesso!");
+                window.location.reload();
+            } else {
+                alert("Erro ao excluir cliente.");
+            }
+        } catch (e) { alert("Erro de rede."); }
     };
 
     return (
@@ -205,8 +218,12 @@ export default function GestaoClientesPage() {
                                                 >
                                                     <History className="w-4 h-4" />
                                                 </button>
-                                                <button className="p-2 text-gray-500 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors" title="Bloquear Cliente">
-                                                    <ShieldAlert className="w-4 h-4" />
+                                                <button 
+                                                    onClick={() => handleDeleteClient(cliente.id, cliente.name)}
+                                                    className="p-2 text-gray-500 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors" 
+                                                    title="Excluir Cliente"
+                                                >
+                                                    <Trash className="w-4 h-4" />
                                                 </button>
                                             </div>
                                         </td>

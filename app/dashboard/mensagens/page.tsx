@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { MessageSquareCode, CheckCircle2, Bot, User, Send, Smartphone, Loader2, Power, AlertTriangle } from "lucide-react";
+import { MessageSquareCode, CheckCircle2, Bot, User, Send, Smartphone, Loader2, Power, AlertTriangle, Trash } from "lucide-react";
 
 export default function MensagensPage() {
     const [isConnected, setIsConnected] = useState(false);
@@ -11,6 +11,19 @@ export default function MensagensPage() {
     const [messages, setMessages] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [selectedChat, setSelectedChat] = useState<string | null>(null);
+
+    const handleDeleteMessages = async (senderNum: string) => {
+        if (!confirm("Deseja realmente apagar o histórico de mensagens deste cliente? A IA 'esquecerá' o contexto da conversa.")) return;
+        try {
+            const res = await fetch(`/api/messages/clear/${senderNum}`, { method: 'DELETE' });
+            if (res.ok) {
+                alert("Histórico limpo com sucesso!");
+                window.location.reload();
+            } else {
+                alert("Erro ao limpar histórico.");
+            }
+        } catch (e) { alert("Erro de rede."); }
+    };
 
     // 🕵️‍♀️ Agrupa mensagens por Cliente (senderNum)
     const chats = messages.reduce((acc: any, msg: any) => {
@@ -214,6 +227,16 @@ export default function MensagensPage() {
                         <h3 className="text-sm font-bold text-gray-900 dark:text-white">{currentChatName}</h3>
                         <p className="text-[10px] text-gray-400">{selectedChat}</p>
                     </div>
+                    {selectedChat && (
+                        <button 
+                            onClick={() => handleDeleteMessages(selectedChat)}
+                            className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors flex items-center gap-1.5 text-xs font-semibold"
+                            title="Limpar Conversa"
+                        >
+                            <Trash className="w-4 h-4" />
+                            Limpar Histórico
+                        </button>
+                    )}
                 </header>
 
                 <div className="flex-1 p-6 overflow-y-auto custom-scrollbar z-10">
