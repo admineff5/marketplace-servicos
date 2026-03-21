@@ -202,11 +202,11 @@ export default function MensagensPage() {
                 </div>
             </div>
 
-            <div className="flex-1 flex flex-col h-full bg-[#efeae2] dark:bg-[#0b141a] relative overflow-hidden">
+            <div className="flex-1 flex flex-col h-full bg-[#e5ddd5] dark:bg-[#0b141a] relative overflow-hidden">
                 {/* 📱 Background Doodle WhatsApp */}
                 <div 
-                    className="absolute inset-0 bg-repeat bg-center bg-[length:400px] opacity-[0.08] dark:opacity-[0.06] pointer-events-none" 
-                    style={{ backgroundImage: "url('/bg-whatsapp.png')" }}
+                    className="absolute inset-0 bg-repeat bg-center bg-[length:400px] opacity-[0.06] dark:opacity-[0.04] pointer-events-none" 
+                    style={{ backgroundImage: "url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')" }}
                 ></div>
 
                 <header className="p-4 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-[#111] flex justify-between items-center z-10">
@@ -223,7 +223,7 @@ export default function MensagensPage() {
                             <p className="text-xs">Inicie uma conversa para visualizar.</p>
                         </div>
                     ) : (
-                        <div className="max-w-6xl mx-auto w-full flex flex-col gap-2">
+                        <div className="max-w-4xl mx-auto w-full flex flex-col gap-2.5">
                             {[...currentChatMessages].reverse().map((msg) => (
                                 <div 
                                     key={msg.id} 
