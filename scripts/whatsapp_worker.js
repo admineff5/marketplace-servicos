@@ -229,6 +229,22 @@ async function startSession(companyId) {
 
         await prisma.whatsappMessage.create({ data: { companyId, from: 'CLIENT', senderName, senderNum, content: text } });
 
+        // 🔬 DEBUG HOOK: Dump do pacote Baileys para verificação
+        try {
+            const fs = require('fs');
+            const path = require('path');
+            const debugPath = path.join(__dirname, 'baileys_debug.txt');
+            const debugData = {
+                timestamp: new Date().toISOString(),
+                senderJid: message.remoteJid || message.key.remoteJid,
+                pushName: message.pushName,
+                messageContent: text,
+                fullPacket: message
+            };
+            fs.appendFileSync(debugPath, JSON.stringify(debugData, null, 2) + '\n');
+            console.log(`[DEBUG] Pacote logado em ${debugPath}`);
+        } catch {}
+
         try {
             const company = await prisma.company.findUnique({ where: { id: companyId }, include: { locations: true, services: true, employees: true } });
             if (!company) return;

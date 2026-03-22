@@ -66,7 +66,8 @@ export async function GET() {
                     return (
                         cleanPhone === cleanSender ||
                         cleanPhone.includes(cleanSender.substring(0, 11)) ||
-                        cleanSender.includes(cleanPhone.substring(0, 11))
+                        cleanSender.includes(cleanPhone.substring(0, 11)) ||
+                        (u.name && m.senderName && u.name.toLowerCase() === m.senderName.toLowerCase())
                     );
                 });
                 if (user) {
