@@ -438,4 +438,69 @@ async function monitorSessions() {
     }, 5000);
 }
 
+const notifiedAppointments = new Set();
+let isPollingActive = false;
+
+async function startNotificationPolling() {
+    if (isPollingActive) return;
+    isPollingActive = true;
+    console.log("[Notification] 🔔 Iniciando monitoramento de aprovações/recusas...");
+
+    try {
+        // 1. Carrega os agendamentos já existentes como APROVADOS/RECUSADOS para não disparar antigos ao reiniciar o worker
+        const existing = await prisma.appointment.findMany({
+            where: { status: { in: ['APPROVED', 'REJECTED'] } },
+            select: { id: true }
+        });
+        existing.forEach(a => notifiedAppointments.add(a.id));
+        console.log(`[Notification] ${notifiedAppointments.size} agendamentos antigos ignorados de notificação.`);
+    } catch (err) {
+        console.error("[Notification] Erro ao carregar agendamentos antigos:", err);
+    }
+
+    // 2. Loop de verificação a cada 7 segundos para evitar estresse no banco
+    setInterval(async () => {
+        try {
+            const pending = await prisma.appointment.findMany({
+                where: {
+                    status: { in: ['APPROVED', 'REJECTED'] },
+                    id: { notIn: Array.from(notifiedAppointments) }
+                },
+                include: {
+                    user: true,
+                    company: true,
+                    service: true,
+                    employee: true
+                }
+            });
+
+            for (const app of pending) {
+                const clientPhone = app.user.phone;
+                if (!clientPhone) {
+                     notifiedAppointments.add(app.id); // Evita loopar caso não tenha fone
+                     continue;
+                }
+
+                const companyId = app.companyId;
+                const companySession = sessions.get(companyId);
+                if (!companySession || companySession.status !== 'CONNECTED') continue;
+
+                const statusText = app.status === 'APPROVED' ? '✅ APROVADO' : '❌ RECUSADO';
+                const message = `Olá **${app.user.name}**!\n\nSeu agendamento para **${app.service.name}** com **${app.employee.name}** no dia **${new Date(app.date).toLocaleDateString('pt-BR')}** foi **${statusText}** pelo estabelecimento.\n\nAgradecemos a preferência!`;
+
+                try {
+                    await companySession.sock.sendMessage(`${clientPhone}@s.whatsapp.net`, { text: message });
+                    notifiedAppointments.add(app.id);
+                    console.log(`[Notification] Cliente ${clientPhone} notificado para agendamento ${app.id} (${app.status}).`);
+                } catch (sendErr) {
+                    console.error(`[Notification] Falha ao enviar msg para ${clientPhone} (${app.id}):`, sendErr);
+                }
+            }
+        } catch (pollErr) {
+            console.error("[Notification] Erro no polling de aprovações:", pollErr);
+        }
+    }, 7000);
+}
+
 monitorSessions();
+startNotificationPolling();
