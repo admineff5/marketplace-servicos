@@ -222,7 +222,8 @@ async function startSession(companyId) {
         if (!message.message || message.key.fromMe) return;
 
         const senderJid = message.remoteJid || message.key.remoteJid;
-        const senderNum = senderJid.split('@')[0].split(':')[0];
+        const altJid = message.key && message.key.remoteJidAlt;
+        const senderNum = altJid ? altJid.split('@')[0] : senderJid.split('@')[0].split(':')[0];
         const senderName = message.pushName || "Cliente";
         let text = message.message.conversation || message.message.extendedTextMessage?.text;
         if (!text) return;
