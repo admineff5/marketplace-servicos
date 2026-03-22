@@ -485,8 +485,10 @@ async function startNotificationPolling() {
                 const companySession = sessions.get(companyId);
                 if (!companySession || companySession.status !== 'CONNECTED') continue;
 
-                const statusText = app.status === 'CONFIRMED' ? '✅ CONFIRMADO' : '❌ RECUSADO';
-                const message = `Olá **${app.user.name}**!\n\nSeu agendamento para **${app.service.name}** com **${app.employee.name}** no dia **${new Date(app.date).toLocaleDateString('pt-BR')}** foi **${statusText}** pelo estabelecimento.\n\nAgradecemos a preferência!`;
+                const isApproved = app.status === 'CONFIRMED';
+                const statusText = isApproved ? '✅ CONFIRMADO' : '❌ RECUSADO';
+                const footerText = isApproved ? 'Aguardamos você!' : 'Infelizmente não foi possível confirmar este horário no momento.';
+                const message = `Olá **${app.user.name}**!\n\nSeu agendamento para **${app.service.name}** com **${app.employee.name}** no dia **${new Date(app.date).toLocaleDateString('pt-BR')}** foi **${statusText}** pelo estabelecimento.\n\n${footerText}`;
 
                 try {
                     await companySession.sock.sendMessage(`${clientPhone}@s.whatsapp.net`, { text: message });
