@@ -89,8 +89,7 @@ async function registrarCliente(nome, clientPhone) {
             where: {
                 OR: [
                     { phone: clientPhone },
-                    { phone: { contains: clientPhone } },
-                    { phone: { in: [clientPhone, clientPhone.substring(0, 11), clientPhone.substring(0, 12)] } }
+                    { phone: { startsWith: clientPhone.substring(0, 11) } }
                 ],
                 role: 'CLIENT'
             }
@@ -120,8 +119,7 @@ async function criarAgendamento(employeeId, serviceId, locationId, clientPhone, 
             where: {
                 OR: [
                     { phone: clientPhone },
-                    { phone: { contains: clientPhone } },
-                    { phone: { in: [clientPhone, clientPhone.substring(0, 11), clientPhone.substring(0, 12)] } }
+                    { phone: { startsWith: clientPhone.substring(0, 11) } }
                 ],
                 role: 'CLIENT'
             }
@@ -239,8 +237,7 @@ async function startSession(companyId) {
                 where: {
                     OR: [
                         { phone: senderNum },
-                        { phone: { contains: senderNum } },
-                        { phone: { in: [senderNum, senderNum.substring(0, 11), senderNum.substring(0, 12)] } }
+                        { phone: { startsWith: senderNum.substring(0, 11) } }
                     ],
                     role: 'CLIENT'
                 }
