@@ -447,9 +447,9 @@ async function startNotificationPolling() {
     console.log("[Notification] 🔔 Iniciando monitoramento de aprovações/recusas...");
 
     try {
-        // 1. Carrega os agendamentos já existentes como APROVADOS/RECUSADOS para não disparar antigos ao reiniciar o worker
+        // 1. Carrega os agendamentos já existentes como CONFIRMED/CANCELLED para não disparar antigos ao reiniciar o worker
         const existing = await prisma.appointment.findMany({
-            where: { status: { in: ['APPROVED', 'REJECTED'] } },
+            where: { status: { in: ['CONFIRMED', 'CANCELLED'] } },
             select: { id: true }
         });
         existing.forEach(a => notifiedAppointments.add(a.id));
@@ -463,7 +463,7 @@ async function startNotificationPolling() {
         try {
             const pending = await prisma.appointment.findMany({
                 where: {
-                    status: { in: ['APPROVED', 'REJECTED'] },
+                    status: { in: ['CONFIRMED', 'CANCELLED'] },
                     id: { notIn: Array.from(notifiedAppointments) }
                 },
                 include: {
@@ -485,7 +485,7 @@ async function startNotificationPolling() {
                 const companySession = sessions.get(companyId);
                 if (!companySession || companySession.status !== 'CONNECTED') continue;
 
-                const statusText = app.status === 'APPROVED' ? '✅ APROVADO' : '❌ RECUSADO';
+                const statusText = app.status === 'CONFIRMED' ? '✅ CONFIRMADO' : '❌ RECUSADO';
                 const message = `Olá **${app.user.name}**!\n\nSeu agendamento para **${app.service.name}** com **${app.employee.name}** no dia **${new Date(app.date).toLocaleDateString('pt-BR')}** foi **${statusText}** pelo estabelecimento.\n\nAgradecemos a preferência!`;
 
                 try {
