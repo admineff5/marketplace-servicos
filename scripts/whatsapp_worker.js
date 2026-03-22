@@ -273,12 +273,15 @@ async function startSession(companyId) {
             rulesContext += `- **CADASTRO**: Se o cliente te informar o Nome Completo e não tiver cadastro, você **DEVE** acionar a ferramenta \`registrarCliente\` com o nome dele imediatamente! **NUNCA** responda recusando o agendamento antes de tentar cadastrá-lo.\n`;
             rulesContext += `- **Sinalização de Listas**: Se for oferecer opções (Serviço, Unidade ou Profissional), responda usando o prefixo "LISTA:" seguido dos nomes exatos separados por vírgula no final da mensagem.\n`;
             rulesContext += `- **VÍNCULO DE UNIDADE**: Ao oferecer profissionais, mostre APENAS os que pertencem à Unidade/Localização que o cliente escolheu.\n`;
+            rulesContext += `- **ENDEREÇO**: Se o cliente perguntar o endereço ou local, você deve informar o endereço ou local completo E o link do Google Maps (se disponível).\n`;
             rulesContext += `Exemplo: "Qual profissional deseja? LISTA: Thiago, Olivia"\n\n`;
 
             rulesContext += `--- 📍 DADOS DA EMPRESA ---\n\n`;
             if (company.locations.length > 0) {
                 rulesContext += `Unidades/Localizações:\n`;
-                company.locations.forEach(l => { rulesContext += `- ${l.name} (id: ${l.id}): ${l.address}\n`; });
+                company.locations.forEach(l => { 
+                    rulesContext += `- ${l.name} (id: ${l.id}): ${l.address}, ${l.number} - ${l.neighborhood}, ${l.city}/${l.state}${l.mapsLink ? ` | Link do Google Maps: ${l.mapsLink}` : ''}\n`; 
+                });
             }
             if (company.services.length > 0) {
                 rulesContext += `\nServiços:\n`;
