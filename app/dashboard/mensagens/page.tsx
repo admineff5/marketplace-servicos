@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { MessageSquareCode, CheckCircle2, Bot, User, Send, Smartphone, Loader2, Power, AlertTriangle, Trash } from "lucide-react";
 
-export default function MensagensPage() {
+function MensagensContent() {
     const searchParams = useSearchParams();
     const chatParam = searchParams.get("chat");
 
@@ -283,5 +283,17 @@ export default function MensagensPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function MensagensPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <Loader2 className="w-8 h-8 animate-spin text-cyan-600 dark:text-primary" />
+            </div>
+        }>
+            <MensagensContent />
+        </Suspense>
     );
 }
