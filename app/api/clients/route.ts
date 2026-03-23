@@ -56,6 +56,25 @@ export async function GET() {
             }
         });
 
+        // 🚀 Busca Leads que ainda não foram convertidos
+        const leads = await prisma.lead.findMany({
+            where: { companyId: company.id, converted: false }
+        });
+
+        leads.forEach((l: any) => {
+            if (!clientsMap.has(l.id)) {
+                clientsMap.set(l.id, {
+                    id: l.id,
+                    name: l.name,
+                    phone: l.phone,
+                    email: l.email,
+                    lastVisit: null,
+                    totalVisits: 0,
+                    status: "Lead"
+                });
+            }
+        });
+
         return NextResponse.json(Array.from(clientsMap.values()));
     } catch (error) {
         console.error("GET Clients Error:", error);

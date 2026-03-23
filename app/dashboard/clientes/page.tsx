@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { Search, Plus, Users, MessageCircle, Clock, Star, X, Check, ShieldAlert, History, Trash } from "lucide-react";
 
 // Mock Data para Simular Base de Clientes Reais
@@ -179,10 +180,13 @@ export default function GestaoClientesPage() {
                                             </div>
                                         </td>
                                         <td className="py-4 px-6">
-                                            <button className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:text-green-500 dark:hover:text-green-400 transition-colors">
+                                            <Link 
+                                                href={`/dashboard/mensagens?chat=${cliente.phone.replace(/\D/g, "")}`}
+                                                className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:text-green-500 dark:hover:text-green-400 transition-colors"
+                                            >
                                                 <MessageCircle className="w-4 h-4" />
                                                 {maskPhone(cliente.phone)}
-                                            </button>
+                                            </Link>
                                         </td>
                                         <td className="py-4 px-6">
                                             <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
@@ -207,6 +211,11 @@ export default function GestaoClientesPage() {
                                             {cliente.status === "Novo" && (
                                                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 text-xs font-bold">
                                                     Novo Cliente
+                                                </span>
+                                            )}
+                                            {cliente.status === "Lead" && (
+                                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-500 text-xs font-bold">
+                                                    Lead
                                                 </span>
                                             )}
                                         </td>

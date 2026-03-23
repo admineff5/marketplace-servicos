@@ -1,9 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { MessageSquareCode, CheckCircle2, Bot, User, Send, Smartphone, Loader2, Power, AlertTriangle, Trash } from "lucide-react";
 
 export default function MensagensPage() {
+    const searchParams = useSearchParams();
+    const chatParam = searchParams.get("chat");
+
     const [isConnected, setIsConnected] = useState(false);
     const [qrCode, setQrCode] = useState<string | null>(null);
     const [status, setStatus] = useState<"DISCONNECTED" | "QRCODE" | "CONNECTED" | "DISCONNECTING" | "ERROR">("DISCONNECTED");
@@ -11,6 +15,13 @@ export default function MensagensPage() {
     const [messages, setMessages] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [selectedChat, setSelectedChat] = useState<string | null>(null);
+
+    // Auto-foca no chat passado por parâmetro
+    useEffect(() => {
+        if (chatParam) {
+            setSelectedChat(chatParam);
+        }
+    }, [chatParam]);
 
     const handleDeleteMessages = async (senderNum: string) => {
         if (!confirm("Deseja realmente apagar o histórico de mensagens deste cliente? A IA 'esquecerá' o contexto da conversa.")) return;

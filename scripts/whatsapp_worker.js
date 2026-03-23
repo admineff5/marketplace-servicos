@@ -260,6 +260,24 @@ async function startSession(companyId) {
                 }
             });
 
+            // 🚀 Automatização: Cria Lead se não for Clietne cadastrado
+            if (!dbUser) {
+                const existingLead = await prisma.lead.findFirst({
+                    where: { phone: senderNum, companyId }
+                });
+                if (!existingLead) {
+                    await prisma.lead.create({
+                        data: {
+                            companyId,
+                            name: senderName,
+                            phone: senderNum,
+                            interest: "Contato via WhatsApp",
+                            converted: false
+                        }
+                    });
+                }
+            }
+
             let rulesContext = `Você é uma secretária virtual educada da empresa "${company.name}".\n`;
             rulesContext += `Nicho: ${company.niche}\n\n`;
             rulesContext += `Data de Hoje: ${new Date().toLocaleDateString('pt-BR')} (Use para deduzir o ano)\n\n`;
