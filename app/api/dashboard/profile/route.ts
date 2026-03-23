@@ -43,13 +43,12 @@ export async function PUT(request: Request) {
         }
 
         const body = await request.json();
-        const { name, cnpj, legalName, imageUrl } = body;
+        const { name, legalName, imageUrl } = body;
 
         const updated = await prisma.company.update({
             where: { ownerId: userId },
             data: { 
                 name, 
-                cnpj, 
                 legalName, 
                 imageUrl 
             }

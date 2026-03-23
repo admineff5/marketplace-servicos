@@ -63,7 +63,7 @@ export async function PUT(
         }
 
         const body = await request.json();
-        const { name, cep, address, number, neighborhood, city, state, mapsLink } = body;
+        const { name, cep, address, number, neighborhood, city, state, mapsLink, cnpj } = body;
 
         // Verificar se a unidade pertence à empresa
         const location = await prisma.location.findUnique({
@@ -84,7 +84,8 @@ export async function PUT(
                 neighborhood,
                 city,
                 state,
-                mapsLink
+                mapsLink,
+                cnpj: cnpj || null
             },
         });
 

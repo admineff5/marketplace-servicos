@@ -44,7 +44,6 @@ model Company {
   services  Service[]
   locations Location[]
   blocks    Block[]
-  cnpj      String?    @unique
   legalName String?
   imageUrl  String?
   appointments Appointment[]
@@ -66,6 +65,7 @@ model Location {
   city         String
   state        String
   mapsLink     String?
+  cnpj         String?       @unique
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   company      Company       @relation(fields: [companyId], references: [id])

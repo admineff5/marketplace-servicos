@@ -6,7 +6,6 @@ const TABS = [
     { id: "profile", label: "Perfil da Empresa", icon: Building },
     { id: "locations", label: "Lojas / Franquias", icon: MapPin },
     { id: "appearance", label: "Aparência", icon: Palette },
-    { id: "payments", label: "Pagamentos", icon: CreditCard },
     { id: "notifications", label: "Notificações", icon: Bell },
     { id: "security", label: "Segurança", icon: Shield },
 ];
@@ -35,7 +34,8 @@ export default function ConfigPage() {
         neighborhood: "",
         city: "",
         state: "",
-        mapsLink: ""
+        mapsLink: "",
+        cnpj: ""
     });
 
     const maskCNPJ = (value: string) => {
@@ -121,7 +121,8 @@ export default function ConfigPage() {
                     neighborhood: "",
                     city: "",
                     state: "",
-                    mapsLink: ""
+                    mapsLink: "",
+                    cnpj: ""
                 });
             } else {
                 const data = await res.json();
@@ -243,17 +244,7 @@ export default function ConfigPage() {
                                             className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2.5 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-cyan-600 dark:focus:ring-cyan-600/50 dark:focus:ring-primary/50" 
                                         />
                                     </div>
-                                    <div className="space-y-1">
-                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">CNPJ</label>
-                                        <input 
-                                            type="text" 
-                                            readOnly
-                                            disabled
-                                            value={maskCNPJ(company.cnpj || "")} 
-                                            placeholder="00.000.000/0000-00"
-                                            className="w-full bg-gray-100 dark:bg-gray-800/80 border-none rounded-lg px-4 py-2.5 text-gray-500 dark:text-gray-400 outline-none cursor-not-allowed select-none opacity-80" 
-                                        />
-                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -341,9 +332,19 @@ export default function ConfigPage() {
                                                 <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Link Google Maps (Como chegar)</label>
                                                 <input 
                                                     type="url" 
-                                                    value={loc.mapsLink} 
+                                                    value={loc.mapsLink || ""} 
                                                     onChange={(e) => handleUpdateLocation(loc.id, "mapsLink", e.target.value)}
                                                     className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm text-blue-500 outline-none focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary" 
+                                                />
+                                            </div>
+                                            <div className="space-y-1 md:col-span-2">
+                                                <label className="text-xs font-medium text-gray-500 dark:text-gray-400">CNPJ</label>
+                                                <input 
+                                                    type="text" 
+                                                    value={maskCNPJ(loc.cnpj || "")} 
+                                                    onChange={(e) => handleUpdateLocation(loc.id, "cnpj", e.target.value.replace(/\D/g, "").slice(0, 14))}
+                                                    className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md px-3 py-2 text-sm text-gray-900 dark:text-white outline-none focus:ring-1 focus:ring-cyan-600 dark:focus:ring-primary" 
+                                                    placeholder="00.000.000/0000-00"
                                                 />
                                             </div>
                                         </div>
@@ -485,6 +486,20 @@ export default function ConfigPage() {
                                         className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-cyan-600 dark:focus:ring-cyan-600/50 dark:focus:ring-primary/50 outline-none" 
                                     />
                                 </div>
+                            </div>
+
+                            <div className="space-y-1">
+                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">CNPJ (Opcional)</label>
+                                <input 
+                                    type="text" 
+                                    value={maskCNPJ(newLocation.cnpj)}
+                                    onChange={(e) => {
+                                        const val = e.target.value.replace(/\D/g, "").slice(0, 14);
+                                        setNewLocation({...newLocation, cnpj: val});
+                                    }}
+                                    className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-cyan-600 dark:focus:ring-cyan-600/50 dark:focus:ring-primary/50 outline-none" 
+                                    placeholder="00.000.000/0000-00"
+                                />
                             </div>
 
                             <div className="p-4 bg-gray-900 dark:bg-black rounded-xl flex items-center justify-between mt-6">

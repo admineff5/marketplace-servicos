@@ -46,7 +46,7 @@ export async function POST(request: Request) {
         }
 
         const body = await request.json();
-        const { name, cep, address, number, neighborhood, city, state, mapsLink } = body;
+        const { name, cep, address, number, neighborhood, city, state, mapsLink, cnpj } = body;
 
         if (!name || !cep || !address) {
             return NextResponse.json({ error: "Nome, CEP e Endereço são obrigatórios" }, { status: 400 });
@@ -62,6 +62,7 @@ export async function POST(request: Request) {
                 city: city || "",
                 state: state || "",
                 mapsLink: mapsLink || "",
+                cnpj: cnpj || null, // null is safe for unique constraints if not provided, or empty string if allowed
                 companyId: company.id,
             },
         });
