@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { getSession } from "@/lib/auth";
 import { cookies } from "next/headers";
 
 // Helper: Mascarar CPF — retorna ***.***. ***-XX
@@ -12,14 +13,13 @@ function maskCPF(cpf: string | null): string | null {
 
 export async function GET() {
     try {
-        const cookieStore = await cookies();
-        const session = cookieStore.get("auth_session");
-        
-        if (!session) {
-            return NextResponse.json({ error: "Sessão expirada" }, { status: 401 });
-        }
-
-        const { id } = JSON.parse(session.value);
+        const session = await getSession();
+         
+         if (!session) {
+             return NextResponse.json({ error: "Sessão expirada" }, { status: 401 });
+         }
+ 
+         const { id } = session;
 
         const user = await prisma.user.findUnique({
             where: { id },
@@ -51,14 +51,13 @@ export async function GET() {
 
 export async function PUT(request: Request) {
     try {
-        const cookieStore = await cookies();
-        const session = cookieStore.get("auth_session");
-        
-        if (!session) {
-            return NextResponse.json({ error: "Sessão expirada" }, { status: 401 });
-        }
-
-        const { id } = JSON.parse(session.value);
+        const session = await getSession();
+         
+         if (!session) {
+             return NextResponse.json({ error: "Sessão expirada" }, { status: 401 });
+         }
+ 
+         const { id } = session;
         const body = await request.json();
         const { name, address, phone, imageUrl } = body;
 

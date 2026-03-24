@@ -1,17 +1,17 @@
 import { NextResponse } from "next/server";
+import { getSession } from "@/lib/auth";
 import { cookies } from "next/headers";
 import prisma from "@/lib/prisma";
 
 export async function GET() {
     try {
-        const cookieStore = await cookies();
-        const session = cookieStore.get("auth_session");
-
-        if (!session) {
-            return NextResponse.json({ authenticated: false });
-        }
-
-        const { id } = JSON.parse(session.value);
+        const session = await getSession();
+ 
+         if (!session) {
+             return NextResponse.json({ authenticated: false });
+         }
+ 
+         const { id } = session;
         const user = await prisma.user.findUnique({
             where: { id },
             select: { id: true, name: true, email: true, role: true }
