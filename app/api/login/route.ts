@@ -100,6 +100,7 @@ export async function POST(request: Request) {
         });
     } catch (error) {
         console.error("Login API Error:", error);
-        return NextResponse.json({ error: "Erro interno no servidor" }, { status: 500 });
+        const errorMessage = error instanceof Error ? error.message : "Erro interno desconhecido";
+        return NextResponse.json({ error: `Erro interno: ${errorMessage}` }, { status: 500 });
     }
 }

@@ -20,7 +20,7 @@ export async function GET(request: Request) {
         }
 
         // 2. Marcar como verificado e limpar token
-        await prisma.user.update({
+        const updatedUser = await prisma.user.update({
             where: { id: user.id },
             data: {
                 emailVerified: true,
@@ -28,12 +28,35 @@ export async function GET(request: Request) {
             }
         });
 
-        // 3. Redirecionar para o Login com flag de sucesso
+        // 🌟 3. Emitir Sessão Imediata (Autenticação automática pelo clique)
+        const { SignJWT } = await import("jose");
+        const secretText = process.env.AUTH_SECRET;
+        if (!secretText) throw new Error("AUTH_SECRET não configurada");
+        const secret = new TextEncoder().encode(secretText);
+
+        const tokenJWT = await new SignJWT({ id: updatedUser.id, role: updatedUser.role })
+            .setProtectedHeader({ alg: "HS256" })
+            .setIssuedAt()
+            .setExpirationTime("7d")
+            .sign(secret);
+
+        const { cookies } = await import("next/headers");
+        const cookieStore = await cookies();
+        cookieStore.set("auth_session", tokenJWT, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            maxAge: 7 * 24 * 60 * 60, // 7 dias
+            path: "/",
+        });
+
+        // 4. Redirecionar direto para o Painel correspondente
         const baseUrl = new URL(request.url).origin;
-        return NextResponse.redirect(new URL(`/login?verified=true`, baseUrl));
+        const redirectUrl = updatedUser.role === "CLIENT" ? "/cliente" : "/dashboard";
+        return NextResponse.redirect(new URL(redirectUrl, baseUrl));
 
     } catch (error) {
         console.error("Verify Email Error:", error);
-        return NextResponse.json({ error: "Erro interno no servidor" }, { status: 500 });
+        return NextResponse.json({ error: error instanceof Error ? error.message : "Erro interno no servidor" }, { status: 500 });
     }
 }
