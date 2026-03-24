@@ -51,7 +51,7 @@ export async function GET(request: Request) {
         });
 
         // 4. Redirecionar direto para o Painel correspondente
-        const baseUrl = new URL(request.url).origin;
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || new URL(request.url).origin;
         const redirectUrl = updatedUser.role === "CLIENT" ? "/cliente" : "/dashboard";
         return NextResponse.redirect(new URL(redirectUrl, baseUrl));
 
