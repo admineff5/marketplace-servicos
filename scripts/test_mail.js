@@ -51,7 +51,7 @@ async function run() {
 
         const info = await transporter.sendMail({
             from: process.env.SMTP_FROM,
-            to: process.env.SMTP_USER, // Envia para ele mesmo como teste
+            to: process.argv[2] || process.env.SMTP_USER, // 🔴 Permite testar com um email externo pelo terminal
             subject: "📩 Teste de SMTP - AgendaJá",
             text: "Seu teste de e-mail corporativo funcionou perfeitamente!"
         });
