@@ -18,7 +18,8 @@ export async function sendVerificationEmail(email: string, token: string) {
         port: Number(process.env.SMTP_PORT) || 587,
         secure: process.env.SMTP_SECURE === "true",
         auth: { user, pass },
-    });
+        family: 4 // 🔴 FORÇA O USO DE IPV4 PARA EVITAR ERROS DE REDE/V6 EM SERVIDORES VPS
+    } as any);
 
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
     const verifyLink = `${baseUrl}/api/auth/verify-email?token=${token}`;
