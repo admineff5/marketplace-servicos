@@ -23,8 +23,10 @@ export async function sendVerificationEmail(email: string, token: string) {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
     const verifyLink = `${baseUrl}/api/auth/verify-email?token=${token}`;
 
+    const fromEmail = process.env.SMTP_FROM || user;
+
     const mailOptions = {
-        from: `"AgendaJá" <${user}>`,
+        from: `"AgendaJá" <${fromEmail}>`,
         to: email,
         subject: "Verifique seu E-mail - AgendaJá",
         html: `
