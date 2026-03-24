@@ -56,8 +56,8 @@ export default function Register() {
                 throw new Error(data.error || "Erro ao realizar cadastro");
             }
 
-            // 📩 Verificar se email foi enviado
-            if (data.emailSent) {
+            // 📩 Verificar se o cadastro deu certo para exibir a tela de confirmação de e-mail
+            if (data.success) {
                 setIsSuccess(true);
                 return;
             }
