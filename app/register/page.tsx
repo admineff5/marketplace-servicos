@@ -20,6 +20,7 @@ export default function Register() {
 
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
 
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -55,6 +56,12 @@ export default function Register() {
                 throw new Error(data.error || "Erro ao realizar cadastro");
             }
 
+            // 📩 Verificar se email foi enviado
+            if (data.emailSent) {
+                setIsSuccess(true);
+                return;
+            }
+
             // Sucesso! Redireciona conforme o perfil
             if (role === "CLIENT") {
                 router.push("/cliente");
@@ -83,6 +90,31 @@ export default function Register() {
 
         setFormData({ ...formData, [name]: value });
     };
+
+    if (isSuccess) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 dark:bg-[#0a0a0a]">
+                <div className="sm:mx-auto sm:w-full sm:max-w-md">
+                    <div className="bg-white py-8 px-4 shadow-xl sm:rounded-2xl sm:px-10 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 text-center">
+                        <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-cyan-100 dark:bg-cyan-900/30">
+                            <svg className="h-8 w-8 text-cyan-600 dark:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v10a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <h2 className="mt-4 text-2xl font-bold text-gray-900 dark:text-white">Verifique seu E-mail</h2>
+                        <p className="mt-2 text-gray-600 dark:text-gray-400">
+                            Enviamos um link de ativação para o seu e-mail. Por favor, acesse sua caixa de entrada para liberar seu acesso.
+                        </p>
+                        <div className="mt-6">
+                            <Link href="/login" className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-cyan-700 hover:bg-cyan-800 transition-colors">
+                                Ir para o Login
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col dark:bg-[#0a0a0a]">
