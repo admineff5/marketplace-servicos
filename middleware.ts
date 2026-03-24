@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { jwtVerify } from 'jose';
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // Bypass total para a rota de cadastro (necessário para usuários logados PF/PJ)
@@ -14,8 +15,9 @@ export function middleware(request: NextRequest) {
     // Se o usuário está logado e tenta acessar login, redireciona para sua área
     if (session && pathname === '/login') {
         try {
-            const userData = JSON.parse(session.value);
-            const redirectUrl = userData.role === 'CLIENT' ? '/cliente' : '/dashboard';
+            const secret = new TextEncoder().encode(process.env.AUTH_SECRET);
+            const { payload } = await jwtVerify(session.value, secret);
+            const redirectUrl = payload.role === 'CLIENT' ? '/cliente' : '/dashboard';
             return NextResponse.redirect(new URL(redirectUrl, request.url));
         } catch (e) {
             // Cookie corrompido — limpar e deixar passar para o login
@@ -33,7 +35,9 @@ export function middleware(request: NextRequest) {
     // RBAC — Verificar papéis corretos por rota
     if (session) {
         try {
-            const { role } = JSON.parse(session.value);
+            const secret = new TextEncoder().encode(process.env.AUTH_SECRET);
+            const { payload } = await jwtVerify(session.value, secret);
+            const role = payload.role as string;
 
             // BUSINESS tentando acessar área de CLIENT
             if (pathname.startsWith('/cliente') && role === 'BUSINESS') {

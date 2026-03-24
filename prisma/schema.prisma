@@ -25,6 +25,13 @@ model User {
   paymentMethods  PaymentMethod[]
   imageUrl        String?
   balance         Float         @default(0)
+  
+  // 📸 Novas Configurações de Segurança
+  googleId           String?   @unique
+  twoFactorSecret    String?
+  twoFactorEnabled   Boolean   @default(false)
+  emailVerified      Boolean   @default(false)
+  verificationToken  String?
 }
 
 model Company {

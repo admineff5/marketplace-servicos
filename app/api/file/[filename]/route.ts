@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { readFile } from "fs/promises";
-import { join } from "path";
+import { join, basename } from "path";
 
 export async function GET(request: Request, context: { params: Promise<{ filename: string }> }) {
     try {
         const { filename } = await context.params;
-        const filePath = join(process.cwd(), "public", "uploads", filename);
+        const filePath = join(process.cwd(), "public", "uploads", basename(filename));
         
         try {
             const buffer = await readFile(filePath);

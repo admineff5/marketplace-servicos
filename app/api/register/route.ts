@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { cookies } from "next/headers";
+import { SignJWT } from "jose";
 import bcrypt from "bcrypt";
+import { sendVerificationEmail } from "@/lib/mail";
 
 export async function POST(request: Request) {
     try {
@@ -41,24 +43,39 @@ export async function POST(request: Request) {
             if (existingPhone.email.includes("@whatsapp.com")) {
                 // 🧠 O cliente já tem uma conta de rascunho criada pelo Whatsapp!
                 // Nós atualizamos ela com os dados reais do site para não duplicar!
+                const verificationToken = crypto.randomUUID();
                 const user = await prisma.user.update({
                     where: { id: existingPhone.id },
                     data: {
                         name,
                         email,
                         password: hashedPassword,
-                        cpf: cleanCPF
+                        cpf: cleanCPF,
+                        verificationToken,
                     }
                 });
 
+                const secretText = process.env.AUTH_SECRET;
+                if (!secretText) throw new Error("AUTH_SECRET não configurada");
+                const secret = new TextEncoder().encode(secretText);
+
+                const token = await new SignJWT({ id: user.id, role: user.role })
+                    .setProtectedHeader({ alg: "HS256" })
+                    .setIssuedAt()
+                    .setExpirationTime("7d")
+                    .sign(secret);
+
                 const cookieStore = await cookies();
-                cookieStore.set("auth_session", JSON.stringify({ id: user.id, role: user.role }), {
+                cookieStore.set("auth_session", token, {
                     httpOnly: true,
                     secure: process.env.NODE_ENV === "production",
                     sameSite: "lax",
                     maxAge: 7 * 24 * 60 * 60,
                     path: "/",
                 });
+
+                // Disparar e-mail de verificação
+                await sendVerificationEmail(email, verificationToken);
 
                 return NextResponse.json({ success: true, user: { id: user.id, email: user.email } });
             } else {
@@ -72,6 +89,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "E-mail já cadastrado" }, { status: 400 });
         }
 
+        const verificationToken = crypto.randomUUID();
         const user = await prisma.user.create({
             data: {
                 name,
@@ -79,7 +97,8 @@ export async function POST(request: Request) {
                 password: hashedPassword,
                 role: role || "CLIENT",
                 cpf: cleanCPF,
-                phone: normalizedPhone
+                phone: normalizedPhone,
+                verificationToken,
             },
         });
 
@@ -95,15 +114,30 @@ export async function POST(request: Request) {
             console.log(`[SYSTEM] Empresa auto-criada para novo usuário BUSINESS: ${user.id}`);
         }
 
-        // Sessão segura — 7 dias, httpOnly, sameSite lax
+        // Sessão segura — JWT assinado com jose
+        const secretText = process.env.AUTH_SECRET;
+        if (!secretText) throw new Error("AUTH_SECRET não configurada");
+        const secret = new TextEncoder().encode(secretText);
+
+        const token = await new SignJWT({ id: user.id, role: user.role })
+            .setProtectedHeader({ alg: "HS256" })
+            .setIssuedAt()
+            .setExpirationTime("7d")
+            .sign(secret);
+
         const cookieStore = await cookies();
-        cookieStore.set("auth_session", JSON.stringify({ id: user.id, role: user.role }), {
+        cookieStore.set("auth_session", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
             maxAge: 7 * 24 * 60 * 60, // 7 dias
             path: "/",
         });
+
+        // Disparar e-mail de verificação
+        if (user.verificationToken) {
+            await sendVerificationEmail(user.email, user.verificationToken);
+        }
 
         return NextResponse.json({ success: true, user: { id: user.id, email: user.email } });
     } catch (error) {

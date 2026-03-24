@@ -45,9 +45,38 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "E-mail e/ou senha inválidos" }, { status: 401 });
         }
 
-        // Sessão segura — 7 dias, httpOnly, sameSite lax
+        // Sessão segura — JWT assinado com jose
+        const secretText = process.env.AUTH_SECRET;
+        if (!secretText) {
+            throw new Error("AUTH_SECRET não está definida no ambiente");
+        }
+        const secret = new TextEncoder().encode(secretText);
+        
+        const { SignJWT } = await import("jose");
+
+        // 🚨 Verificar se Autenticação de 2 Fatores está ativada
+        if (user.twoFactorEnabled) {
+            const preAuthToken = await new SignJWT({ id: user.id, role: user.role, mfa: "PENDING" })
+                .setProtectedHeader({ alg: "HS256" })
+                .setIssuedAt()
+                .setExpirationTime("15m") // 15 minutos para digitar o código
+                .sign(secret);
+
+            return NextResponse.json({ 
+                success: true, 
+                mfaRequired: true, 
+                preAuthToken // Enviar para o frontend usar na rota /api/auth/2fa/login
+            });
+        }
+
+        const token = await new SignJWT({ id: user.id, role: user.role })
+            .setProtectedHeader({ alg: "HS256" })
+            .setIssuedAt()
+            .setExpirationTime("7d")
+            .sign(secret);
+
         const cookieStore = await cookies();
-        cookieStore.set("auth_session", JSON.stringify({ id: user.id, role: user.role }), {
+        cookieStore.set("auth_session", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 import { cookies } from "next/headers";
+import { jwtVerify } from "jose";
 
 export async function POST(request: Request) {
     try {
@@ -12,11 +13,33 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Sessão expirada" }, { status: 401 });
         }
 
+        // Validar assinatura do Token JWT
+        try {
+            const secretText = process.env.AUTH_SECRET;
+            if (!secretText) throw new Error("Chave secreta não configurada");
+            const secret = new TextEncoder().encode(secretText);
+            await jwtVerify(session.value, secret);
+        } catch (e) {
+            return NextResponse.json({ error: "Sessão inválida ou corrompida" }, { status: 401 });
+        }
+
         const formData = await request.formData();
         const file = formData.get("file") as File;
 
         if (!file) {
             return NextResponse.json({ error: "Nenhum arquivo enviado" }, { status: 400 });
+        }
+
+        // 🚨 Validação de Tipo (Prevent XSS/Malware)
+        const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+        if (!allowedTypes.includes(file.type.toLowerCase())) {
+            return NextResponse.json({ error: "Formato de arquivo não permitido (Apenas JPG, PNG, WEBP)" }, { status: 400 });
+        }
+
+        // 🚨 Validação de Tamanho (Prevent DoS)
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        if (file.size > maxSize) {
+            return NextResponse.json({ error: "Arquivo muito grande (Máximo 5MB)" }, { status: 400 });
         }
 
         const bytes = await file.arrayBuffer();
