@@ -54,6 +54,11 @@ export async function POST(request: Request) {
         
         const { SignJWT } = await import("jose");
 
+        // 🚨 Verificar se E-mail está verificado
+        if (user.emailVerified === false) {
+            return NextResponse.json({ error: "Por favor, verifique seu e-mail para acessar a conta." }, { status: 403 });
+        }
+
         // 🚨 Verificar se Autenticação de 2 Fatores está ativada
         if (user.twoFactorEnabled) {
             const preAuthToken = await new SignJWT({ id: user.id, role: user.role, mfa: "PENDING" })

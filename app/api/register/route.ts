@@ -52,32 +52,18 @@ export async function POST(request: Request) {
                         password: hashedPassword,
                         cpf: cleanCPF,
                         verificationToken,
+                        emailVerified: false // Reseta para falso até aprovar e-mail
                     }
-                });
-
-                const secretText = process.env.AUTH_SECRET;
-                if (!secretText) throw new Error("AUTH_SECRET não configurada");
-                const secret = new TextEncoder().encode(secretText);
-
-                const token = await new SignJWT({ id: user.id, role: user.role })
-                    .setProtectedHeader({ alg: "HS256" })
-                    .setIssuedAt()
-                    .setExpirationTime("7d")
-                    .sign(secret);
-
-                const cookieStore = await cookies();
-                cookieStore.set("auth_session", token, {
-                    httpOnly: true,
-                    secure: process.env.NODE_ENV === "production",
-                    sameSite: "lax",
-                    maxAge: 7 * 24 * 60 * 60,
-                    path: "/",
                 });
 
                 // Disparar e-mail de verificação
                 await sendVerificationEmail(email, verificationToken);
 
-                return NextResponse.json({ success: true, user: { id: user.id, email: user.email } });
+                return NextResponse.json({ 
+                    success: true, 
+                    message: "Cadastro atualizado. Por favor, verifique seu e-mail para validar a conta.",
+                    emailSent: true 
+                });
             } else {
                 return NextResponse.json({ error: "Celular / WhatsApp já cadastrado no sistema" }, { status: 400 });
             }
@@ -114,32 +100,16 @@ export async function POST(request: Request) {
             console.log(`[SYSTEM] Empresa auto-criada para novo usuário BUSINESS: ${user.id}`);
         }
 
-        // Sessão segura — JWT assinado com jose
-        const secretText = process.env.AUTH_SECRET;
-        if (!secretText) throw new Error("AUTH_SECRET não configurada");
-        const secret = new TextEncoder().encode(secretText);
-
-        const token = await new SignJWT({ id: user.id, role: user.role })
-            .setProtectedHeader({ alg: "HS256" })
-            .setIssuedAt()
-            .setExpirationTime("7d")
-            .sign(secret);
-
-        const cookieStore = await cookies();
-        cookieStore.set("auth_session", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            maxAge: 7 * 24 * 60 * 60, // 7 dias
-            path: "/",
-        });
-
         // Disparar e-mail de verificação
         if (user.verificationToken) {
             await sendVerificationEmail(user.email, user.verificationToken);
         }
 
-        return NextResponse.json({ success: true, user: { id: user.id, email: user.email } });
+        return NextResponse.json({ 
+            success: true, 
+            message: "Cadastro realizado com sucesso! Por favor, verifique seu e-mail para ativar a conta.",
+            emailSent: true 
+        });
     } catch (error) {
         console.error("Register API Error:", error);
         return NextResponse.json({ error: "Erro interno no servidor" }, { status: 500 });
