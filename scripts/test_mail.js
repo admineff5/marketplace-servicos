@@ -42,7 +42,10 @@ async function run() {
             user: process.env.SMTP_USER,
             pass: process.env.SMTP_PASS,
         },
-        family: 4 // 🔴 FORÇA O USO DE IPV4 PARA EVITAR ERROS DE REDE/V6
+        family: 4, // 🔴 FORÇA O USO DE IPV4 PARA EVITAR ERROS DE REDE/V6
+        tls: {
+            rejectUnauthorized: false // 🔴 Ignora erros de SSL para diagnóstico
+        }
     });
 
     try {
