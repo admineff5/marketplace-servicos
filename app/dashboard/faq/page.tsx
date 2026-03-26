@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { HelpCircle, Save, CheckCircle2, AlertTriangle, Loader2 } from "lucide-react";
+import { HelpCircle, Save, CheckCircle2, AlertTriangle, Loader2, Sparkles } from "lucide-react";
 
 const ESTETICA_QUESTIONS = [
     { id: "q2", question: "Vocês atendem por ordem de chegada ou apenas com agendamento?" },
@@ -123,8 +123,8 @@ export default function FaqPage() {
                         className={`bg-white dark:bg-[#111] p-5 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm transition-all duration-200 group ${q.isRag ? 'border-primary/30 dark:border-primary/30 shadow-[0_0_15px_rgba(0,255,255,0.05)]' : 'hover:border-cyan-200 dark:hover:border-cyan-900/40'}`}
                     >
                         <div className="flex items-start gap-3">
-                            <span className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold shrink-0 mt-0.5 ${q.isRag ? 'bg-primary text-black' : 'bg-cyan-50 dark:bg-cyan-900/20 text-cyan-700 dark:text-primary'}`}>
-                                {q.isRag ? '✨' : index + 1}
+                            <span className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold shrink-0 mt-0.5 ${q.isRag ? 'bg-gray-900 text-white dark:bg-primary dark:text-black' : 'bg-cyan-50 dark:bg-cyan-900/20 text-cyan-700 dark:text-primary'}`}>
+                                {q.isRag ? <Sparkles className="w-3.5 h-3.5" /> : index + 1}
                             </span>
                             <div className="flex-1 space-y-2">
                                 <label className="block text-sm font-bold text-gray-900 dark:text-white group-hover:text-cyan-700 dark:group-hover:text-primary transition-colors">
