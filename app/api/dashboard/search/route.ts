@@ -20,41 +20,43 @@ export async function GET(request: Request) {
 
         const companyId = company.id;
 
-        // 1. Buscas Relacionais (Paralelas)
-        const searchPattern = `%${query}%`;
-        
-        const [clients, products, services, popularClients] = await Promise.all([
-            prisma.$queryRaw`
-                SELECT id, name, email, phone 
-                FROM "User" 
-                WHERE "companyId" = ${companyId} AND "role" = 'CLIENT' 
-                AND (name ILIKE ${searchPattern} OR email ILIKE ${searchPattern} OR phone ILIKE ${searchPattern})
-                LIMIT 3
-            `,
-            prisma.$queryRaw`
-                SELECT id, name, price, stock 
-                FROM "Product" 
-                WHERE "companyId" = ${companyId} 
-                AND name ILIKE ${searchPattern}
-                LIMIT 3
-            `,
-            prisma.$queryRaw`
-                SELECT id, name, price, duration 
-                FROM "Service" 
-                WHERE "companyId" = ${companyId} 
-                AND name ILIKE ${searchPattern}
-                LIMIT 3
-            `,
-            prisma.$queryRaw`
-                SELECT name 
-                FROM "User" 
-                WHERE "companyId" = ${companyId} AND "role" = 'CLIENT' 
-                ORDER BY "createdAt" DESC 
-                LIMIT 100
-            `
+        // 1. Buscas Relacionais (Paralelas, Tipadas usando Prisma)
+        const [products, services, matchLeads, recentAppointments, recentLeads] = await Promise.all([
+            prisma.product.findMany({
+                where: { companyId, name: { contains: query, mode: 'insensitive' } },
+                select: { id: true, name: true, price: true, stock: true },
+                take: 3
+            }),
+            prisma.service.findMany({
+                where: { companyId, name: { contains: query, mode: 'insensitive' } },
+                select: { id: true, name: true, price: true, duration: true },
+                take: 3
+            }),
+            prisma.lead.findMany({
+                where: { companyId, name: { contains: query, mode: 'insensitive' } },
+                select: { id: true, name: true, phone: true },
+                take: 3
+            }),
+            prisma.appointment.findMany({
+                where: { location: { companyId } },
+                select: { user: { select: { name: true } } },
+                orderBy: { date: 'desc' },
+                take: 100
+            }),
+            prisma.lead.findMany({
+                where: { companyId },
+                select: { name: true },
+                orderBy: { createdAt: 'desc' },
+                take: 50
+            })
         ]);
 
-        const clientNames = (popularClients as any[]).map((c: any) => c.name).join(', ');
+        const allNames = [
+            ...recentAppointments.map((a: any) => a.user?.name),
+            ...recentLeads.map((l: any) => l.name)
+        ].filter(Boolean);
+        
+        const clientNames = Array.from(new Set(allNames)).join(', ');
 
         // 2. IA Routing com Fuzzy Matching Dinâmico
         let aiSuggestions = [];
@@ -98,7 +100,7 @@ Retorne APENAS o JSON puro (NUNCA markdown, comece com '[' e termine com ']'). T
         }
 
         return NextResponse.json({
-            clients: clients || [],
+            clients: matchLeads || [],
             products: products || [],
             services: services || [],
             aiSuggestions
