@@ -60,33 +60,27 @@ export async function GET(request: Request) {
         let aiSuggestions = [];
         try {
             const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+            const todayStr = new Date().toISOString().split('T')[0];
             
-            const prompt = `Você é o Roteador Inteligente de um sistema SaaS. O usuário digitou: "${query}"
+            const prompt = `Você é o Roteador Inteligente (OmniSearch) de um sistema SaaS. O usuário digitou na barra de busca: "${query}"
 
-Sua tarefa: Descobrir o que ele quer fazer e devolver até 3 links que resolvem a intenção dele.
+Sua tarefa: Devolver até 3 links diretos (Deep Links) que resolvam a intenção dele em formato ARRAY JSON.
+
+Nomes de Clientes no BD: [${clientNames}].
+Data de Hoje: ${todayStr}
 
 DICAS EXTREMAMENTE IMPORTANTES:
-1) Tolerância a erros (Fuzzy Match): Se o usuário digitou "rodrt", "jooa", ou "corte decrade", assuma que é um typo! 
-Aqui estão alguns clientes cadastrados: [${clientNames}]. Se parecer com algum deles, USE O NOME CORRETO NAS URLs!
+1) FUZZY MATCH AGRESSIVO: Se a busca for uma palavra solta que parece um nome próprio (ex: "rodrt", "maria", "jooa"), assuma IMEDIATAMENTE que ele quer buscar um cliente! Procure na lista [${clientNames}], ache o correto (ex: Rodrigo) e gere 2 links obrigatórios:
+- {"url": "/dashboard/clientes?q=Rodrigo", "label": "Buscar Rodrigo [Gestão de Cliente]"}
+- {"url": "/dashboard/agenda?view=list&q=Rodrigo", "label": "Buscar Rodrigo [Agenda]"}
 
-2) Múltiplos Destinos: Se o usuário pesquisar o nome de alguém, ofereça ir para o Perfil do Cliente E ir para a Agenda dele.
-- Gestão de Cliente: /dashboard/clientes?q=NOME_CORRETO
-- Ver na Agenda: /dashboard/agenda?view=list&q=NOME_CORRETO
+2) FILTROS NATURAIS: 
+- "agenda de hoje" -> {"url": "/dashboard/agenda?view=list&startDate=${todayStr}&endDate=${todayStr}", "label": "Agenda de Hoje"}
+- "amanha", "ontem", "semana que vem": calcule com base na Data de Hoje (${todayStr}).
 
-3) Filtros de Tempo Naturais:
-- "agendamentos de hoje": /dashboard/agenda?view=list&startDate=HOJE&endDate=HOJE (use formato YYYY-MM-DD para as datas atuais).
-- "agendamentos do dia 13 a 20": /dashboard/agenda?view=list&startDate=YYYY-03-13&endDate=YYYY-03-20
+3) AÇÕES RÁPIDAS: "adicionar fulano" -> /dashboard/clientes?action=new
 
-4) Ações Rápidas:
-- "cadastrar fulano": /dashboard/clientes?action=new
-- "novo corte": /dashboard/servicos?action=new
-
-Responda ESTRITAMENTE em formato ARRAY JSON. Apresente o JSON puro (SEM \`\`\`json).
-Exemplo:
-[
-  {"url": "/dashboard/clientes?q=rodrigo", "label": "rodrigo [Gestão de Cliente]"},
-  {"url": "/dashboard/agenda?view=list&q=rodrigo", "label": "rodrigo [Agenda]"}
-]`;
+Retorne APENAS o JSON puro (NUNCA markdown, comece com '[' e termine com ']'). Tente sempre sugerir algo!`;
 
             const response = await ai.models.generateContent({
                 model: 'gemini-2.5-flash',
