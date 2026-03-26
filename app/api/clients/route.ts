@@ -81,3 +81,38 @@ export async function GET() {
         return NextResponse.json({ error: "Erro interno" }, { status: 500 });
     }
 }
+
+export async function POST(request: Request) {
+    try {
+        const session = await getSession();
+        if (!session) return NextResponse.json({ error: "Sessão expirada" }, { status: 401 });
+
+        const company = await getCompanyByUserId(session.id);
+        if (!company) return NextResponse.json({ error: "Empresa não encontrada" }, { status: 404 });
+
+        const body = await request.json();
+        const { name, phone } = body;
+
+        if (!name || !phone) {
+            return NextResponse.json({ error: "Nome e Telefone são obrigatórios" }, { status: 400 });
+        }
+
+        // 🧹 Limpa a formatação do telefone
+        const cleanPhone = phone.replace(/\D/g, "");
+
+        // 🛡️ Salva como Lead associado à Empresa
+        const newLead = await prisma.lead.create({
+            data: {
+                name,
+                phone: cleanPhone,
+                companyId: company.id,
+                converted: false
+            }
+        });
+
+        return NextResponse.json({ success: true, lead: newLead });
+    } catch (error) {
+        console.error("POST Clients Error:", error);
+        return NextResponse.json({ error: "Erro ao criar cliente manual" }, { status: 500 });
+    }
+}

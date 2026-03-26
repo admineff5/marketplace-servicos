@@ -83,12 +83,25 @@ export default function GestaoClientesPage() {
     const handleSave = async () => {
         if (!formName || !formPhone) return;
 
-        // Por enquanto, como o sistema é baseado em User (Role.CLIENT), 
-        // a adição manual pode ser via criação de User ou apenas via Leads.
-        // O plano foca em correção de bugs e mascaramento.
-        alert("Cadastro manual em desenvolvimento. Clientes são adicionados automaticamente ao agendar.");
-        setIsModalOpen(false);
-        resetForm();
+        try {
+            const res = await fetch("/api/clients", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name: formName, phone: formPhone })
+            });
+
+            if (res.ok) {
+                alert("Cliente cadastrado manualmente com sucesso!");
+                setIsModalOpen(false);
+                resetForm();
+                fetchData(); // Recarrega a tabela de clientes
+            } else {
+                const errorData = await res.json();
+                alert(`Falha ao cadastrar: ${errorData.error}`);
+            }
+        } catch (error) {
+            alert("Erro de rede ao tentar cadastrar o cliente.");
+        }
     };
 
     const handleOpenHistory = (client: any) => {
