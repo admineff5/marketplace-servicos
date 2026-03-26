@@ -51,10 +51,21 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
         }
 
-        // Para evitar erros de chave estrangeira caso o banco não tenha as NicheQuestions cadastradas ainda pelos seeds
-        // Agregamos as respostas mapeando cada uma
-        const operations = Object.entries(answers).map(([qId, answer]) => {
+        // Para evitar erros de chave estrangeira, nós garantimos que a NicheQuestion correspondente exista no Banco antes de salvar a resposta.
+        const operations = Object.entries(answers).map(async ([qId, answer]) => {
             if (!answer || (answer as string).trim() === '') return null;
+
+            // Cria a pergunta se for mock "q1", "q2", etc para não quebrar a Foreign Key
+            await prisma.nicheQuestion.upsert({
+                where: { id: qId },
+                update: {},
+                create: {
+                    id: qId,
+                    niche: "GERAL",
+                    question: `Pergunta ${qId}`,
+                    order: parseInt(qId.replace('q', '')) || 0,
+                }
+            });
 
             return prisma.companyAnswer.upsert({
                 where: {
@@ -70,16 +81,13 @@ export async function POST(request: Request) {
                     answer: answer as string,
                 }
             });
-        }).filter(Boolean);
+        });
 
-        if (operations.length > 0) {
-            // Se as questões existirem, salva as respostas
-            try {
-                await Promise.all(operations);
-            } catch (error) {
-                // Silencia erro de FK para fins de simulação inicial se os IDs do front forem estáticos
-                console.warn("FAQ Save Warning - Talvez questões não existam no banco ainda:", error);
-            }
+        const resolvedQueries = (await Promise.all(operations)).filter(Boolean);
+
+        if (resolvedQueries.length > 0) {
+            // Executa todas as inserções
+            await prisma.$transaction(resolvedQueries as any[]);
         }
 
         return NextResponse.json({ success: true });

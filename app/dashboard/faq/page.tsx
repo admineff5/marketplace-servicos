@@ -87,7 +87,7 @@ export default function FaqPage() {
                     className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-lg active:scale-95 ${
                         answeredCount === 0 
                             ? "bg-gray-200 dark:bg-gray-800 text-gray-400 cursor-not-allowed" 
-                            : "bg-cyan-600 dark:bg-primary text-white hover:bg-cyan-700 dark:hover:bg-primary/90"
+                            : "bg-cyan-600 dark:bg-primary text-white dark:text-black hover:bg-cyan-700 dark:hover:bg-primary/90"
                     }`}
                 >
                     {loading ? (
