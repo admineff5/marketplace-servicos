@@ -73,11 +73,12 @@ export default function FaqPage() {
             <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                        <HelpCircle className="w-6 h-6 text-primary" />
+                        <HelpCircle className="w-6 h-6 text-cyan-600 dark:text-primary" />
                         FAQ Assistente (IA)
                     </h1>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm">
-                        Responda às perguntas frequentes do seu nicho para treinar a sua IA de atendimento.
+                    <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
+                        Responda às perguntas abaixo para alimentar o conhecimento da sua Inteligência Artificial. 
+                        Ela usará essas informações para conversar e responder automaticamente aos seus clientes via WhatsApp.
                     </p>
                 </div>
 
