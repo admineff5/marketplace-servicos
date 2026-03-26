@@ -49,9 +49,9 @@ export function Footer() {
                         <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-wider">Empresa</h4>
                         <ul className="space-y-3">
                             <li>
-                                <Link href="/fale-conosco" className="text-sm text-gray-400 hover:text-cyan-700 dark:hover:text-primary transition-colors">
+                                <a href="https://eff5.com.br" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-400 hover:text-cyan-700 dark:hover:text-primary transition-colors">
                                     Quem somos
-                                </Link>
+                                </a>
                             </li>
                             <li>
                                 <Link href="/fale-conosco" className="text-sm text-gray-400 hover:text-cyan-700 dark:hover:text-primary transition-colors">
