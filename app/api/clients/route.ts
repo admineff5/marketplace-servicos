@@ -106,6 +106,7 @@ export async function POST(request: Request) {
                 name,
                 phone: cleanPhone,
                 companyId: company.id,
+                interest: "Cadastro Manual",
                 converted: false
             }
         });
