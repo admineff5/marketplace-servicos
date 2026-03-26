@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { cookies } from "next/headers";
 
@@ -7,14 +8,13 @@ export async function PUT(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const cookieStore = await cookies();
-        const session = cookieStore.get("auth_session");
+        const session = await getSession();
         
         if (!session) {
             return NextResponse.json({ error: "Sessão expirada" }, { status: 401 });
         }
 
-        const { id: userId } = JSON.parse(session.value);
+        const { id: userId } = session;
         const { id } = await params;
 
         const company = await prisma.company.findUnique({
@@ -53,14 +53,13 @@ export async function DELETE(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const cookieStore = await cookies();
-        const session = cookieStore.get("auth_session");
+        const session = await getSession();
         
         if (!session) {
             return NextResponse.json({ error: "Sessão expirada" }, { status: 401 });
         }
 
-        const { id: userId } = JSON.parse(session.value);
+        const { id: userId } = session;
         const { id } = await params;
 
         const company = await prisma.company.findUnique({

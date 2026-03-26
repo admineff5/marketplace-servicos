@@ -1,17 +1,17 @@
 import { NextResponse } from "next/server";
+import { getSession } from "@/lib/auth";
 import prisma, { getCompanyByUserId } from "@/lib/prisma";
 import { cookies } from "next/headers";
 
 export async function GET(request: Request) {
     try {
-        const cookieStore = await cookies();
-        const session = cookieStore.get("auth_session");
+        const session = await getSession();
 
         if (!session) {
             return NextResponse.json({ error: "Sessão expirada" }, { status: 401 });
         }
 
-        const { id: userId, role } = JSON.parse(session.value);
+        const { id: userId, role } = session;
 
         // BUSINESS: buscar agendamentos da empresa do dono
         if (role === "BUSINESS") {
@@ -118,14 +118,13 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
     try {
-        const cookieStore = await cookies();
-        const session = cookieStore.get("auth_session");
+        const session = await getSession();
 
         if (!session) {
             return NextResponse.json({ error: "Sessão expirada" }, { status: 401 });
         }
 
-        const { id: userId } = JSON.parse(session.value);
+        const { id: userId } = session;
         const body = await request.json();
         const { employeeId, serviceId, locationId, companyId, date } = body;
 

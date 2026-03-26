@@ -1,17 +1,17 @@
 import { NextResponse } from "next/server";
+import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { cookies } from "next/headers";
 
 export async function GET() {
     try {
-        const cookieStore = await cookies();
-        const session = cookieStore.get("auth_session");
+        const session = await getSession();
         
         if (!session) {
             return NextResponse.json({ error: "Sessão expirada" }, { status: 401 });
         }
 
-        const { id: userId } = JSON.parse(session.value);
+        const { id: userId } = session;
 
         const appointments = await (prisma.appointment as any).findMany({
             where: { userId },
@@ -77,14 +77,13 @@ export async function GET() {
 
 export async function POST(request: Request) {
     try {
-        const cookieStore = await cookies();
-        const session = cookieStore.get("auth_session");
+        const session = await getSession();
         
         if (!session) {
             return NextResponse.json({ error: "Sessão expirada" }, { status: 401 });
         }
 
-        const { id: userId, role } = JSON.parse(session.value);
+        const { id: userId, role } = session;
 
         if (role === "BUSINESS") {
             return NextResponse.json({ 
@@ -135,14 +134,13 @@ export async function POST(request: Request) {
 
 export async function PATCH(request: Request) {
     try {
-        const cookieStore = await cookies();
-        const session = cookieStore.get("auth_session");
+        const session = await getSession();
         
         if (!session) {
             return NextResponse.json({ error: "Sessão expirada" }, { status: 401 });
         }
 
-        const { id: userId } = JSON.parse(session.value);
+        const { id: userId } = session;
         const { appointmentId, rating, comment, action } = await request.json();
 
         if (action === "cancel") {

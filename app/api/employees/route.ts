@@ -1,17 +1,17 @@
 import { NextResponse } from "next/server";
+import { getSession } from "@/lib/auth";
 import prisma, { getCompanyByUserId } from "@/lib/prisma";
 import { cookies } from "next/headers";
 
 export async function GET() {
     try {
-        const cookieStore = await cookies();
-        const session = cookieStore.get("auth_session");
+        const session = await getSession();
         
         if (!session) {
             return NextResponse.json({ error: "Sessão expirada" }, { status: 401 });
         }
 
-        const { id: userId } = JSON.parse(session.value);
+        const { id: userId } = session;
         const company = await getCompanyByUserId(userId);
 
         if (!company) {
@@ -34,14 +34,13 @@ export async function GET() {
 
 export async function POST(request: Request) {
     try {
-        const cookieStore = await cookies();
-        const session = cookieStore.get("auth_session");
+        const session = await getSession();
         
         if (!session) {
             return NextResponse.json({ error: "Sessão expirada" }, { status: 401 });
         }
 
-        const { id: userId } = JSON.parse(session.value);
+        const { id: userId } = session;
         const company = await getCompanyByUserId(userId);
 
         if (!company) {

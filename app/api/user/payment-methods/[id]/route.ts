@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
+import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { cookies } from "next/headers";
 
 async function getUserId() {
-    const cookieStore = await cookies();
-    const session = cookieStore.get("auth_session");
+    const session = await getSession();
     if (!session) return null;
     try {
-        const userData = JSON.parse(session.value);
+        const userData = session;
         return userData.id;
     } catch {
         return null;
