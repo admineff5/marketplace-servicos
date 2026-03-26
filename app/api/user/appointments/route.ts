@@ -120,6 +120,22 @@ export async function POST(request: Request) {
                     status: "PENDING"
                 }
             });
+
+            // 🔔 GATILHO: Notificação de Novo Agendamento
+            const user = await tx.user.findUnique({ where: { id: userId }, select: { name: true } });
+            const service = await tx.service.findUnique({ where: { id: serviceId }, select: { name: true } });
+            
+            await tx.notification.create({
+                data: {
+                    companyId,
+                    title: "Novo Agendamento",
+                    message: `${user?.name || 'Cliente'} solicitou um agendamento para ${service?.name || 'Serviço'} (Aguardando Confirmação).`,
+                    type: "APPOINTMENT",
+                    link: "/dashboard/agenda"
+                }
+            });
+
+            return newApp;
         });
 
         // Se houver nota, poderíamos salvar em uma tabela de comentários ou campo extra no futuro
