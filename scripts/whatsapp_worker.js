@@ -306,6 +306,20 @@ async function startSession(companyId) {
             }];
 
             const history = await prisma.whatsappMessage.findMany({ where: { companyId, senderNum }, orderBy: { timestamp: 'desc' }, take: 15 });
+            
+            // 🔔 GATILHO: Primeira interação no WhatsApp
+            if (history.length === 1) {
+                await prisma.notification.create({
+                    data: {
+                        companyId,
+                        title: "Nova Conversa no WhatsApp",
+                        message: `O número ${senderNum} (${senderName}) iniciou uma conversa com a IA.`,
+                        type: "WHATSAPP",
+                        link: "/dashboard/mensagens"
+                    }
+                });
+            }
+
             let contents = history.reverse().map(m => ({ role: m.from === 'CLIENT' ? 'user' : 'model', parts: [{ text: m.content }] }));
             if (contents.length === 0 || contents[contents.length - 1].parts[0].text !== text) { contents.push({ role: 'user', parts: [{ text: text }] }); }
 

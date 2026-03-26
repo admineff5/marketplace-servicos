@@ -55,6 +55,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     
     const [profile, setProfile] = useState<any>(null);
     const [notifications, setNotifications] = useState<any[]>([]);
+    const [unreadCount, setUnreadCount] = useState<number>(0);
+
+    const fetchNotifications = async () => {
+        try {
+            const res = await fetch("/api/dashboard/notifications");
+            const data = await res.json();
+            if (data && data.notifications) {
+                setNotifications(data.notifications);
+                setUnreadCount(data.unreadCount);
+            }
+        } catch (e) { console.error("Erro fetch notifications:", e) }
+    };
 
     useEffect(() => {
         // Fetch Profile
@@ -64,13 +76,27 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 if (!data.error) setProfile(data);
             });
 
-        // Fetch Notifications
-        fetch("/api/dashboard/notifications")
-            .then(res => res.json())
-            .then(data => {
-                if (Array.isArray(data)) setNotifications(data);
-            });
+        // Initialize and Set Interval for Notifications
+        fetchNotifications();
+        const intervalId = setInterval(fetchNotifications, 10000); // 10 sec polling
+        return () => clearInterval(intervalId);
     }, []);
+
+    const markAsRead = async (id: string, link: string | null) => {
+        try {
+            await fetch("/api/dashboard/notifications", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ notificationId: id })
+            });
+            fetchNotifications(); // Refresh list to remove dot
+            if (link) {
+                window.location.href = link;
+            }
+        } catch (e) {
+            if (link) window.location.href = link;
+        }
+    };
 
     return (
         <div className="flex h-screen bg-gray-50 dark:bg-[#0a0a0a] overflow-hidden">
@@ -182,8 +208,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 className={`relative p-2 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 ${isNotificationsOpen ? 'text-cyan-700 dark:text-primary bg-gray-100 dark:bg-gray-800' : 'text-gray-500 dark:text-gray-400'}`}
                             >
                                 <Bell className="w-5 h-5" />
-                                {notifications.length > 0 && (
-                                    <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-[#111]"></span>
+                                {unreadCount > 0 && (
+                                    <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-[#111] animate-pulse"></span>
                                 )}
                             </button>
 
@@ -191,25 +217,42 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                             {isNotificationsOpen && (
                                 <>
                                     <div className="fixed inset-0 z-10" onClick={() => setIsNotificationsOpen(false)} />
-                                    <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 rounded-2xl shadow-2xl overflow-hidden z-20 animate-in fade-in zoom-in-95 duration-200">
+                                    <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 rounded-2xl shadow-2xl overflow-hidden z-20 animate-in fade-in zoom-in-95 duration-200">
                                         <div className="p-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gray-50/50 dark:bg-[#161618]">
                                             <h3 className="font-bold text-gray-900 dark:text-white">Notificações</h3>
-                                            {notifications.length > 0 && (
-                                                <span className="text-[10px] font-bold bg-primary text-black px-2 py-0.5 rounded-full uppercase tracking-wider">{notifications.length} Novas</span>
+                                            {unreadCount > 0 && (
+                                                <button 
+                                                    onClick={async () => {
+                                                        await fetch("/api/dashboard/notifications", { method: "PATCH", body: JSON.stringify({ markAll: true }) });
+                                                        fetchNotifications();
+                                                    }}
+                                                    className="text-[10px] font-bold bg-primary text-black px-2 py-0.5 rounded-full uppercase tracking-wider hover:bg-cyan-500 transition-colors"
+                                                >
+                                                    Marcar Lidas
+                                                </button>
                                             )}
                                         </div>
-                                        <div className="max-h-[70vh] overflow-y-auto">
+                                        <div className="max-h-[60vh] overflow-y-auto custom-scrollbar">
                                             {notifications.length > 0 ? (
                                                 notifications.map((notif: any) => (
-                                                    <div key={notif.id} className="p-4 border-b border-gray-100 dark:border-gray-800 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer group">
+                                                    <div 
+                                                        key={notif.id} 
+                                                        onClick={() => markAsRead(notif.id, notif.link)}
+                                                        className={`p-4 border-b border-gray-100 dark:border-gray-800 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer group ${!notif.isRead ? 'bg-cyan-50/30 dark:bg-primary/5' : ''}`}
+                                                    >
                                                         <div className="flex justify-between items-start mb-1">
-                                                            <span className={`text-[10px] font-bold uppercase tracking-widest ${notif.type === 'error' ? 'text-red-500' : notif.type === 'warning' ? 'text-amber-500' : 'text-cyan-600 dark:text-primary'}`}>
-                                                                {notif.title}
+                                                            <div className="flex items-center gap-2">
+                                                                {!notif.isRead && <span className="w-1.5 h-1.5 bg-cyan-600 dark:bg-primary rounded-full"></span>}
+                                                                <span className={`text-[10px] font-bold uppercase tracking-widest ${notif.type === 'STOCK' ? 'text-amber-500' : notif.type === 'WHATSAPP' ? 'text-green-500' : 'text-cyan-600 dark:text-primary'}`}>
+                                                                    {notif.title}
+                                                                </span>
+                                                            </div>
+                                                            <span className="text-[10px] text-gray-400 shrink-0">
+                                                                {new Date(notif.createdAt).toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}
                                                             </span>
-                                                            <span className="text-[10px] text-gray-400">{notif.time}</span>
                                                         </div>
-                                                        <p className="text-sm text-gray-600 dark:text-gray-300 leading-snug group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
-                                                            {notif.description}
+                                                        <p className={`text-sm leading-snug transition-colors pt-1 ${!notif.isRead ? 'text-gray-900 dark:text-white font-medium' : 'text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white'}`}>
+                                                            {notif.message}
                                                         </p>
                                                     </div>
                                                 ))

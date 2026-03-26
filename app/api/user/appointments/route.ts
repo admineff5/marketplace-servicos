@@ -109,7 +109,7 @@ export async function POST(request: Request) {
                 });
             }
 
-            return await (tx.appointment as any).create({
+            const newApp = await (tx.appointment as any).create({
                 data: {
                     userId,
                     employeeId,
