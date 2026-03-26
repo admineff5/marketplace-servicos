@@ -43,7 +43,7 @@ export async function POST(request: Request) {
             if (existingPhone.email.includes("@whatsapp.com")) {
                 // 🧠 O cliente já tem uma conta de rascunho criada pelo Whatsapp!
                 // Nós atualizamos ela com os dados reais do site para não duplicar!
-                const verificationToken = crypto.randomUUID();
+                const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
                 const user = await prisma.user.update({
                     where: { id: existingPhone.id },
                     data: {
@@ -75,7 +75,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "E-mail já cadastrado" }, { status: 400 });
         }
 
-        const verificationToken = crypto.randomUUID();
+        const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
         const actualRole = cleanCPF.length === 14 ? "BUSINESS" : "CLIENT";
 
         const user = await prisma.user.create({

@@ -32,15 +32,18 @@ export async function sendVerificationEmail(email: string, token: string) {
         subject: "Verifique seu E-mail - AgendaJá",
         html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
-                <h2 style="color: #333;">Bem-vindo ao AgendaJá!</h2>
-                <p>Obrigado por se cadastrar. Clique no botão abaixo para verificar sua conta:</p>
+                <h2 style="color: #333; text-align: center;">Bem-vindo ao AgendaJá!</h2>
+                <p style="text-align: center; color: #555;">Obrigado por se cadastrar. Use o código abaixo para verificar sua conta:</p>
+                
                 <div style="text-align: center; margin: 30px 0;">
-                    <a href="${verifyLink}" style="background-color: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">Verificar Conta</a>
+                    <span style="display: inline-block; background-color: #f4f4f4; border: 2px dashed #ccc; padding: 15px 30px; font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #333; border-radius: 8px;">
+                        ${token}
+                    </span>
                 </div>
-                <p style="color: #666; font-size: 12px;">Se o botão não funcionar, cole o link abaixo no seu navegador:</p>
-                <p style="color: #888; font-size: 11px;">${verifyLink}</p>
-                <hr style="border-top: 1px solid #eee;" />
-                <p style="color: #999; font-size: 11px;">Se você não solicitou este cadastro, desconsidere este e-mail.</p>
+                
+                <p style="text-align: center; color: #666; font-size: 14px;">Digite este código na tela de verificação do site.</p>
+                <hr style="border-top: 1px solid #eee; margin-top: 30px;" />
+                <p style="color: #999; font-size: 11px; text-align: center;">Se você não solicitou este cadastro, desconsidere este e-mail.</p>
             </div>
         `,
     };
