@@ -58,56 +58,15 @@ export async function GET(request: Request) {
         
         const clientNames = Array.from(new Set(allNames)).join(', ');
 
-        // 2. IA Routing com Fuzzy Matching Dinâmico
-        let aiSuggestions = [];
-        try {
-            const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-            const todayStr = new Date().toISOString().split('T')[0];
-            
-            const prompt = `Você é o Roteador Inteligente (OmniSearch) de um sistema SaaS. O usuário digitou na barra de busca: "${query}"
-
-Sua tarefa: Devolver até 3 links diretos (Deep Links) que resolvam a intenção dele em formato ARRAY JSON.
-
-Nomes de Clientes no BD: [${clientNames}].
-Data de Hoje: ${todayStr}
-
-DICAS EXTREMAMENTE IMPORTANTES:
-1) FUZZY MATCH AGRESSIVO: Se a busca for uma palavra solta que parece um nome próprio (ex: "rodrt", "maria", "jooa"), assuma IMEDIATAMENTE que ele quer buscar um cliente! Procure na lista [${clientNames}], ache o correto (ex: Rodrigo) e gere 2 links obrigatórios:
-- {"url": "/dashboard/clientes?q=Rodrigo", "label": "Buscar Rodrigo [Gestão de Cliente]"}
-- {"url": "/dashboard/agenda?view=list&q=Rodrigo", "label": "Buscar Rodrigo [Agenda]"}
-
-2) FILTROS NATURAIS: 
-- "agenda de hoje" -> {"url": "/dashboard/agenda?view=list&startDate=${todayStr}&endDate=${todayStr}", "label": "Agenda de Hoje"}
-- "amanha", "ontem", "semana que vem": calcule com base na Data de Hoje (${todayStr}).
-
-3) AÇÕES RÁPIDAS: "adicionar fulano" -> /dashboard/clientes?action=new
-
-Retorne APENAS o JSON puro (NUNCA markdown, comece com '[' e termine com ']'). Tente sempre sugerir algo!`;
-
-            const response = await ai.models.generateContent({
-                model: 'gemini-2.5-flash',
-                contents: prompt,
-            });
-            
-            const textResponse = response.text || "";
-            const jsonMatch = textResponse.match(/\[[\s\S]*\]/);
-            
-            if (jsonMatch) {
-                aiSuggestions = JSON.parse(jsonMatch[0]);
-            }
-        } catch (e) {
-            console.error("AI Routing failed:", e);
-        }
-
+        // Retorna APENAS o Instant SQL (menos de 50ms)
         return NextResponse.json({
             clients: matchLeads || [],
             products: products || [],
-            services: services || [],
-            aiSuggestions
+            services: services || []
         });
-        
+
     } catch (error: any) {
-        console.error("GET Dashboard Search Error:", error);
-        return NextResponse.json({ error: "Erro interno", details: error.message }, { status: 500 });
+        console.error("Search API Error:", error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }

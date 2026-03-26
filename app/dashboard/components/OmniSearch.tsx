@@ -8,6 +8,7 @@ export function OmniSearch() {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isAiLoading, setIsAiLoading] = useState(false);
   const [results, setResults] = useState<any>({ clients: [], products: [], services: [], aiSuggestions: [] });
   const wrapperRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -28,6 +29,7 @@ export function OmniSearch() {
     if (query.trim().length < 2) {
       setResults({ clients: [], products: [], services: [], aiSuggestions: [] });
       setIsLoading(false);
+      setIsAiLoading(false);
       return;
     }
 
@@ -36,17 +38,34 @@ export function OmniSearch() {
 
     const timer = setTimeout(async () => {
       try {
+        setResults((prev: any) => ({ ...prev, aiSuggestions: [] }));
+        setIsAiLoading(true);
+
+        // 1. Instant DB Search
         const res = await fetch(`/api/dashboard/search?q=${encodeURIComponent(query)}`);
         const data = await res.json();
         if (!data.error) {
-          setResults(data);
+          setResults((prev: any) => ({ ...data, aiSuggestions: prev.aiSuggestions || [] }));
         }
+        setIsLoading(false);
+
+        // 2. Background AI Semantic Routing
+        fetch(`/api/dashboard/search-ai?q=${encodeURIComponent(query)}`)
+          .then(r => r.json())
+          .then(aiData => {
+            if (!aiData.error && aiData.aiSuggestions) {
+              setResults((prev: any) => ({ ...prev, aiSuggestions: aiData.aiSuggestions }));
+            }
+          })
+          .catch(e => console.error("AI Search erro:", e))
+          .finally(() => setIsAiLoading(false));
+
       } catch (e) {
         console.error("Busca falhou:", e);
-      } finally {
         setIsLoading(false);
+        setIsAiLoading(false);
       }
-    }, 600); // 600ms debounce
+    }, 400); // 400ms DB debounce (ultra fast response)
 
     return () => clearTimeout(timer);
   }, [query]);
@@ -96,13 +115,20 @@ export function OmniSearch() {
             {isLoading && !hasResults && (
               <div className="p-8 text-center text-sm text-gray-500 flex flex-col items-center gap-3">
                 <Loader2 className="w-6 h-6 animate-spin text-cyan-600 dark:text-primary" />
-                <p>A IA está interpretando seu pedido...</p>
+                <p>Buscando no banco de dados...</p>
               </div>
             )}
 
-            {!isLoading && !hasResults && (
+            {!isLoading && !hasResults && !isAiLoading && (
               <div className="p-8 text-center text-sm text-gray-500">
                 Nenhum resultado encontrado para "{query}".<br/>Tente ser mais direto.
+              </div>
+            )}
+
+            {!isLoading && !hasResults && isAiLoading && (
+              <div className="p-8 text-center text-sm text-gray-500 flex flex-col items-center gap-3">
+                <Sparkles className="w-5 h-5 animate-pulse text-cyan-600 dark:text-primary" />
+                <p>Nenhuma correspondência exata. A IA está analisando sua intenção...</p>
               </div>
             )}
 
