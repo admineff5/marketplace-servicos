@@ -20,7 +20,9 @@ export async function sendVerificationEmail(email: string, token: string) {
         secure: smtpport === 465 || process.env.SMTP_SECURE === "true", // STARTTLS friendly
         auth: { user, pass },
         tls: { rejectUnauthorized: false }, // Previne rejeição se o certificado do cPanel for self-signed
-        family: 4 // FORÇA O USO DE IPV4 PARA EVITAR ERROS DE REDE/V6 EM SERVIDORES VPS
+        family: 4, // FORÇA O USO DE IPV4 PARA EVITAR ERROS DE REDE/V6 EM SERVIDORES VPS
+        logger: true, // 🔴 EXTREME LOGGING ACTIVE
+        debug: true   // 🔴 MOSTRA MENSAGENS SMTP NA INTEGRA
     } as any);
 
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
@@ -53,9 +55,19 @@ export async function sendVerificationEmail(email: string, token: string) {
     };
 
     try {
-        await transporter.sendMail(mailOptions);
-        console.log(`[MAIL] E-mail de verificação enviado para ${email}`);
-    } catch (error) {
-        console.error("[MAIL] Erro ao enviar e-mail:", error);
+        console.log(`\n[MAIL-DIAGNOSTIC] 🟡 Iniciando Transmissão de E-mail para ${email}...`);
+        console.log(`[MAIL-DIAGNOSTIC] Configs: HOST=${host} | PORT=${smtpport} | SECURE=${smtpport === 465 || process.env.SMTP_SECURE === "true"}`);
+        
+        const info = await transporter.sendMail(mailOptions);
+        console.log(`[MAIL-DIAGNOSTIC] ✅ Sucesso absoluto! Resposta SMTP:`, info.response);
+    } catch (error: any) {
+        console.error(`\n======================================================`);
+        console.error(`[MAIL-CRITICAL-ERROR] ❌ DETALHES DA FALHA DE ENVIO`);
+        console.error(`======================================================`);
+        console.error(`Status de Erro:`, error.message);
+        console.error(`Código de Erro do SMTP:`, error.code);
+        console.error(`Comando que Falhou:`, error.command);
+        console.error(`Stack Trace:`, error.stack);
+        console.error(`======================================================\n`);
     }
 }
