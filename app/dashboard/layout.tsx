@@ -6,6 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "../components/ThemeToggle";
 import { Footer } from "../components/Footer";
+import { OmniSearch } from "./components/OmniSearch";
 import {
     BarChart3,
     Calendar,
@@ -196,9 +197,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         >
                             <Menu className="w-6 h-6" />
                         </button>
-                        <h1 className="text-xl font-bold text-gray-900 dark:text-white sm:block truncate max-w-[200px] sm:max-w-none">
+                        <h1 className="text-xl font-bold text-gray-900 dark:text-white hidden lg:block truncate max-w-[200px] sm:max-w-none">
                             {profile?.name || "Carregando..."}
                         </h1>
+                    </div>
+
+                    {/* OmniSearch */}
+                    <div className="flex-1 flex justify-center px-4 md:px-8">
+                        <OmniSearch />
                     </div>
 
                     <div className="flex items-center gap-4">
