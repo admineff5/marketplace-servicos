@@ -520,8 +520,15 @@ export default function AgendaPage() {
                                                 if (!matchClient && !matchProf) return false;
                                             }
 
-                                            // Se houver filtro por periodo, aceitar tudo que a API mandar
-                                            if (startDate && endDate) return true;
+                                            // Se houver filtro dinâmico de datas vindo do OmniSearch (IA), cruzar rigorosamente
+                                            if (startDate && endDate) {
+                                                const aptDateObj = new Date(apt.date);
+                                                const y = aptDateObj.getUTCFullYear();
+                                                const m = String(aptDateObj.getUTCMonth() + 1).padStart(2, '0');
+                                                const d = String(aptDateObj.getUTCDate()).padStart(2, '0');
+                                                const aptYmd = `${y}-${m}-${d}`;
+                                                return aptYmd >= startDate && aptYmd <= endDate;
+                                            }
 
                                             if (selectedMiniDate) {
                                                 const aptDate = new Date(apt.date);
