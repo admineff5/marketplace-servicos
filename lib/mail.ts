@@ -13,12 +13,14 @@ export async function sendVerificationEmail(email: string, token: string) {
         return;
     }
 
+    const smtpport = Number(process.env.SMTP_PORT) || 587;
     const transporter = nodemailer.createTransport({
         host,
-        port: Number(process.env.SMTP_PORT) || 587,
-        secure: process.env.SMTP_SECURE === "true",
+        port: smtpport,
+        secure: smtpport === 465 || process.env.SMTP_SECURE === "true", // STARTTLS friendly
         auth: { user, pass },
-        family: 4 // 🔴 FORÇA O USO DE IPV4 PARA EVITAR ERROS DE REDE/V6 EM SERVIDORES VPS
+        tls: { rejectUnauthorized: false }, // Previne rejeição se o certificado do cPanel for self-signed
+        family: 4 // FORÇA O USO DE IPV4 PARA EVITAR ERROS DE REDE/V6 EM SERVIDORES VPS
     } as any);
 
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
@@ -30,6 +32,8 @@ export async function sendVerificationEmail(email: string, token: string) {
         from: `"AgendaJá" <${fromEmail}>`,
         to: email,
         subject: "Verifique seu E-mail - AgendaJá",
+        // Fallback em Texto Puro obrigatório para passar pelo AntiSpam do Gmail e Hotmail
+        text: `Bem-vindo ao AgendaJá!\n\nSeu código de verificação é: ${token}\n\nDigite este código na tela de verificação do site.\n\nSe você não solicitou este cadastro, desconsidere.`,
         html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
                 <h2 style="color: #333; text-align: center;">Bem-vindo ao AgendaJá!</h2>
