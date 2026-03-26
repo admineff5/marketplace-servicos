@@ -160,7 +160,7 @@ function MensagensContent() {
                         <button
                             onClick={() => handleAction("CONNECT")}
                             disabled={status === "QRCODE"}
-                            className="w-full py-3 px-6 bg-cyan-600 dark:bg-primary text-white font-bold rounded-xl shadow-lg hover:bg-cyan-700 dark:hover:bg-primary/90 hover:scale-[1.02] active:scale-95 transition-all text-sm flex items-center justify-center gap-2"
+                            className="w-full py-3 px-6 bg-cyan-600 dark:bg-primary text-white dark:text-gray-900 font-bold rounded-xl shadow-lg hover:bg-cyan-700 dark:hover:bg-primary/90 hover:scale-[1.02] active:scale-95 transition-all text-sm flex items-center justify-center gap-2"
                         >
                             {status === "QRCODE" ? (
                                 <Loader2 className="w-4 h-4 animate-spin" />
