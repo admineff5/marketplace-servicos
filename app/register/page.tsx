@@ -28,13 +28,12 @@ export default function Register() {
         setIsLoading(true);
 
         try {
-            // Lógica: Se o usuário preencher um campo adicional futuramente para CNPJ, mudaremos o role.
-            // Por enquanto, registro padrão via formulário principal é CLIENT.
-            const role = "CLIENT";
+            // Define automaticamente se é Empresa ou Cliente pelo tamanho
             const cleanCPF = formData.cpf.replace(/\D/g, "");
+            const role = cleanCPF.length === 14 ? "BUSINESS" : "CLIENT";
 
-            if (cleanCPF.length !== 11) {
-                throw new Error("O CPF deve conter 11 dígitos.");
+            if (cleanCPF.length !== 11 && cleanCPF.length !== 14) {
+                throw new Error("O documento deve ser um CPF (11 dígitos) ou um CNPJ (14 dígitos) válido.");
             }
 
             const res = await fetch("/api/register", {
@@ -79,12 +78,24 @@ export default function Register() {
         const { name, value } = e.target;
         
         if (name === "cpf") {
-            // Máscara simples para CPF: 000.000.000-00
-            const x = value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,3})(\d{0,2})/);
-            if (x) {
-                const masked = !x[2] ? x[1] : `${x[1]}.${x[2]}${x[3] ? `.${x[3]}` : ''}${x[4] ? `-${x[4]}` : ''}`;
-                setFormData({ ...formData, [name]: masked });
+            const rawValue = value.replace(/\D/g, '');
+            let masked = rawValue;
+
+            if (rawValue.length <= 11) {
+                // Máscara simples para CPF: 000.000.000-00
+                const x = rawValue.match(/(\d{0,3})(\d{0,3})(\d{0,3})(\d{0,2})/);
+                if (x) {
+                    masked = !x[2] ? x[1] : `${x[1]}.${x[2]}${x[3] ? `.${x[3]}` : ''}${x[4] ? `-${x[4]}` : ''}`;
+                }
+            } else {
+                // Máscara para CNPJ: 00.000.000/0000-00
+                const x = rawValue.match(/(\d{0,2})(\d{0,3})(\d{0,3})(\d{0,4})(\d{0,2})/);
+                if (x) {
+                    masked = !x[2] ? x[1] : `${x[1]}.${x[2]}${x[3] ? `.${x[3]}` : ''}${x[4] ? `/${x[4]}` : ''}${x[5] ? `-${x[5]}` : ''}`;
+                }
             }
+
+            setFormData({ ...formData, [name]: masked });
             return;
         }
 
@@ -187,7 +198,7 @@ export default function Register() {
 
                             <div>
                                 <label htmlFor="cpf" className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                                    CPF
+                                    CPF / CNPJ
                                 </label>
                                 <div className="mt-1">
                                     <input
@@ -197,13 +208,13 @@ export default function Register() {
                                         required
                                         value={formData.cpf}
                                         onChange={handleChange}
-                                        placeholder="000.000.000-00"
-                                        maxLength={14}
+                                        placeholder="000.000.000-00 ou 00.000.000/0000-00"
+                                        maxLength={18}
                                         className="appearance-none block w-full px-3 py-3 border border-gray-300 dark:border-gray-700 rounded-lg placeholder-gray-400 dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-cyan-600 focus:border-cyan-600 dark:focus:ring-primary dark:focus:border-primary sm:text-sm transition-colors"
                                     />
                                 </div>
                                 <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                                    Seu CPF é obrigatório para validação de segurança.
+                                    Seu CPF ou CNPJ é obrigatório para validação de segurança.
                                 </p>
                             </div>
 

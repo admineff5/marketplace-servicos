@@ -12,14 +12,14 @@ export async function POST(request: Request) {
         const email = rawEmail?.trim().toLowerCase();
 
         if (!email || !password || !name || !cpf || !phone) {
-            return NextResponse.json({ error: "Campos obrigatórios ausentes (Nome, E-mail, Senha, CPF e Telefone)" }, { status: 400 });
+            return NextResponse.json({ error: "Campos obrigatórios ausentes (Nome, E-mail, Senha, CPF/CNPJ e Telefone)" }, { status: 400 });
         }
 
         const cleanCPF = cpf.replace(/\D/g, "");
         const cleanPhone = phone.replace(/\D/g, "");
 
-        if (cleanCPF.length !== 11) {
-            return NextResponse.json({ error: "CPF inválido. Deve conter 11 dígitos." }, { status: 400 });
+        if (cleanCPF.length !== 11 && cleanCPF.length !== 14) {
+            return NextResponse.json({ error: "Documento inválido. Deve ser CPF (11) ou CNPJ (14 dígitos)." }, { status: 400 });
         }
 
         if (password.length < 6) {
@@ -76,12 +76,14 @@ export async function POST(request: Request) {
         }
 
         const verificationToken = crypto.randomUUID();
+        const actualRole = cleanCPF.length === 14 ? "BUSINESS" : "CLIENT";
+
         const user = await prisma.user.create({
             data: {
                 name,
                 email,
                 password: hashedPassword,
-                role: role || "CLIENT",
+                role: actualRole,
                 cpf: cleanCPF,
                 phone: normalizedPhone,
                 verificationToken,
