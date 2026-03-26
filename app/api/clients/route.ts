@@ -18,7 +18,7 @@ export async function GET() {
             return NextResponse.json({ error: "Empresa não encontrada" }, { status: 404 });
         }
 
-        // Buscar agendamentos da empresa e extrair usuários únicos
+        // Buscar agendamentos da empresa e extrair usuários únicos com histórico real
         const appointments = await prisma.appointment.findMany({
             where: { location: { companyId: company.id } },
             include: {
@@ -29,16 +29,27 @@ export async function GET() {
                         phone: true,
                         email: true
                     }
-                }
+                },
+                service: { select: { name: true, price: true } },
+                employee: { select: { name: true } }
             },
             orderBy: { date: 'desc' }
         });
 
-        // Agrupar usuários únicos e calcular metadados (última visita, total visitas)
+        // Agrupar usuários únicos e calcular metadados (última visita, total visitas, history)
         const clientsMap = new Map();
         appointments.forEach(app => {
             if (!app.user) return; // Segurança caso o usuário tenha sido deletado
             
+            const historyItem = {
+                id: app.id,
+                serviceName: app.service?.name || "Removido",
+                employeeName: app.employee?.name || "Removido",
+                price: app.service?.price || 0,
+                date: app.date,
+                status: app.status
+            };
+
             if (!clientsMap.has(app.userId)) {
                 clientsMap.set(app.userId, {
                     id: app.user.id,
@@ -47,12 +58,14 @@ export async function GET() {
                     email: app.user.email,
                     lastVisit: app.date,
                     totalVisits: 1,
-                    status: "Novo"
+                    status: "Novo",
+                    history: [historyItem]
                 });
             } else {
                 const client = clientsMap.get(app.userId);
                 client.totalVisits += 1;
                 client.status = client.totalVisits > 5 ? "VIP" : "Frequente";
+                client.history.push(historyItem);
             }
         });
 
@@ -70,7 +83,8 @@ export async function GET() {
                     email: l.email,
                     lastVisit: null,
                     totalVisits: 0,
-                    status: "Lead"
+                    status: l.interest === "Cadastro Manual" ? "Cadastrado" : "Lead",
+                    history: []
                 });
             }
         });

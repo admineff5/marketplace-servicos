@@ -231,6 +231,11 @@ export default function GestaoClientesPage() {
                                                     Lead
                                                 </span>
                                             )}
+                                            {cliente.status === "Cadastrado" && (
+                                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-400 text-xs font-bold">
+                                                    Cadastrado Manualmente
+                                                </span>
+                                            )}
                                         </td>
                                         <td className="py-4 px-6 text-right">
                                             <div className="flex items-center justify-end gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
@@ -361,22 +366,29 @@ export default function GestaoClientesPage() {
                         <div className="p-6">
                             <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                                 <History className="w-4 h-4 text-cyan-700 dark:text-primary" />
-                                Últimos Agendamentos (MOCK)
+                                Últimos Agendamentos ({selectedClient.history?.length || 0})
                             </h3>
 
-                            <div className="space-y-3">
-                                {[1, 2, 3].map((_, idx) => (
-                                    <div key={idx} className="p-4 rounded-xl border border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#1a1a1c] flex justify-between items-center transition-colors hover:border-cyan-600/30 dark:hover:border-cyan-600 dark:hover:border-cyan-600/30 dark:border-primary/30">
-                                        <div>
-                                            <p className="text-sm font-bold text-gray-900 dark:text-white">Corte e Barba</p>
-                                            <p className="text-xs text-gray-500">com Rodrigo Silva</p>
+                            <div className="space-y-3 max-h-60 overflow-y-auto custom-scrollbar pr-2">
+                                {selectedClient.history && selectedClient.history.length > 0 ? (
+                                    selectedClient.history.map((hist: any) => (
+                                        <div key={hist.id} className="p-4 rounded-xl border border-gray-200 dark:border-[#222] bg-gray-50/50 dark:bg-[#1a1a1c] flex justify-between items-center transition-colors hover:border-cyan-600/30 dark:hover:border-cyan-600 dark:hover:border-cyan-600/30 dark:border-primary/30">
+                                            <div>
+                                                <p className="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                                    {hist.serviceName}
+                                                    {hist.status === "CANCELLED" && <span className="px-2 py-0.5 text-[10px] bg-red-100 text-red-600 rounded">Cancelado</span>}
+                                                </p>
+                                                <p className="text-xs text-gray-500">com {hist.employeeName}</p>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="text-sm font-semibold text-cyan-700 dark:text-primary">R$ {hist.price.toLocaleString('pt-br', {minimumFractionDigits: 2})}</p>
+                                                <p className="text-xs text-gray-500">{new Date(hist.date).toLocaleDateString('pt-BR')} às {new Date(hist.date).toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}</p>
+                                            </div>
                                         </div>
-                                        <div className="text-right">
-                                            <p className="text-sm font-semibold text-cyan-700 dark:text-primary">R$ 75,00</p>
-                                            <p className="text-xs text-gray-500">{selectedClient.lastVisit === 'Ontem' ? '12/10/2026' : 'Em breve'}</p>
-                                        </div>
-                                    </div>
-                                ))}
+                                    ))
+                                ) : (
+                                    <div className="text-center py-6 text-sm text-gray-500 dark:text-gray-400">Nenhum agendamento encontrado no histórico deste cliente.</div>
+                                )}
                             </div>
                         </div>
 
