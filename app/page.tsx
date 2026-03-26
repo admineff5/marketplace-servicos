@@ -440,24 +440,36 @@ export default function Home() {
               </div>
 
               {/* Categories Big Pills */}
-              <div className="flex flex-row overflow-x-auto justify-start xl:justify-center items-center gap-4 w-full py-2 scrollbar-hide px-4 md:px-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:none]">
-                {CATEGORIES.map((cat) => (
-                  <button
-                    key={cat.name}
-                    onClick={() => setActiveCategory(cat.name)}
-                    className={`flex-shrink-0 flex items-center gap-2.5 px-6 py-3 rounded-full border transition-all ${activeCategory === cat.name
-                        ? "bg-cyan-800/10 border-cyan-800 dark:bg-primary/20 dark:border-primary text-white dark:text-primary shadow-[0_0_10px_rgba(0,255,255,0.2)]"
-                        : "bg-transparent border-white/10 text-gray-300 hover:border-white/30 hover:bg-white/5 hover:text-cyan-700 dark:hover:text-white"
-                      } `}
-                  >
-                    <cat.icon
-                      className={`w-5 h-5 ${activeCategory === cat.name ? "opacity-100" : "opacity-70 text-cyan-700 dark:text-primary"} `}
-                    />
-                    <span className="text-sm font-semibold tracking-wide">
-                      {cat.name}
-                    </span>
-                  </button>
-                ))}
+              <div className="flex flex-row overflow-x-auto justify-start xl:justify-center items-start gap-4 w-full pt-2 pb-6 scrollbar-hide px-4 md:px-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:none]">
+                {CATEGORIES.map((cat) => {
+                  const isPetshop = cat.name === "Petshop";
+                  return (
+                  <div key={cat.name} className="relative flex flex-col items-center">
+                    <button
+                      disabled={isPetshop}
+                      onClick={() => !isPetshop && setActiveCategory(cat.name)}
+                      className={`flex-shrink-0 flex items-center gap-2.5 px-6 py-3 rounded-full border transition-all ${
+                          isPetshop
+                            ? "opacity-30 cursor-not-allowed bg-transparent border-white/10 text-gray-400"
+                            : activeCategory === cat.name
+                              ? "bg-cyan-800/10 border-cyan-800 dark:bg-primary/20 dark:border-primary text-white dark:text-primary shadow-[0_0_10px_rgba(0,255,255,0.2)]"
+                              : "bg-transparent border-white/10 text-gray-300 hover:border-white/30 hover:bg-white/5 hover:text-cyan-700 dark:hover:text-white"
+                        }`}
+                    >
+                      <cat.icon
+                        className={`w-5 h-5 ${isPetshop ? "opacity-50" : activeCategory === cat.name ? "opacity-100" : "opacity-70 text-cyan-700 dark:text-primary"}`}
+                      />
+                      <span className="text-sm font-semibold tracking-wide">
+                        {cat.name}
+                      </span>
+                    </button>
+                    {isPetshop && (
+                      <span className="absolute -bottom-4 text-[10px] font-bold text-gray-500 uppercase tracking-widest whitespace-nowrap">
+                        Em breve
+                      </span>
+                    )}
+                  </div>
+                )})}
               </div>
             </div>
           </div>
@@ -465,7 +477,7 @@ export default function Home() {
 
         {/* The Sticky Search Bar (Only appears when scrolling past hero) */}
         <div
-          className={`fixed top-16 left-0 right-0 z-30 w-full bg-[#050505] border-b border-white/10 shadow-2xl py-3 transform transition-all duration-300 ease-in-out ${isSticky
+          className={`fixed top-16 left-0 right-0 z-30 w-full bg-[#050505] border-b border-white/10 shadow-2xl pt-3 pb-2 transform transition-all duration-300 ease-in-out ${isSticky
               ? "translate-y-0 opacity-100"
               : "-translate-y-full opacity-0 pointer-events-none"
             } `}
@@ -487,24 +499,36 @@ export default function Home() {
               </div>
 
               {/* Pill Categories-Compact Scrollable */}
-              <div className="flex items-center gap-2 overflow-x-auto w-full lg:w-2/3 scrollbar-hide [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:none]">
-                {CATEGORIES.map((cat) => (
-                  <button
-                    key={cat.name}
-                    onClick={() => setActiveCategory(cat.name)}
-                    className={`flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full border transition-all ${activeCategory === cat.name
-                        ? "bg-cyan-800/10 border-cyan-800 dark:bg-primary/20 dark:border-primary text-white dark:text-primary"
-                        : "bg-transparent border-white/10 text-gray-300 hover:bg-white/5 hover:text-cyan-700 dark:hover:text-white"
-                      } `}
-                  >
-                    <cat.icon
-                      className={`w-3.5 h-3.5 ${activeCategory === cat.name ? "opacity-100" : "opacity-70 text-cyan-700 dark:text-primary"} `}
-                    />
-                    <span className="text-xs font-semibold tracking-wide">
-                      {cat.name}
-                    </span>
-                  </button>
-                ))}
+              <div className="flex items-center gap-2 overflow-x-auto w-full lg:w-2/3 pt-1 pb-3 scrollbar-hide [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:none]">
+                {CATEGORIES.map((cat) => {
+                  const isPetshop = cat.name === "Petshop";
+                  return (
+                  <div key={cat.name} className="relative flex flex-col items-center">
+                    <button
+                      disabled={isPetshop}
+                      onClick={() => !isPetshop && setActiveCategory(cat.name)}
+                      className={`flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full border transition-all ${
+                          isPetshop
+                            ? "opacity-30 cursor-not-allowed bg-transparent border-white/10 text-gray-400"
+                            : activeCategory === cat.name
+                              ? "bg-cyan-800/10 border-cyan-800 dark:bg-primary/20 dark:border-primary text-white dark:text-primary"
+                              : "bg-transparent border-white/10 text-gray-300 hover:bg-white/5 hover:text-cyan-700 dark:hover:text-white"
+                        }`}
+                    >
+                      <cat.icon
+                        className={`w-3.5 h-3.5 ${isPetshop ? "opacity-50" : activeCategory === cat.name ? "opacity-100" : "opacity-70 text-cyan-700 dark:text-primary"}`}
+                      />
+                      <span className="text-xs font-semibold tracking-wide">
+                        {cat.name}
+                      </span>
+                    </button>
+                    {isPetshop && (
+                      <span className="absolute -bottom-2 text-[8px] font-bold text-gray-500 uppercase tracking-widest whitespace-nowrap">
+                        Em breve
+                      </span>
+                    )}
+                  </div>
+                )})}
               </div>
             </div>
           </div>
