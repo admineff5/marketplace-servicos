@@ -23,7 +23,7 @@ export async function GET(request: Request) {
         // 1. Buscas Relacionais (Paralelas)
         const searchPattern = `%${query}%`;
         
-        const [clients, products, services] = await Promise.all([
+        const [clients, products, services, popularClients] = await Promise.all([
             prisma.$queryRaw`
                 SELECT id, name, email, phone 
                 FROM "User" 
@@ -44,37 +44,49 @@ export async function GET(request: Request) {
                 WHERE "companyId" = ${companyId} 
                 AND name ILIKE ${searchPattern}
                 LIMIT 3
+            `,
+            prisma.$queryRaw`
+                SELECT name 
+                FROM "User" 
+                WHERE "companyId" = ${companyId} AND "role" = 'CLIENT' 
+                ORDER BY "createdAt" DESC 
+                LIMIT 100
             `
         ]);
 
-        // 2. IA Routing
-        let aiSuggestion = null;
+        const clientNames = (popularClients as any[]).map((c: any) => c.name).join(', ');
+
+        // 2. IA Routing com Fuzzy Matching Dinâmico
+        let aiSuggestions = [];
         try {
             const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
             
-            const prompt = `Você é um mapeador inteligente de intenções de um sistema SaaS.
-O lojista digitou a seguinte intenção na barra de busca: "${query}"
+            const prompt = `Você é o Roteador Inteligente de um sistema SaaS. O usuário digitou: "${query}"
 
-Mapeie esta intenção APENAS para UMA das rotas abaixo.
-Responda ESTRITAMENTE em formato JSON, e APENAS o JSON, sem markdown. 
-Exemplo: {"url": "/dashboard/rota", "label": "Ação Inteligente...", "type": "Ação Sugerida"}.
+Sua tarefa: Descobrir o que ele quer fazer e devolver até 3 links que resolvem a intenção dele.
 
-Rotas disponíveis:
-- /dashboard (Visão geral, métricas)
-- /dashboard/agenda (Agendamentos)
-- /dashboard/tarefas (Checklist)
-- /dashboard/consulta (Consultar histórico)
-- /dashboard/bloqueios (Feriados e folgas)
-- /dashboard/clientes (Gerenciar clientes)
-- /dashboard/profissionais (Equipe)
-- /dashboard/servicos (Serviços oferecidos)
-- /dashboard/produtos (Estoque)
-- /dashboard/faq (Autoatendimento)
-- /dashboard/mensagens (Chats de WhatsApp)
-- /dashboard/relatorios (Finanças e extratos)
-- /dashboard/config (Configurações da loja)
+DICAS EXTREMAMENTE IMPORTANTES:
+1) Tolerância a erros (Fuzzy Match): Se o usuário digitou "rodrt", "jooa", ou "corte decrade", assuma que é um typo! 
+Aqui estão alguns clientes cadastrados: [${clientNames}]. Se parecer com algum deles, USE O NOME CORRETO NAS URLs!
 
-Opcional: Pode adicionar "?action=new" se quer cadastrar algo. Ex: "/dashboard/servicos?action=new" se a busca for "add serviço"`;
+2) Múltiplos Destinos: Se o usuário pesquisar o nome de alguém, ofereça ir para o Perfil do Cliente E ir para a Agenda dele.
+- Gestão de Cliente: /dashboard/clientes?q=NOME_CORRETO
+- Ver na Agenda: /dashboard/agenda?view=list&q=NOME_CORRETO
+
+3) Filtros de Tempo Naturais:
+- "agendamentos de hoje": /dashboard/agenda?view=list&startDate=HOJE&endDate=HOJE (use formato YYYY-MM-DD para as datas atuais).
+- "agendamentos do dia 13 a 20": /dashboard/agenda?view=list&startDate=YYYY-03-13&endDate=YYYY-03-20
+
+4) Ações Rápidas:
+- "cadastrar fulano": /dashboard/clientes?action=new
+- "novo corte": /dashboard/servicos?action=new
+
+Responda ESTRITAMENTE em formato ARRAY JSON. Apresente o JSON puro (SEM \`\`\`json).
+Exemplo:
+[
+  {"url": "/dashboard/clientes?q=rodrigo", "label": "rodrigo [Gestão de Cliente]"},
+  {"url": "/dashboard/agenda?view=list&q=rodrigo", "label": "rodrigo [Agenda]"}
+]`;
 
             const response = await ai.models.generateContent({
                 model: 'gemini-2.5-flash',
@@ -82,10 +94,10 @@ Opcional: Pode adicionar "?action=new" se quer cadastrar algo. Ex: "/dashboard/s
             });
             
             const textResponse = response.text || "";
-            const jsonMatch = textResponse.match(/\{[\s\S]*\}/);
+            const jsonMatch = textResponse.match(/\[[\s\S]*\]/);
             
             if (jsonMatch) {
-                aiSuggestion = JSON.parse(jsonMatch[0]);
+                aiSuggestions = JSON.parse(jsonMatch[0]);
             }
         } catch (e) {
             console.error("AI Routing failed:", e);
@@ -95,7 +107,7 @@ Opcional: Pode adicionar "?action=new" se quer cadastrar algo. Ex: "/dashboard/s
             clients: clients || [],
             products: products || [],
             services: services || [],
-            aiSuggestion
+            aiSuggestions
         });
         
     } catch (error: any) {

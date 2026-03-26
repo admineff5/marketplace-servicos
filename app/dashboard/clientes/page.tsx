@@ -17,7 +17,12 @@ const MOCK_CLIENTES = [
 export default function GestaoClientesPage() {
     const [clientes, setClientes] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState("");
+    const [searchTerm, setSearchTerm] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return new URLSearchParams(window.location.search).get('q') || "";
+        }
+        return "";
+    });
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Estado para o histórico modal (MVP)

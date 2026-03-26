@@ -8,7 +8,7 @@ export function OmniSearch() {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [results, setResults] = useState<any>({ clients: [], products: [], services: [], aiSuggestion: null });
+  const [results, setResults] = useState<any>({ clients: [], products: [], services: [], aiSuggestions: [] });
   const wrapperRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -26,7 +26,7 @@ export function OmniSearch() {
   // Busca Debounced
   useEffect(() => {
     if (query.trim().length < 2) {
-      setResults({ clients: [], products: [], services: [], aiSuggestion: null });
+      setResults({ clients: [], products: [], services: [], aiSuggestions: [] });
       setIsLoading(false);
       return;
     }
@@ -57,7 +57,7 @@ export function OmniSearch() {
     router.push(url);
   };
 
-  const hasResults = results.clients.length > 0 || results.products.length > 0 || results.services.length > 0 || results.aiSuggestion;
+  const hasResults = results.clients.length > 0 || results.products.length > 0 || results.services.length > 0 || (results.aiSuggestions && results.aiSuggestions.length > 0);
 
   return (
     <div className="relative w-full max-w-lg hidden sm:block" ref={wrapperRef}>
@@ -106,22 +106,27 @@ export function OmniSearch() {
               </div>
             )}
 
-            {/* Ação Inteligente (IA) */}
-            {results.aiSuggestion && (
-              <div className="p-2 border-b border-gray-100 dark:border-gray-800 bg-cyan-50/50 dark:bg-primary/5">
+            {/* Ações Inteligentes (IA) */}
+            {results.aiSuggestions && results.aiSuggestions.length > 0 && (
+              <div className="p-2 border-b border-gray-100 dark:border-gray-800 bg-cyan-50/30 dark:bg-primary/5">
                 <div className="px-3 py-1.5 flex items-center gap-2">
                    <Sparkles className="w-3.5 h-3.5 text-cyan-600 dark:text-primary" />
-                   <span className="text-xs font-bold text-cyan-700 dark:text-primary uppercase tracking-widest">{results.aiSuggestion.type || "Ação Recomendada pela IA"}</span>
+                   <span className="text-xs font-bold text-cyan-700 dark:text-primary uppercase tracking-widest">Navegação Inteligente (IA)</span>
                 </div>
-                <button
-                  onClick={() => handleSelect(results.aiSuggestion.url)}
-                  className="w-full text-left px-3 py-3 rounded-xl hover:bg-white dark:hover:bg-[#1a1a1c] transition-colors group flex items-center justify-between"
-                >
-                  <span className="text-sm font-medium text-gray-900 dark:text-white flex items-center gap-2">
-                    {results.aiSuggestion.label}
-                  </span>
-                  <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-cyan-600 dark:group-hover:text-primary group-hover:translate-x-1 transition-all" />
-                </button>
+                <div className="space-y-0.5">
+                  {results.aiSuggestions.map((ai: any, i: number) => (
+                    <button
+                      key={i}
+                      onClick={() => handleSelect(ai.url)}
+                      className="w-full text-left px-3 py-3 rounded-xl hover:bg-white dark:hover:bg-[#1a1a1c] transition-colors group flex items-center justify-between"
+                    >
+                      <span className="text-sm font-medium text-gray-900 dark:text-white flex items-center gap-2">
+                        {ai.label}
+                      </span>
+                      <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-cyan-600 dark:group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
 

@@ -52,13 +52,28 @@ export default function AgendaPage() {
     });
     const [selectedPros, setSelectedPros] = useState<string[]>([]);
     const [currentDate, setCurrentDate] = useState(new Date());
-    const [searchQuery, setSearchQuery] = useState("");
+    const [searchQuery, setSearchQuery] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return new URLSearchParams(window.location.search).get('q') || "";
+        }
+        return "";
+    });
     const [listFilter, setListFilter] = useState<"Proximos" | "Todos">("Proximos");
     const [selectedMiniDate, setSelectedMiniDate] = useState<number | null>(null);
     const [rejectingId, setRejectingId] = useState<string | null>(null);
     const [rejectReason, setRejectReason] = useState<string>("");
-    const [startDate, setStartDate] = useState<string>("");
-    const [endDate, setEndDate] = useState<string>("");
+    const [startDate, setStartDate] = useState<string>(() => {
+        if (typeof window !== 'undefined') {
+            return new URLSearchParams(window.location.search).get('startDate') || "";
+        }
+        return "";
+    });
+    const [endDate, setEndDate] = useState<string>(() => {
+        if (typeof window !== 'undefined') {
+            return new URLSearchParams(window.location.search).get('endDate') || "";
+        }
+        return "";
+    });
 
     useEffect(() => {
         fetchData();
@@ -498,6 +513,12 @@ export default function AgendaPage() {
                                             if (isCancelled) return false;
                                             const matchesPro = selectedPros.includes(apt.employeeId) || selectedPros.includes(apt.employee?.id) || selectedPros.includes(apt.prof);
                                             if (!matchesPro) return false;
+
+                                            if (searchQuery) {
+                                                const matchClient = apt.client?.toLowerCase().includes(searchQuery.toLowerCase());
+                                                const matchProf = apt.prof?.toLowerCase().includes(searchQuery.toLowerCase());
+                                                if (!matchClient && !matchProf) return false;
+                                            }
 
                                             // Se houver filtro por periodo, aceitar tudo que a API mandar
                                             if (startDate && endDate) return true;
