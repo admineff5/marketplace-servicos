@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { HelpCircle, Save, CheckCircle2, AlertTriangle, Loader2 } from "lucide-react";
 
 const ESTETICA_QUESTIONS = [
-    { id: "q1", question: "Quais são os principais serviços que vocês oferecem?" },
     { id: "q2", question: "Vocês atendem por ordem de chegada ou apenas com agendamento?" },
     { id: "q3", question: "Qual é a política de cancelamento ou atraso (tolerância) da loja?" },
     { id: "q4", question: "Vocês possuem estacionamento no local ou convênio?" },
@@ -14,6 +13,7 @@ const ESTETICA_QUESTIONS = [
     { id: "q8", question: "Existe algum preparo necessário para os procedimentos (ex: depilação, peeling)?" },
     { id: "q9", question: "Vocês trabalham com venda de pacotes de sessões ou planos recorrentes?" },
     { id: "q10", question: "Como funciona a garantia ou retorno de procedimentos oferecidos?" },
+    { id: "knowledge_rag", question: "Base de Conhecimento Livre (IA Genérica)", isRag: true }
 ];
 
 export default function FaqPage() {
@@ -120,22 +120,28 @@ export default function FaqPage() {
                 {ESTETICA_QUESTIONS.map((q, index) => (
                     <div 
                         key={q.id}
-                        className="bg-white dark:bg-[#111] p-5 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm hover:border-cyan-200 dark:hover:border-cyan-900/40 transition-all duration-200 group"
+                        className={`bg-white dark:bg-[#111] p-5 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm transition-all duration-200 group ${q.isRag ? 'border-primary/30 dark:border-primary/30 shadow-[0_0_15px_rgba(0,255,255,0.05)]' : 'hover:border-cyan-200 dark:hover:border-cyan-900/40'}`}
                     >
                         <div className="flex items-start gap-3">
-                            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-cyan-50 dark:bg-cyan-900/20 text-xs font-bold text-cyan-700 dark:text-primary shrink-0 mt-0.5">
-                                {index + 1}
+                            <span className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold shrink-0 mt-0.5 ${q.isRag ? 'bg-primary text-black' : 'bg-cyan-50 dark:bg-cyan-900/20 text-cyan-700 dark:text-primary'}`}>
+                                {q.isRag ? '✨' : index + 1}
                             </span>
                             <div className="flex-1 space-y-2">
                                 <label className="block text-sm font-bold text-gray-900 dark:text-white group-hover:text-cyan-700 dark:group-hover:text-primary transition-colors">
                                     {q.question}
                                 </label>
+                                {q.isRag && (
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                                        Insira textos abertos, regras exclusivas, perguntas e respostas extras que você quer que 
+                                        sua IA saiba. Este campo é indexado para a memória livre da Inteligência Artificial.
+                                    </p>
+                                )}
                                 <textarea
                                     value={answers[q.id] || ""}
                                     onChange={(e) => handleChange(q.id, e.target.value)}
-                                    placeholder="Escreva como se estivesse explicando para um cliente direto no WhatsApp..."
-                                    rows={3}
-                                    className="w-full px-4 py-3 bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-gray-800 rounded-xl text-sm text-gray-800 dark:text-gray-200 focus:outline-none focus:border-cyan-600 dark:focus:border-primary focus:ring-1 focus:ring-cyan-600 transition-all resize-none"
+                                    placeholder={q.isRag ? "Ex: O dono da loja se chama Rodrigo. A senha do Wi-Fi é #Loja123. Se o cliente perguntar sobre cortes infantis, diga que só atendemos crianças maiores que 5 anos..." : "Escreva como se estivesse explicando para um cliente direto no WhatsApp..."}
+                                    rows={q.isRag ? 8 : 3}
+                                    className={`w-full px-4 py-3 bg-gray-50 dark:bg-[#161616] border border-gray-200 dark:border-gray-800 rounded-xl text-sm text-gray-800 dark:text-gray-200 focus:outline-none focus:border-cyan-600 dark:focus:border-primary focus:ring-1 focus:ring-cyan-600 transition-all ${q.isRag ? 'resize-y min-h-[150px]' : 'resize-none'}`}
                                 />
                             </div>
                         </div>
