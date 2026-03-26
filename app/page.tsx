@@ -36,9 +36,9 @@ import { useTheme } from "next-themes";
 const CATEGORIES = [
   { name: "Todos", icon: Grid },
   { name: "Barbearia", icon: Scissors },
-  { name: "Petshop", icon: Dog },
   { name: "Clínica", icon: Stethoscope },
   { name: "Estética", icon: Sparkles },
+  { name: "Petshop", icon: Dog },
 ];
 
 // Note: Original MOCK_COMPANIES moved to a dynamic fetch from /api/companies
