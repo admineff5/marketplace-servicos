@@ -13,7 +13,7 @@ const ESTETICA_QUESTIONS = [
     { id: "q8", question: "Existe algum preparo necessário para os procedimentos (ex: depilação, peeling)?" },
     { id: "q9", question: "Vocês trabalham com venda de pacotes de sessões ou planos recorrentes?" },
     { id: "q10", question: "Como funciona a garantia ou retorno de procedimentos oferecidos?" },
-    { id: "knowledge_rag", question: "Base de Conhecimento Livre (IA Genérica)", isRag: true }
+    { id: "knowledge_rag", question: "Base de Conhecimento da Empresa (Treinamento Avançado)", isRag: true }
 ];
 
 export default function FaqPage() {
