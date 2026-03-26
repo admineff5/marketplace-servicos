@@ -16,13 +16,14 @@ export async function GET() {
             where: { companyId: company.id, stock: { lt: 5 } }
         });
 
+        const last24h = new Date(Date.now() - 24 * 60 * 60 * 1000);
         for (const product of lowStockProducts) {
             const existingAlert = await prisma.notification.findFirst({
                 where: { 
                     companyId: company.id, 
                     type: "STOCK", 
                     message: { contains: product.name },
-                    isRead: false 
+                    createdAt: { gte: last24h }
                 }
             });
 
