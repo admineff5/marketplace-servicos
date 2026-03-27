@@ -237,25 +237,34 @@ export default function Home() {
                 const [h, m] = targetTime.split(":").map(Number);
                 const targetMinutes = h * 60 + m;
                 
-                // --- NOVO: Cálculo do Dia da Semana da IA ---
-                const extractedDateObj = new Date(aiExtracted.date + "T10:00:00");
+                // --- Cálculo Robusto do Dia da Semana ---
+                const dateParts = aiExtracted.date.split("-");
+                const extractedDateObj = new Date(Number(dateParts[0]), Number(dateParts[1]) - 1, Number(dateParts[2]), 12, 0, 0);
                 const aiDayOfWeek = extractedDateObj.getDay();
 
-                matchesTime = company.staff.some((p: any) => {
-                    // Primeiro, checamos se o dia da semana é permitido para este profissional
-                    if (!isDayAllowed(p.hours, aiDayOfWeek)) return false;
+                matchesTime = company.staff && company.staff.length > 0 && company.staff.some((p: any) => {
+                    // 1. Checar se o profissional trabalha nesse dia da semana
+                    const allowed = isDayAllowed(p.hours, aiDayOfWeek);
+                    if (!allowed) return false;
 
+                    // 2. Gerar slots e ver se algum bate com a janela do usuário
                     const slots = generateTimeSlots(p.hours, aiExtracted.date, p.id, company.blocks || [], company.appointments || []);
+                    if (!slots || slots.length === 0) return false;
+
                     return slots.some(slot => {
                         const [sh, sm] = slot.split(":").map(Number);
                         const slotMinutes = sh * 60 + sm;
-                        // Janela de 45 min para ser mais produtivo nas sugestões
                         return Math.abs(slotMinutes - targetMinutes) <= 45;
                     });
                 });
+                
+                // Debug log para ajudar o desenvolvedor a entender o match
+                if (!matchesTime && company.niche === "Barbearia") {
+                    console.log(`[Busca IA] Unidade ${company.name} filtrada por falta de horários em ${aiExtracted.date} às ${aiExtracted.time}`);
+                }
             } catch (err) {
                 console.error("Erro ao filtrar horário:", err);
-                matchesTime = true; // Fallback: mostra a empresa se o filtro de horário falhar
+                matchesTime = true; // Fallback seguro
             }
         }
 
