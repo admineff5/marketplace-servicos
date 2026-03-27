@@ -740,7 +740,7 @@ export default function Home() {
                </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            <div className="flex flex-col gap-4 max-w-4xl mx-auto">
                 {[
                   { icon: MapPin, step: "EXEMPLO 01", title: "Busca por CEP", text: "Clínica perto do CEP 04515-030 amanhã", query: "clinica perto do cep 04515-030 amanha" },
                   { icon: CalendarDays, step: "EXEMPLO 02", title: "Data e Hora", text: "Barbeiro em São Paulo para sábado às 14h", query: "barbeiro em sao paulo para sabado as 14h" },
@@ -750,18 +750,24 @@ export default function Home() {
                     key={i}
                     onClick={() => {
                         setSearchQuery(item.text);
-                        // O useEffect debounce cuidará de chamar a busca
                     }}
-                    className="group relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0d1117] p-8 text-center transition-all hover:border-cyan-800/80 dark:hover:border-primary/50 hover:shadow-[0_0_30px_rgba(0,255,255,0.06)] hover:-translate-y-2"
+                    className="group flex flex-col sm:flex-row items-center gap-6 p-6 rounded-[2rem] border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0d1117] transition-all hover:border-cyan-800/80 dark:hover:border-primary/50 hover:shadow-[0_0_40px_rgba(0,255,255,0.06)] hover:-translate-y-1"
                   >
-                    <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-cyan-700/10 dark:bg-primary/10 border border-cyan-800/10 dark:border-primary/10 group-hover:scale-110 transition-transform">
-                      <item.icon className="h-7 w-7 text-cyan-700 dark:text-primary" />
+                    <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-cyan-700/10 dark:bg-primary/10 border border-cyan-800/10 dark:border-primary/10 group-hover:scale-105 transition-transform">
+                      <item.icon className="h-8 w-8 text-cyan-700 dark:text-primary" />
                     </div>
-                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-700 dark:text-primary mb-2 block">{item.step}</span>
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{item.title}</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-                      "{item.text}"
-                    </p>
+                    
+                    <div className="flex-1 text-center sm:text-left">
+                       <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-cyan-700 dark:text-primary mb-1 block">{item.step}</span>
+                       <h3 className="text-gray-900 dark:text-white font-bold mb-1 opacity-60 text-xs">{item.title}</h3>
+                       <p className="text-lg sm:text-2xl font-black text-gray-900 dark:text-white group-hover:text-cyan-800 dark:group-hover:text-primary transition-colors leading-tight">
+                         "{item.text}"
+                       </p>
+                    </div>
+
+                    <div className="hidden sm:flex h-12 w-12 items-center justify-center rounded-full bg-gray-50 dark:bg-white/5 opacity-0 group-hover:opacity-100 transition-all transform translate-x-4 group-hover:translate-x-0">
+                       <ArrowRight className="w-5 h-5 text-cyan-700 dark:text-primary" />
+                    </div>
                   </button>
                 ))}
             </div>
