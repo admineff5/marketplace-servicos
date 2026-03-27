@@ -733,13 +733,13 @@ export default function Home() {
           {/* Showcase Grid / List */}
             <div className="mt-8">
               {isSearchRelaxed && (
-                <div className="mb-8 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-2xl flex items-center gap-3 animate-in fade-in slide-in-from-left-4 duration-500">
-                   <div className="h-10 w-10 rounded-full bg-amber-100 dark:bg-amber-800/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
-                      <Sparkles className="w-5 h-5" />
+                <div className="mb-8 p-5 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 rounded-2xl flex items-center gap-4 animate-in fade-in slide-in-from-left-4 duration-500 shadow-sm">
+                   <div className="h-12 w-12 shrink-0 rounded-2xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800/30">
+                      <Sparkles className="w-6 h-6" />
                    </div>
                    <div className="flex-1">
-                      <p className="text-sm font-bold text-amber-900 dark:text-amber-100">Não encontramos exatamente o que você pediu...</p>
-                      <p className="text-xs text-amber-700 dark:text-amber-400">Mas aqui estão algumas opções de {aiExtracted.service} que você pode gostar:</p>
+                      <p className="text-sm font-black text-amber-900 dark:text-amber-100 uppercase tracking-tight">Não encontramos exatamente o que você pediu...</p>
+                      <p className="text-sm text-amber-800/90 dark:text-amber-400/90 font-medium">Mas aqui estão as melhores unidades de <span className="font-bold underline decoration-amber-500/20">{aiExtracted.service}</span> para você:</p>
                    </div>
                 </div>
               )}
