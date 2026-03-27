@@ -236,8 +236,15 @@ export default function Home() {
                 const targetTime = aiExtracted.time; // "11:00"
                 const [h, m] = targetTime.split(":").map(Number);
                 const targetMinutes = h * 60 + m;
+                
+                // --- NOVO: Cálculo do Dia da Semana da IA ---
+                const extractedDateObj = new Date(aiExtracted.date + "T10:00:00");
+                const aiDayOfWeek = extractedDateObj.getDay();
 
                 matchesTime = company.staff.some((p: any) => {
+                    // Primeiro, checamos se o dia da semana é permitido para este profissional
+                    if (!isDayAllowed(p.hours, aiDayOfWeek)) return false;
+
                     const slots = generateTimeSlots(p.hours, aiExtracted.date, p.id, company.blocks || [], company.appointments || []);
                     return slots.some(slot => {
                         const [sh, sm] = slot.split(":").map(Number);
@@ -264,13 +271,23 @@ export default function Home() {
     return matchesCategory && matchesSearch;
   });
 
-  // SE NÃO HOUVER NADA COM A IA, TENTAMOS UMA BUSCA RELAXADA (Apenas o serviço)
+  // SE NÃO HOUVER NADA COM A IA, TENTAMOS UMA BUSCA RELAXADA (Apenas o serviço + Verificar se abre no dia)
   const isSearchRelaxed = aiExtracted && filteredCompanies.length === 0;
   const displayCompanies = isSearchRelaxed ? companies.filter((c: any) => {
       const serviceKeywords = (aiExtracted.service || "").toLowerCase().split(' ').filter((w: string) => w.length > 2);
-      return !aiExtracted.service || 
+      
+      // Mesmo na busca relaxada, filtramos quem não abre no dia solicitado
+      let opensOnRequestedDay = true;
+      if (aiExtracted.date) {
+          const aiDayOfWeek = new Date(aiExtracted.date + "T10:00:00").getDay();
+          opensOnRequestedDay = c.staff.some((p: any) => isDayAllowed(p.hours, aiDayOfWeek));
+      }
+
+      const matchesService = !aiExtracted.service || 
              c.niche.toLowerCase().includes(aiExtracted.service.toLowerCase()) ||
              serviceKeywords.some((word: string) => c.niche.toLowerCase().includes(word));
+      
+      return matchesService && opensOnRequestedDay;
   }) : filteredCompanies;
 
   // Handle Scroll to make search bar sticky
