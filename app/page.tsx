@@ -694,7 +694,7 @@ export default function Home() {
 
               {/* Pill Categories-Compact Scrollable */}
               <div className="flex items-center gap-2 overflow-x-auto w-full lg:w-2/3 pt-1 pb-3 scrollbar-hide [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:none]">
-                {CATEGORIES.map((cat) => {
+                {CATEGORIES.filter(c => c.name !== "Petshop").map((cat) => {
                   const isPetshop = cat.name === "Petshop";
                   return (
                   <div key={cat.name} className="relative flex flex-col items-center">
