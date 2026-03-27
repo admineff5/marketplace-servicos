@@ -162,6 +162,7 @@ export default function Home() {
     }
 
     setIsAiLoading(true);
+    setAiExtracted(null); // Resetar para mostrar o loading
     try {
         const res = await fetch("/api/search-home-ai", {
             method: "POST",
@@ -170,7 +171,19 @@ export default function Home() {
         });
         const data = await res.json();
         if (data.extracted) {
+            console.log("IA Insights:", data.extracted);
             setAiExtracted(data.extracted);
+            
+            // Auto-selecionar categoria se a IA identificou um nicho claro
+            const niches = CATEGORIES.map(c => c.name.toLowerCase());
+            const extractedService = (data.extracted.service || "").toLowerCase();
+            const matchedNiche = CATEGORIES.find(c => 
+                extractedService.includes(c.name.toLowerCase()) || 
+                c.name.toLowerCase().includes(extractedService)
+            );
+            if (matchedNiche && matchedNiche.name !== "Todos") {
+                setActiveCategory(matchedNiche.name);
+            }
         }
     } catch (err) {
         console.error("AI Search Error:", err);
@@ -538,28 +551,47 @@ export default function Home() {
                 </button>
               </form>
 
-              {/* Status da Busca por IA */}
-              {aiExtracted && (
-                <div className="flex flex-wrap justify-center gap-2 mb-6 animate-in fade-in slide-in-from-top-2 duration-300">
-                   {aiExtracted.service && (
-                     <span className="px-3 py-1 bg-primary/20 text-primary border border-primary/30 rounded-full text-xs font-bold">
-                        Serviço: {aiExtracted.service}
-                     </span>
+              {/* Status da Busca por IA - Mais visível e informativo */}
+              {(isAiLoading || aiExtracted) && (
+                <div className="flex flex-col items-center gap-4 mb-8 -mt-4 animate-in fade-in zoom-in duration-500">
+                   {isAiLoading && (
+                     <div className="flex items-center gap-3 bg-white/5 backdrop-blur-md px-6 py-3 rounded-2xl border border-white/10 shadow-xl">
+                        <div className="flex gap-1.5">
+                           <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                           <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                           <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+                        </div>
+                        <span className="text-xs font-bold text-gray-300 uppercase tracking-widest">A IA está analisando sua intenção...</span>
+                     </div>
                    )}
-                   {aiExtracted.location && (
-                     <span className="px-3 py-1 bg-cyan-900/30 text-cyan-400 border border-cyan-800/50 rounded-full text-xs font-bold">
-                        Local: {aiExtracted.location}
-                     </span>
-                   )}
-                   {aiExtracted.date && (
-                     <span className="px-3 py-1 bg-purple-900/30 text-purple-400 border border-purple-800/50 rounded-full text-xs font-bold">
-                        Data: {new Date(aiExtracted.date).toLocaleDateString('pt-BR')}
-                     </span>
-                   )}
-                   {aiExtracted.time && (
-                     <span className="px-3 py-1 bg-amber-900/30 text-amber-500 border border-amber-800/50 rounded-full text-xs font-bold">
-                        Às {aiExtracted.time}
-                     </span>
+
+                   {aiExtracted && !isAiLoading && (
+                     <div className="flex flex-wrap justify-center gap-2 max-w-2xl">
+                        <div className="flex items-center gap-1.5 px-4 py-2 bg-primary/10 text-primary border border-primary/20 rounded-xl text-[10px] font-black uppercase tracking-wider shadow-lg">
+                           <Sparkles className="w-3 h-3" />
+                           Busca Inteligente Ativa
+                        </div>
+                        {aiExtracted.service && (
+                          <div className="px-3 py-2 bg-white/5 text-gray-200 border border-white/10 rounded-xl text-xs font-medium flex items-center gap-2">
+                             <span className="text-[10px] text-gray-500 font-bold">O QUE:</span> {aiExtracted.service}
+                          </div>
+                        )}
+                        {aiExtracted.location && (
+                          <div className="px-3 py-2 bg-white/5 text-gray-200 border border-white/10 rounded-xl text-xs font-medium flex items-center gap-2">
+                             <span className="text-[10px] text-gray-500 font-bold">ONDE:</span> {aiExtracted.location}
+                          </div>
+                        )}
+                        {aiExtracted.date && (
+                          <div className="px-3 py-2 bg-white/5 text-gray-200 border border-white/10 rounded-xl text-xs font-medium flex items-center gap-2">
+                             <span className="text-[10px] text-gray-500 font-bold">QUANDO:</span> {new Date(aiExtracted.date + "T10:00:00").toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' })}
+                          </div>
+                        )}
+                        {aiExtracted.time && (
+                          <div className="px-3 py-2 bg-white/5 text-gray-200 border border-white/10 rounded-xl text-xs font-medium flex items-center gap-2">
+                             <span className="text-[10px] text-gray-500 font-bold">HORA:</span> {aiExtracted.time}
+                          </div>
+                        )}
+                     </div>
                    )}
                 </div>
               )}

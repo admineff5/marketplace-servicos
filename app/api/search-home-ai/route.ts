@@ -18,21 +18,22 @@ export async function POST(req: Request) {
         const dateStr = today.toISOString().split('T')[0];
         const dayOfWeek = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"][today.getDay()];
 
-        const prompt = `Você é um extrator de intenções ultrassensível para um Marketplace de Serviços.
+        const prompt = `Você é um motor de busca semântico ultra-inteligente para o marketplace "AgendeJá".
 O usuário digitou: "${query}"
 
-Sua tarefa é extrair as seguintes informações em formato JSON:
-- service: (O tipo de serviço, nicho ou o que ele quer fazer. Ex: "corte", "unha", "barba", "limpeza de pele")
-- location: (Extraia a parte geográfica: Cidade, Bairro, CEP ou nome de Rua. Remova palavras como "perto de", "ao lado de", "na")
-- date: (YYYY-MM-DD. Hoje é ${dateStr}. Se ele falar "hoje", use ${dateStr}. Se não falar nada, mas falar horário, assuma ${dateStr})
-- time: (HH:mm. Se ele disser "agora", use o horário aproximado mais próximo. Se disser "manhã", use "09:00", "tarde" "15:00")
-- name: (Nome de uma loja específica se ele mencionar)
+Sua missão é extrair um JSON com:
+- service: (O nicho ou serviço. Priorize usar um destes se possível: "Barbearia", "Clínica", "Estética")
+- location: (Cidade, Bairro, CEP ou Rua. Extraia só o nome, sem "perto de")
+- date: (YYYY-MM-DD. Hoje é ${dateStr} (${dayOfWeek}). Se disser "amanhã", use a data correta do dia seguinte)
+- time: (HH:mm. Horário exato ou aproximado)
+- name: (Nome de loja específica)
 
-REGRAS DE OURO:
-1. Seja FLEXÍVEL. Se ele disser "quero arrumar o rosto", service = "estética". Se disser "tô com dor", service = "clínica".
-2. No 'location', extraia apenas o NÚCLEO (ex: de "perto da rua teste" extraia "rua teste").
-3. Se não houver nada, retorne null.
-4. Retorne APENAS o JSON puro.`;
+REGRAS CRÍTICAS:
+1. Se o usuário falar algo como "procuro um serviço padrão barbearia", o 'service' deve ser "Barbearia".
+2. Se ele disser "quero cortar o cabelo", 'service' é "Barbearia".
+3. Se ele disser "limpeza de pele", 'service' é "Estética".
+4. NÃO invente dados. Se não houver local, retorne null.
+5. Retorne APENAS o JSON. Sem explicações.`;
 
         const result = await (ai as any).models.generateContent({
             model: 'gemini-1.5-flash',
