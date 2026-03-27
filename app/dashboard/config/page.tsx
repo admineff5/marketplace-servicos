@@ -1,6 +1,7 @@
 "use client";
-import { useState, useEffect } from "react";
-import { Settings, User, Building, CreditCard, Bell, Shield, Palette, MapPin, X, Plus, Loader2 } from "lucide-react";
+import { Suspense, useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { Settings, User, Building, CreditCard, Bell, Shield, Palette, MapPin, X, Plus, Loader2, CheckCircle2, AlertTriangle, MessageSquare, ArrowRight, Trash2 } from "lucide-react";
 
 const TABS = [
     { id: "profile", label: "Perfil da Empresa", icon: Building },
@@ -11,9 +12,20 @@ const TABS = [
 ];
 
 export default function ConfigPage() {
+    return (
+        <Suspense fallback={<div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>}>
+            <ConfigContent />
+        </Suspense>
+    );
+}
+
+function ConfigContent() {
+    const searchParams = useSearchParams();
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [activeTab, setActiveTab] = useState("profile");
+    const [notifications, setNotifications] = useState<any[]>([]);
+    const [unreadCount, setUnreadCount] = useState<number>(0);
     const [showToast, setShowToast] = useState(false);
     const [locations, setLocations] = useState<any[]>([]);
     const [company, setCompany] = useState<any>({
@@ -56,6 +68,54 @@ export default function ConfigPage() {
 
     useEffect(() => {
         fetchProfile();
+        
+        // Handle Tab from URL
+        const tab = searchParams.get("tab");
+        if (tab && TABS.some(t => t.id === tab)) {
+            setActiveTab(tab);
+        }
+    }, [searchParams]);
+
+    const fetchNotifications = async () => {
+        try {
+            const res = await fetch("/api/dashboard/notifications");
+            const data = await res.json();
+            if (data && data.notifications) {
+                setNotifications(data.notifications);
+                setUnreadCount(data.unreadCount);
+            }
+        } catch (e) { console.error("Erro fetch notifications:", e) }
+    };
+
+    const markAsRead = async (id: string, link: string | null) => {
+        try {
+            await fetch("/api/dashboard/notifications", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ notificationId: id })
+            });
+            fetchNotifications();
+            if (link) window.open(link, '_blank');
+        } catch (e) {
+            if (link) window.open(link, '_blank');
+        }
+    };
+
+    const markAllAsRead = async () => {
+        try {
+            await fetch("/api/dashboard/notifications", { 
+                method: "PATCH", 
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ markAll: true }) 
+            });
+            fetchNotifications();
+        } catch (e) { console.error(e) }
+    };
+
+    useEffect(() => {
+        fetchNotifications();
+        const interval = setInterval(fetchNotifications, 15000);
+        return () => clearInterval(interval);
     }, []);
 
     const fetchProfile = async () => {
@@ -388,7 +448,86 @@ export default function ConfigPage() {
                         </div>
                     )}
 
-                    {activeTab !== "profile" && activeTab !== "locations" && activeTab !== "appearance" && (
+                    {activeTab === "notifications" && (
+                        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                            <div className="flex items-center justify-between mb-2">
+                                <div>
+                                    <h2 className="text-lg font-bold text-gray-900 dark:text-white">Central de Notificações</h2>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Acompanhe alertas importantes sobre agendamentos, estoque e sistema.</p>
+                                </div>
+                                {unreadCount > 0 && (
+                                    <button 
+                                        onClick={markAllAsRead}
+                                        className="flex items-center gap-2 px-4 py-2 bg-primary/10 text-cyan-700 dark:text-primary rounded-lg text-sm font-bold border border-primary/20 hover:bg-primary/20 transition-all"
+                                    >
+                                        <CheckCircle2 className="w-4 h-4" />
+                                        <span>Limpar todas</span>
+                                    </button>
+                                )}
+                            </div>
+
+                            <div className="space-y-3">
+                                {notifications.length > 0 ? (
+                                    notifications.map((notif: any) => (
+                                        <div 
+                                            key={notif.id}
+                                            onClick={() => markAsRead(notif.id, notif.link)}
+                                            className={`group relative flex items-start gap-4 p-5 rounded-2xl border transition-all cursor-pointer ${
+                                                !notif.isRead 
+                                                    ? 'bg-cyan-50/30 dark:bg-primary/5 border-cyan-100 dark:border-primary/20 shadow-sm' 
+                                                    : 'bg-white dark:bg-transparent border-gray-100 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700'
+                                            }`}
+                                        >
+                                            <div className={`mt-1 p-2.5 rounded-xl border shrink-0 ${
+                                                notif.type === 'STOCK' 
+                                                    ? 'bg-amber-50 dark:bg-amber-900/10 border-amber-100 dark:border-amber-900/20 text-amber-500' 
+                                                    : notif.type === 'WHATSAPP' 
+                                                        ? 'bg-green-50 dark:bg-green-900/10 border-green-100 dark:border-green-900/20 text-green-500' 
+                                                        : 'bg-cyan-50 dark:bg-primary/10 border-cyan-100 dark:border-primary/20 text-cyan-600 dark:text-primary'
+                                            }`}>
+                                                {notif.type === 'STOCK' ? <AlertTriangle className="w-5 h-5" /> : notif.type === 'WHATSAPP' ? <MessageSquare className="w-5 h-5" /> : <Bell className="w-5 h-5" />}
+                                            </div>
+
+                                            <div className="flex-1">
+                                                <div className="flex items-center justify-between mb-1">
+                                                    <span className={`text-[10px] font-black uppercase tracking-widest ${
+                                                        notif.type === 'STOCK' ? 'text-amber-500' : notif.type === 'WHATSAPP' ? 'text-green-500' : 'text-cyan-600 dark:text-primary'
+                                                    }`}>
+                                                        {notif.title}
+                                                    </span>
+                                                    <span className="text-xs text-gray-400">
+                                                        {new Date(notif.createdAt).toLocaleDateString('pt-BR')} às {new Date(notif.createdAt).toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}
+                                                    </span>
+                                                </div>
+                                                <p className={`text-sm leading-relaxed ${!notif.isRead ? 'text-gray-900 dark:text-white font-medium' : 'text-gray-600 dark:text-gray-400'}`}>
+                                                    {notif.message}
+                                                </p>
+                                            </div>
+
+                                            <div className="absolute right-4 bottom-4 opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0">
+                                                <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-primary" />
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="py-20 text-center border border-dashed border-gray-200 dark:border-gray-800 rounded-3xl bg-gray-50/30 dark:bg-gray-800/20">
+                                        <Bell className="w-12 h-12 text-gray-300 dark:text-gray-700 mx-auto mb-4 opacity-50" />
+                                        <h3 className="text-lg font-bold text-gray-900 dark:text-white">Sem novidades</h3>
+                                        <p className="text-gray-500 dark:text-gray-400 mt-1">Você está em dia com todas as notificações.</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === "security" && (
+                        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Segurança da Conta</h2>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">Em breve: Alteração de senha, autenticação de dois fatores e log de acessos.</p>
+                        </div>
+                    )}
+
+                    {activeTab !== "profile" && activeTab !== "locations" && activeTab !== "appearance" && activeTab !== "notifications" && activeTab !== "security" && (
                         <div className="flex flex-col items-center justify-center py-16 text-center animate-in fade-in zoom-in-95 duration-300">
                             <div className="w-16 h-16 bg-gray-50 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
                                 <Settings className="w-8 h-8 text-gray-400" />

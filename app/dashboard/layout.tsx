@@ -280,7 +280,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                         <button
                                             onClick={() => {
                                                 setIsNotificationsOpen(false);
-                                                window.location.href = '/dashboard/relatorios';
+                                                window.location.href = '/dashboard/config?tab=notifications';
                                             }}
                                             className="w-full py-3 text-xs font-bold text-gray-500 dark:text-gray-400 hover:text-cyan-700 dark:hover:text-primary hover:bg-gray-50 dark:hover:bg-gray-800 transition-all border-t border-gray-100 dark:border-gray-800 uppercase tracking-widest"
                                         >
