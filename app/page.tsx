@@ -733,13 +733,18 @@ export default function Home() {
           {/* Showcase Grid / List */}
             <div className="mt-8">
               {isSearchRelaxed && (
-                <div className="mb-8 p-5 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 rounded-2xl flex items-center gap-4 animate-in fade-in slide-in-from-left-4 duration-500 shadow-sm">
-                   <div className="h-12 w-12 shrink-0 rounded-2xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800/30">
-                      <Sparkles className="w-6 h-6" />
+                <div className="mb-10 p-6 bg-amber-500/5 dark:bg-amber-500/10 backdrop-blur-md border border-amber-500/30 dark:border-amber-500/20 rounded-3xl flex flex-col sm:flex-row items-center gap-5 animate-in fade-in slide-in-from-top-4 duration-700">
+                   <div className="flex-shrink-0 w-14 h-14 bg-amber-500/10 dark:bg-amber-500/20 rounded-2xl flex items-center justify-center border border-amber-500/20">
+                      <Sparkles className="w-8 h-8 text-amber-600 dark:text-amber-400" />
                    </div>
-                   <div className="flex-1">
-                      <p className="text-sm font-black text-amber-900 dark:text-amber-100 uppercase tracking-tight">Não encontramos exatamente o que você pediu...</p>
-                      <p className="text-sm text-amber-800/90 dark:text-amber-400/90 font-medium">Mas aqui estão as melhores unidades de <span className="font-bold underline decoration-amber-500/20">{aiExtracted.service}</span> para você:</p>
+                   <div className="flex-1 text-center sm:text-left">
+                      <p className="text-sm font-black text-amber-700 dark:text-amber-400 uppercase tracking-widest mb-1">Busca Flexível Ativada</p>
+                      <p className="text-lg font-bold text-gray-900 dark:text-white leading-tight">
+                         Não encontramos exatamente o que você pediu... 
+                         <span className="block text-sm font-medium text-gray-600 dark:text-gray-400 mt-1">
+                            Mas aqui estão as melhores opções de <span className="text-amber-600 dark:text-amber-400 font-bold">{aiExtracted.service}</span> para você:
+                         </span>
+                      </p>
                    </div>
                 </div>
               )}
