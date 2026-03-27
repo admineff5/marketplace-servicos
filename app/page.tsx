@@ -200,31 +200,36 @@ export default function Home() {
     if (aiExtracted && searchQuery.trim().length >= 3) {
         const matchesName = !aiExtracted.name || company.name.toLowerCase().includes(aiExtracted.name.toLowerCase());
         
-        // Match por Niche ou Serviços internos
+        // Match por Niche ou Serviços internos (Fuzzy)
+        const serviceKeywords = (aiExtracted.service || "").toLowerCase().split(' ').filter((w: string) => w.length > 2);
         const matchesService = !aiExtracted.service || 
                               company.niche.toLowerCase().includes(aiExtracted.service.toLowerCase()) ||
+                              serviceKeywords.some((word: string) => company.niche.toLowerCase().includes(word)) ||
                               company.services.some((s: any) => s.name.toLowerCase().includes(aiExtracted.service.toLowerCase()));
         
-        // Match por Cidade, Bairro ou CEP
+        // Match por Cidade, Bairro ou CEP (Fuzzy Matching por Palavras-Chave)
         const companyFullAddress = `${company.address} ${company.neighborhood || ""} ${company.city} ${company.state}`.toLowerCase();
+        const locationKeywords = (aiExtracted.location || "").toLowerCase().split(' ').filter((w: string) => w.length > 2);
+        
+        // Se a IA extraiu localização, tentamos match parcial por palavras (ex: "rua teste" casa com "Rua de Teste")
         const matchesLocation = !aiExtracted.location || 
+                               locationKeywords.some((word: string) => companyFullAddress.includes(word)) ||
                                companyFullAddress.includes(aiExtracted.location.toLowerCase());
 
-        // Filtro de disponibilidade de horário (Próximo de +- 30 min)
+        // Filtro de disponibilidade de horário (Próximo de +- 45 min para ser mais flexível)
         let matchesTime = true;
         if (aiExtracted.time && aiExtracted.date) {
             const targetTime = aiExtracted.time; // "11:00"
             const [h, m] = targetTime.split(":").map(Number);
             const targetMinutes = h * 60 + m;
 
-            // Verificar se algum profissional nessa unidade tem o horário vago
             matchesTime = company.staff.some((p: any) => {
                 const slots = generateTimeSlots(p.hours, aiExtracted.date, p.id, company.blocks, company.appointments);
                 return slots.some(slot => {
                     const [sh, sm] = slot.split(":").map(Number);
                     const slotMinutes = sh * 60 + sm;
-                    // Sugestão de horários próximos (janela de 30 min como solicitado)
-                    return Math.abs(slotMinutes - targetMinutes) <= 30;
+                    // Janela de 45 min para ser mais produtivo nas sugestões
+                    return Math.abs(slotMinutes - targetMinutes) <= 45;
                 });
             });
         }
@@ -240,6 +245,15 @@ export default function Home() {
       company.niche.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
+
+  // SE NÃO HOUVER NADA COM A IA, TENTAMOS UMA BUSCA RELAXADA (Apenas o serviço)
+  const isSearchRelaxed = aiExtracted && filteredCompanies.length === 0;
+  const displayCompanies = isSearchRelaxed ? companies.filter((c: any) => {
+      const serviceKeywords = (aiExtracted.service || "").toLowerCase().split(' ').filter((w: string) => w.length > 2);
+      return !aiExtracted.service || 
+             c.niche.toLowerCase().includes(aiExtracted.service.toLowerCase()) ||
+             serviceKeywords.some((word: string) => c.niche.toLowerCase().includes(word));
+  }) : filteredCompanies;
 
   // Handle Scroll to make search bar sticky
   useEffect(() => {
@@ -679,97 +693,106 @@ export default function Home() {
             </div>
           </div>
 
-          {filteredCompanies.length > 0 ? (
-            <div
-              className={
-                layoutMode === "grid"
-                  ? "grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-                  : "flex flex-col gap-6"
-              }
-            >
-              {filteredCompanies.map((company) => (
+          {/* Showcase Grid / List */}
+            <div className="mt-8">
+              {isSearchRelaxed && (
+                <div className="mb-8 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-2xl flex items-center gap-3 animate-in fade-in slide-in-from-left-4 duration-500">
+                   <div className="h-10 w-10 rounded-full bg-amber-100 dark:bg-amber-800/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
+                      <Sparkles className="w-5 h-5" />
+                   </div>
+                   <div className="flex-1">
+                      <p className="text-sm font-bold text-amber-900 dark:text-amber-100">Não encontramos exatamente o que você pediu...</p>
+                      <p className="text-xs text-amber-700 dark:text-amber-400">Mas aqui estão algumas opções de {aiExtracted.service} que você pode gostar:</p>
+                   </div>
+                </div>
+              )}
+
+              {displayCompanies.length > 0 ? (
                 <div
-                  key={company.id}
-                  onClick={() => handleOpenCompany(company)}
-                  className={`group flex rounded-2xl bg-white border border-gray-100 shadow-sm transition-all hover:shadow-lg hover:-translate-y-1 dark:bg-gray-900 dark:border-gray-800 overflow-hidden cursor-pointer ${layoutMode === "grid" ? "flex-col" : "flex-row h-[200px]"
-                    } `}
+                  className={`grid gap-6 ${
+                    layoutMode === "grid"
+                      ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                      : "grid-cols-1"
+                  }`}
                 >
-                  {/* Image Header */}
-                  <div
-                    className={`${layoutMode === "grid" ? "h-32 w-full" : "h-full w-[250px] shrink-0"} relative bg-gray-200 dark:bg-gray-800`}
-                  >
-                    <img
-                      src={company.image}
-                      alt="Banner"
-                      className="w-full h-full object-cover"
-                    />
-
-                    {layoutMode === "grid" ? (
-                      <div className="absolute -bottom-6 left-6 h-16 w-16 rounded-full border-4 border-white dark:border-gray-900 bg-white dark:bg-gray-800 flex items-center justify-center overflow-hidden transition-transform z-10 group-hover:scale-105">
+                  {displayCompanies.map((company, idx) => (
+                    <div
+                      key={company.id}
+                      onClick={() => handleOpenCompany(company)}
+                      className={`group flex rounded-2xl bg-white border border-gray-100 shadow-sm transition-all hover:shadow-lg hover:-translate-y-1 dark:bg-gray-900 dark:border-gray-800 overflow-hidden cursor-pointer ${
+                        layoutMode === "grid" ? "flex-col" : "flex-row h-auto sm:h-[200px]"
+                      } `}
+                    >
+                      {/* Image Header */}
+                      <div
+                        className={`${
+                          layoutMode === "grid" ? "h-32 w-full" : "h-full w-[150px] sm:w-[250px] shrink-0"
+                        } relative bg-gray-200 dark:bg-gray-800`}
+                      >
                         <img
-                          src={company.logo}
-                          alt="Logo"
+                          src={company.image}
+                          alt="Banner"
                           className="w-full h-full object-cover"
                         />
-                      </div>
-                    ) : (
-                      <div className="absolute top-4 left-4 h-14 w-14 rounded-full border-2 border-white dark:border-gray-900 bg-white dark:bg-gray-800 flex items-center justify-center overflow-hidden transition-transform z-10">
-                        <img
-                          src={company.logo}
-                          alt="Logo"
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    )}
 
-                    <div className="absolute top-4 right-4 rounded-full bg-black/60 backdrop-blur-sm px-3 py-1 text-xs font-medium text-white flex items-center gap-1 shadow-sm">
-                      <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                      {company.rating} ({company.reviews})
-                    </div>
-                  </div>
+                        {layoutMode === "grid" ? (
+                          <div className="absolute -bottom-6 left-6 h-16 w-16 rounded-full border-4 border-white dark:border-gray-900 bg-white dark:bg-gray-800 flex items-center justify-center overflow-hidden transition-transform z-10 group-hover:scale-105">
+                            <img
+                              src={company.logo}
+                              alt="Logo"
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        ) : (
+                          <div className="absolute top-4 left-4 h-14 w-14 rounded-full border-2 border-white dark:border-gray-900 bg-white dark:bg-gray-800 flex items-center justify-center overflow-hidden transition-transform z-10">
+                            <img
+                              src={company.logo}
+                              alt="Logo"
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        )}
 
-                  {/* Card Content */}
-                  <div
-                    className={`flex flex-col flex-1 p-6 ${layoutMode === "grid" ? "pt-10" : ""} `}
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-cyan-700 dark:group-hover:text-primary transition-colors line-clamp-1">
-                        {company.name}
-                      </h3>
-                    </div>
-                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-4">
-                      {company.niche}
-                    </p>
-
-                    {layoutMode === "list" && (
-                      <div className="mb-4">
-                        <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
-                          {company.description}
-                        </p>
-                        <div className="flex flex-wrap gap-2 mt-3">
-                          {company.services?.slice(0, 3).map((s: any, idx: number) => (
-                            <span
-                              key={idx}
-                              className="text-xs font-semibold bg-gray-100 dark:bg-gray-800/60 text-gray-600 dark:text-gray-300 px-2.5 py-1 rounded-md border border-gray-200 dark:border-gray-700/50"
-                            >
-                              {s.name}
-                            </span>
-                          ))}
+                        <div className="absolute top-4 right-4 rounded-full bg-black/60 backdrop-blur-sm px-3 py-1 text-xs font-medium text-white flex items-center gap-1 shadow-sm">
+                          <Star className="w-3 h-3 text-yellow-400 fill-current" />
+                          {company.rating} ({company.reviews})
                         </div>
                       </div>
-                    )}
 
-                    <div className="flex mt-auto pt-2">
-                      <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                        <MapPin className="w-4 h-4 shrink-0" />
-                        <span className="line-clamp-1">{company.address}</span>
+                      {/* Card Content */}
+                      <div
+                        className={`flex flex-col flex-1 p-6 ${
+                          layoutMode === "grid" ? "pt-10" : "justify-center"
+                        } `}
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-cyan-700 dark:group-hover:text-primary transition-colors line-clamp-1">
+                            {company.name}
+                          </h3>
+                        </div>
+                        <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-4">
+                          {company.niche}
+                        </p>
+
+                        {layoutMode === "list" && (
+                          <div className="mb-4 hidden sm:block">
+                            <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
+                              {company.description}
+                            </p>
+                          </div>
+                        )}
+
+                        <div className="flex mt-auto pt-2">
+                          <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                            <MapPin className="w-4 h-4 shrink-0" />
+                            <span className="line-clamp-1">{company.address}</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          ) : (
+              ) : (
             <div className="rounded-2xl border border-dashed border-gray-300 bg-gray-50/50 p-16 text-center dark:border-gray-800 dark:bg-gray-900/50">
               <h3 className="text-xl font-medium text-gray-900 dark:text-white">
                 Nenhum resultado encontrado
@@ -788,7 +811,8 @@ export default function Home() {
               </button>
             </div>
           )}
-        </section>
+        </div>
+      </section>
 
         {/* ============================================= */}
         {/* COMO FUNCIONA — 3 passos */}

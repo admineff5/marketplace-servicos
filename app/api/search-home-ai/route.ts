@@ -18,29 +18,21 @@ export async function POST(req: Request) {
         const dateStr = today.toISOString().split('T')[0];
         const dayOfWeek = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"][today.getDay()];
 
-        const prompt = `Você é um extrator de intenções para um Marketplace de Serviços chamado AgendeJá.
+        const prompt = `Você é um extrator de intenções ultrassensível para um Marketplace de Serviços.
 O usuário digitou: "${query}"
 
-Sua tarefa é extrair as seguintes informações em formato JSON puro:
-- service: (O tipo de serviço ou categoria, ex: "Barbearia", "Corte de Cabelo")
-- location: (Cidade, Bairro ou CEP mencionado. Se for CEP, retorne apenas os números)
-- date: (Data mencionada no formato YYYY-MM-DD. Hoje é ${dateStr} (${dayOfWeek}). Calcule datas relativas como "amanhã", "sábado", "dia 27")
-- time: (Horário mencionado no formato HH:mm. Ex: "11:00")
-- name: (Se o usuário estiver buscando uma loja específica pelo nome)
+Sua tarefa é extrair as seguintes informações em formato JSON:
+- service: (O tipo de serviço, nicho ou o que ele quer fazer. Ex: "corte", "unha", "barba", "limpeza de pele")
+- location: (Extraia a parte geográfica: Cidade, Bairro, CEP ou nome de Rua. Remova palavras como "perto de", "ao lado de", "na")
+- date: (YYYY-MM-DD. Hoje é ${dateStr}. Se ele falar "hoje", use ${dateStr}. Se não falar nada, mas falar horário, assuma ${dateStr})
+- time: (HH:mm. Se ele disser "agora", use o horário aproximado mais próximo. Se disser "manhã", use "09:00", "tarde" "15:00")
+- name: (Nome de uma loja específica se ele mencionar)
 
-Regras:
-1. Se a informação não existir, retorne null.
-2. Para horários aproximados como "final da tarde", retorne "17:00".
-3. Retorne APENAS o JSON, sem markdown ou explicações.
-
-Exemplo de Saída:
-{
-  "service": "barbeiro",
-  "location": "São Paulo",
-  "date": "2026-03-27",
-  "time": "11:00",
-  "name": null
-}`;
+REGRAS DE OURO:
+1. Seja FLEXÍVEL. Se ele disser "quero arrumar o rosto", service = "estética". Se disser "tô com dor", service = "clínica".
+2. No 'location', extraia apenas o NÚCLEO (ex: de "perto da rua teste" extraia "rua teste").
+3. Se não houver nada, retorne null.
+4. Retorne APENAS o JSON puro.`;
 
         const result = await (ai as any).models.generateContent({
             model: 'gemini-1.5-flash',
