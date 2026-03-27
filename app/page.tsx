@@ -730,65 +730,40 @@ export default function Home() {
 
         {/* AI Search Guide - Only visible when NO search is active and NO category selected */}
         {(!aiExtracted && !activeCategory && !searchQuery) && (
-          <section className="container mx-auto px-4 py-16 sm:px-6 lg:px-8 animate-in fade-in slide-in-from-bottom-6 duration-1000">
-            <div className="max-w-4xl mx-auto">
-               <div className="bg-white/5 dark:bg-white/5 backdrop-blur-xl border border-white/10 rounded-[3rem] p-12 text-center shadow-2xl relative overflow-hidden group">
-                  {/* Decorative background effects */}
-                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent"></div>
-                  <div className="absolute -top-24 -left-24 w-48 h-48 bg-cyan-500/10 blur-[100px] rounded-full group-hover:bg-cyan-500/20 transition-all duration-700"></div>
-                  <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-purple-500/10 blur-[100px] rounded-full group-hover:bg-purple-500/20 transition-all duration-700"></div>
+          <section className="container mx-auto px-4 py-20 sm:px-6 lg:px-8 animate-in fade-in slide-in-from-bottom-6 duration-1000">
+            <div className="text-center mb-12">
+               <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">
+                  Busca Inteligente <span className="text-cyan-800 dark:text-primary animate-pulse">AgendeJá</span>
+               </h2>
+               <p className="mt-3 text-gray-500 dark:text-gray-400 text-lg max-w-2xl mx-auto">
+                  Fale como se estivesse conversando conosco. Nossa IA entende sua intenção em segundos.
+               </p>
+            </div>
 
-                  <div className="relative z-10">
-                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-cyan-700/10 dark:bg-primary/10 border border-cyan-800/20 dark:border-primary/20 mb-8 transform group-hover:rotate-12 transition-transform duration-500">
-                      <Sparkles className="w-10 h-10 text-cyan-800 dark:text-primary animate-pulse" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                {[
+                  { icon: MapPin, step: "EXEMPLO 01", title: "Busca por CEP", text: "Clínica perto do CEP 04515-030 amanhã", query: "clinica perto do cep 04515-030 amanha" },
+                  { icon: CalendarDays, step: "EXEMPLO 02", title: "Data e Hora", text: "Barbeiro em São Paulo para sábado às 14h", query: "barbeiro em sao paulo para sabado as 14h" },
+                  { icon: Sparkles, step: "EXEMPLO 03", title: "Serviço Direto", text: "Preciso de um corte hoje às 18:30", query: "preciso de um corte hoje as 18:30" }
+                ].map((item, i) => (
+                  <button
+                    key={i}
+                    onClick={() => {
+                        setSearchQuery(item.text);
+                        // O useEffect debounce cuidará de chamar a busca
+                    }}
+                    className="group relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0d1117] p-8 text-center transition-all hover:border-cyan-800/80 dark:hover:border-primary/50 hover:shadow-[0_0_30px_rgba(0,255,255,0.06)] hover:-translate-y-2"
+                  >
+                    <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-cyan-700/10 dark:bg-primary/10 border border-cyan-800/10 dark:border-primary/10 group-hover:scale-110 transition-transform">
+                      <item.icon className="h-7 w-7 text-cyan-700 dark:text-primary" />
                     </div>
-                    
-                    <h2 className="text-3xl sm:text-4xl font-black text-gray-900 dark:text-white mb-6 tracking-tight">
-                      A busca ficou <span className="text-cyan-800 dark:text-primary">Inteligente</span>
-                    </h2>
-                    
-                    <p className="text-lg text-gray-600 dark:text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
-                      Não perca tempo filtrando. A nossa IA entende <span className="text-gray-900 dark:text-white font-bold italic">exatamente</span> o que você precisa. Experimente falar como se estivesse conversando conosco:
+                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-700 dark:text-primary mb-2 block">{item.step}</span>
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{item.title}</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 italic">
+                      "{item.text}"
                     </p>
-
-                    <div className="grid gap-4 sm:grid-cols-2 text-left">
-                       {[
-                         { icon: Scissors, text: "Barbeiro em São Paulo para sábado às 14h", query: "barbeiro em sao paulo para sabado as 14h" },
-                         { icon: Stethoscope, text: "Clínica perto do CEP 04515-030 amanhã", query: "clinica perto do cep 04515-030 amanha" },
-                         { icon: Sparkles, text: "Estética proximo ao meu cep 04533-000 para amanhã as 10h", query: "estetica proximo ao meu cep 04533-000 para amanha as 10h" },
-                         { icon: Search, text: "Preciso de um corte hoje às 18:30", query: "preciso de um corte hoje as 18:30" }
-                       ].map((example, i) => (
-                         <button 
-                           key={i}
-                           onClick={() => setSearchQuery(example.query)}
-                           className="flex items-center gap-4 p-5 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-cyan-800/30 dark:hover:border-primary/30 transition-all group/item hover:-translate-y-1"
-                         >
-                            <div className="w-10 h-10 rounded-xl bg-cyan-800/10 dark:bg-primary/10 flex items-center justify-center border border-cyan-800/5 dark:border-primary/5 group-hover/item:scale-110 transition-transform">
-                              <example.icon className="w-5 h-5 text-cyan-800 dark:text-primary" />
-                            </div>
-                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover/item:text-cyan-800 dark:group-hover/item:text-primary transition-colors">
-                              "{example.text}"
-                            </span>
-                         </button>
-                       ))}
-                    </div>
-
-                    <div className="mt-12 pt-8 border-t border-white/5">
-                       <p className="text-xs font-bold text-gray-500 tracking-[0.2em] uppercase mb-4">Ou explore pelos nichos abaixo</p>
-                       <div className="flex flex-wrap justify-center gap-2">
-                          {CATEGORIES.slice(1).map(cat => (
-                            <button 
-                              key={cat.name}
-                              onClick={() => setActiveCategory(cat.name)}
-                              className="px-6 py-2 rounded-full border border-white/10 text-xs font-bold text-gray-600 dark:text-gray-400 hover:bg-white/5 hover:border-cyan-800 dark:hover:border-primary transition-all"
-                            >
-                              {cat.name}
-                            </button>
-                          ))}
-                       </div>
-                    </div>
-                  </div>
-               </div>
+                  </button>
+                ))}
             </div>
           </section>
         )}
