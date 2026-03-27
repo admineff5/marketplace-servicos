@@ -36,7 +36,7 @@ REGRAS CRÍTICAS:
 5. Retorne APENAS o JSON. Sem explicações.`;
 
         const result = await (ai as any).models.generateContent({
-            model: 'gemini-1.5-flash',
+            model: 'gemini-2.5-flash',
             contents: prompt,
         });
 
