@@ -232,19 +232,24 @@ export default function Home() {
         // Filtro de disponibilidade de horário (Próximo de +- 45 min para ser mais flexível)
         let matchesTime = true;
         if (aiExtracted.time && aiExtracted.date) {
-            const targetTime = aiExtracted.time; // "11:00"
-            const [h, m] = targetTime.split(":").map(Number);
-            const targetMinutes = h * 60 + m;
+            try {
+                const targetTime = aiExtracted.time; // "11:00"
+                const [h, m] = targetTime.split(":").map(Number);
+                const targetMinutes = h * 60 + m;
 
-            matchesTime = company.staff.some((p: any) => {
-                const slots = generateTimeSlots(p.hours, aiExtracted.date, p.id, company.blocks, company.appointments);
-                return slots.some(slot => {
-                    const [sh, sm] = slot.split(":").map(Number);
-                    const slotMinutes = sh * 60 + sm;
-                    // Janela de 45 min para ser mais produtivo nas sugestões
-                    return Math.abs(slotMinutes - targetMinutes) <= 45;
+                matchesTime = company.staff.some((p: any) => {
+                    const slots = generateTimeSlots(p.hours, aiExtracted.date, p.id, company.blocks || [], company.appointments || []);
+                    return slots.some(slot => {
+                        const [sh, sm] = slot.split(":").map(Number);
+                        const slotMinutes = sh * 60 + sm;
+                        // Janela de 45 min para ser mais produtivo nas sugestões
+                        return Math.abs(slotMinutes - targetMinutes) <= 45;
+                    });
                 });
-            });
+            } catch (err) {
+                console.error("Erro ao filtrar horário:", err);
+                matchesTime = true; // Fallback: mostra a empresa se o filtro de horário falhar
+            }
         }
 
         return matchesName && matchesService && matchesLocation && matchesTime;
@@ -298,7 +303,7 @@ export default function Home() {
   };
 
   const generateTimeSlots = (hoursRange: string | null, date: string | null, staffId: string | null, companyBlocks: any[] = [], companyAppointments: any[] = []) => {
-    if (!hoursRange) return ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"];
+    if (!hoursRange || !date) return [];
     
     try {
       // Extrair apenas o intervalo de HORÁRIO da String
@@ -318,7 +323,7 @@ export default function Home() {
         
         // Verificar se este slot específico está bloqueado por um "Fechamento Parcial"
         const isTimeBlocked = companyBlocks?.some(b => 
-          b.date.startsWith(date) && 
+          b.date && date && b.date.startsWith(date) && 
           (b.employeeId === null || b.employeeId === staffId) &&
           !b.isAllDay &&
           timeStr >= (b.openTime || "") && timeStr <= (b.closeTime || "")
