@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { 
     CheckSquare, Plus, PlusCircle, Check, MoreVertical, 
     Star, Trash2, Edit2, ChevronDown, ChevronRight, 
-    Folders, ClipboardList, Clock, AlertCircle
+    Folders, ClipboardList, ListTodo, Clock, AlertCircle
 } from "lucide-react";
 
 export default function TarefasPage() {
@@ -49,9 +49,7 @@ export default function TarefasPage() {
     }, []);
 
     useEffect(() => {
-        if (listas.length > 0) {
-            localStorage.setItem("agenda_tasks_listas", JSON.stringify(listas));
-        }
+        localStorage.setItem("agenda_tasks_listas", JSON.stringify(listas));
     }, [listas]);
 
     useEffect(() => {
@@ -119,7 +117,21 @@ export default function TarefasPage() {
     };
 
     return (
-        <div className="min-h-[calc(100vh-4rem)] p-4 sm:p-8 bg-gray-50/50 dark:bg-[#0a0a0a] flex gap-6">
+        <div className="space-y-6 max-w-7xl mx-auto">
+            {/* Header Padronizado */}
+            <div className="flex items-center justify-between px-2">
+                <div>
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        <ListTodo className="w-6 h-6 text-cyan-700 dark:text-primary" />
+                        Gerenciamento de Tarefas
+                    </h1>
+                    <p className="text-gray-500 dark:text-gray-400 mt-1">
+                        Organize seus afazeres diários e otimize a produtividade da sua empresa.
+                    </p>
+                </div>
+            </div>
+
+            <div className="min-h-[calc(100vh-12rem)] p-2 sm:p-4 bg-gray-50/50 dark:bg-transparent flex flex-col md:flex-row gap-6">
             
             {/* Sidebar Esquerda (Internal) */}
             <div className="w-full md:w-64 shrink-0 flex flex-col bg-white dark:bg-[#111112] border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-sm h-full max-h-[calc(100vh-8rem)]">
@@ -328,7 +340,7 @@ export default function TarefasPage() {
                 })}
 
             </div>
-
         </div>
+    </div>
     );
 }
