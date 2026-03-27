@@ -107,9 +107,9 @@ export function OnboardingPopup() {
                     </div>
 
                     {/* BLOCO DE SERVIÇOS PREMIUM */}
-                    <div className="mt-8 border border-dashed border-cyan-800/40 dark:border-primary/40 rounded-2xl relative p-5 pt-8 bg-transparent">
-                        <div className="absolute -top-3.5 left-6 px-3 py-1 bg-cyan-800 dark:bg-primary text-white dark:text-black text-[10px] md:text-xs uppercase font-extrabold tracking-widest rounded-full shadow-md flex items-center gap-1.5">
-                            <Crown className="w-3 h-3" />
+                    <div className="mt-8 border border-dashed border-cyan-800/40 dark:border-primary/40 rounded-2xl p-6 bg-transparent flex flex-col gap-6">
+                        <div className="inline-flex self-start items-center gap-2 px-3 py-1.5 bg-cyan-800 dark:bg-primary text-white dark:text-black text-[10px] md:text-xs uppercase font-extrabold tracking-widest rounded-lg shadow-sm">
+                            <Crown className="w-3.5 h-3.5" />
                             Recursos Premium
                         </div>
                         
