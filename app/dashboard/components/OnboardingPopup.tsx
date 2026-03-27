@@ -118,7 +118,7 @@ export function OnboardingPopup() {
                             <div className="flex gap-4 items-start group">
                                 <div className="relative w-10 h-10 rounded-2xl bg-cyan-50 dark:bg-cyan-900/30 text-cyan-800 dark:text-cyan-500 flex items-center justify-center shrink-0 border border-cyan-200 dark:border-cyan-800 group-hover:scale-110 transition-transform">
                                     <HelpCircle className="w-5 h-5" />
-                                    <div className="absolute -top-1.5 -right-1.5 bg-amber-500 text-amber-50 rounded-full p-0.5 shadow-sm border border-white dark:border-gray-900">
+                                    <div className="absolute -top-1.5 -right-1.5 bg-[#f59e0b] text-white rounded-full p-0.5 shadow-sm border-2 border-white dark:border-[#111]">
                                         <Crown className="w-2.5 h-2.5" fill="currentColor" />
                                     </div>
                                 </div>
@@ -139,7 +139,7 @@ export function OnboardingPopup() {
                             <div className="flex gap-4 items-start group">
                                 <div className="relative w-10 h-10 rounded-2xl bg-cyan-50 dark:bg-cyan-900/30 text-cyan-800 dark:text-cyan-500 flex items-center justify-center shrink-0 border border-cyan-200 dark:border-cyan-800 group-hover:scale-110 transition-transform">
                                     <MessageSquareCode className="w-5 h-5" />
-                                    <div className="absolute -top-1.5 -right-1.5 bg-amber-500 text-amber-50 rounded-full p-0.5 shadow-sm border border-white dark:border-gray-900">
+                                    <div className="absolute -top-1.5 -right-1.5 bg-[#f59e0b] text-white rounded-full p-0.5 shadow-sm border-2 border-white dark:border-[#111]">
                                         <Crown className="w-2.5 h-2.5" fill="currentColor" />
                                     </div>
                                 </div>
