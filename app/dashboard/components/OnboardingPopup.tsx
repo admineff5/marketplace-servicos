@@ -156,20 +156,23 @@ export function OnboardingPopup() {
 
                 {/* Footer Controls */}
                 <div className="bg-gray-50 dark:bg-[#161616] shrink-0 p-5 flex flex-col md:flex-row items-center justify-between gap-4 border-t border-gray-100 dark:border-gray-800 rounded-b-3xl">
-                    <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer hover:text-gray-900 dark:hover:text-white transition-colors group">
-                        <div className="relative flex items-center justify-center">
-                            <input 
-                                type="checkbox" 
-                                checked={dontShowAgain}
-                                onChange={(e) => setDontShowAgain(e.target.checked)}
-                                className="peer appearance-none w-5 h-5 border-2 border-gray-300 dark:border-gray-600 rounded cursor-pointer checked:bg-cyan-800 dark:checked:bg-primary checked:border-cyan-800 dark:checked:border-primary transition-all"
-                            />
-                            <svg className="absolute w-3 h-3 text-white dark:peer-checked:text-black pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" viewBox="0 0 14 10" fill="none" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5l3.5 3.5L13 1"></path>
-                            </svg>
+                    <div 
+                        className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer hover:text-gray-900 dark:hover:text-white transition-colors select-none"
+                        onClick={() => setDontShowAgain(!dontShowAgain)}
+                    >
+                        <div className={`w-5 h-5 flex items-center justify-center border-2 rounded transition-all ${
+                            dontShowAgain 
+                                ? 'bg-cyan-800 border-cyan-800 dark:bg-primary dark:border-primary' 
+                                : 'bg-transparent border-gray-400 dark:border-gray-500'
+                        }`}>
+                            {dontShowAgain && (
+                                <svg className="w-3 h-3 text-white dark:text-black" viewBox="0 0 14 10" fill="none" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M1 5l3.5 3.5L13 1"></path>
+                                </svg>
+                            )}
                         </div>
-                        Não mostrar este aviso novamente
-                    </label>
+                        <span>Não mostrar este aviso novamente</span>
+                    </div>
 
                     <button 
                         onClick={handleClose}
