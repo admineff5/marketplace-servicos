@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { ThemeToggle } from "../components/ThemeToggle";
 import { Footer } from "../components/Footer";
 import { OmniSearch } from "./components/OmniSearch";
+import { OnboardingPopup } from "./components/OnboardingPopup";
 import {
     BarChart3,
     Calendar,
@@ -305,6 +306,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     </div>
                     <Footer />
                 </main>
+                <OnboardingPopup />
             </div>
         </div>
     );
