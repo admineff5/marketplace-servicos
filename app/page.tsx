@@ -150,11 +150,89 @@ export default function Home() {
   const [layoutMode, setLayoutMode] = useState<"grid" | "list">("grid");
   const [showcaseIndex, setShowcaseIndex] = useState(0);
 
+  // AI Search State
+  const [aiExtracted, setAiExtracted] = useState<any>(null);
+  const [isAiLoading, setIsAiLoading] = useState(false);
+
+  const handleAiSearch = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (searchQuery.trim().length < 3) {
+        setAiExtracted(null);
+        return;
+    }
+
+    setIsAiLoading(true);
+    try {
+        const res = await fetch("/api/search-home-ai", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ query: searchQuery })
+        });
+        const data = await res.json();
+        if (data.extracted) {
+            setAiExtracted(data.extracted);
+        }
+    } catch (err) {
+        console.error("AI Search Error:", err);
+    } finally {
+        setIsAiLoading(false);
+    }
+  };
+
+  // Trigger AI search on debounce (Optional, but user said "always with AI")
+  useEffect(() => {
+    if (searchQuery.trim().length < 3) {
+      setAiExtracted(null);
+      return;
+    }
+    const timer = setTimeout(() => {
+        handleAiSearch();
+    }, 1000); // 1s debounce to save tokens
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
   // References for sticky scroll logic
   const searchContainerRef = useRef<HTMLDivElement>(null);
 
   // Filter Logic
   const filteredCompanies = companies.filter((company: any) => {
+    // SE TEMOS DADOS DA IA, O FILTRO É SEMÂNTICO (Rigoroso e Inteligente)
+    if (aiExtracted && searchQuery.trim().length >= 3) {
+        const matchesName = !aiExtracted.name || company.name.toLowerCase().includes(aiExtracted.name.toLowerCase());
+        
+        // Match por Niche ou Serviços internos
+        const matchesService = !aiExtracted.service || 
+                              company.niche.toLowerCase().includes(aiExtracted.service.toLowerCase()) ||
+                              company.services.some((s: any) => s.name.toLowerCase().includes(aiExtracted.service.toLowerCase()));
+        
+        // Match por Cidade, Bairro ou CEP
+        const companyFullAddress = `${company.address} ${company.neighborhood || ""} ${company.city} ${company.state}`.toLowerCase();
+        const matchesLocation = !aiExtracted.location || 
+                               companyFullAddress.includes(aiExtracted.location.toLowerCase());
+
+        // Filtro de disponibilidade de horário (Próximo de +- 30 min)
+        let matchesTime = true;
+        if (aiExtracted.time && aiExtracted.date) {
+            const targetTime = aiExtracted.time; // "11:00"
+            const [h, m] = targetTime.split(":").map(Number);
+            const targetMinutes = h * 60 + m;
+
+            // Verificar se algum profissional nessa unidade tem o horário vago
+            matchesTime = company.staff.some((p: any) => {
+                const slots = generateTimeSlots(p.hours, aiExtracted.date, p.id, company.blocks, company.appointments);
+                return slots.some(slot => {
+                    const [sh, sm] = slot.split(":").map(Number);
+                    const slotMinutes = sh * 60 + sm;
+                    // Sugestão de horários próximos (janela de 30 min como solicitado)
+                    return Math.abs(slotMinutes - targetMinutes) <= 30;
+                });
+            });
+        }
+
+        return matchesName && matchesService && matchesLocation && matchesTime;
+    }
+
+    // FALLBACK: Filtro Legado (por texto simples nas categorias)
     const matchesCategory =
       activeCategory === "Todos" || company.niche === activeCategory;
     const matchesSearch =
@@ -422,22 +500,55 @@ export default function Home() {
               className={`mt-10 mx-auto w-full max-w-7xl transition-all duration-500 ease-in-out ${isSticky ? "opacity-0 scale-95 pointer-events-none" : "opacity-100 scale-100"} `}
             >
               {/* Search Input Large */}
-              <div className="relative w-full max-w-4xl mx-auto mb-8">
+              <form 
+                onSubmit={handleAiSearch}
+                className="relative w-full max-w-4xl mx-auto mb-8"
+              >
                 <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
-                  <Sparkles className="h-6 w-6 text-primary animate-pulse" />
+                  <Sparkles className={`h-6 w-6 text-primary ${isAiLoading ? 'animate-spin' : 'animate-pulse'}`} />
                 </div>
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Ex: Preciso de um corte degradê perto de mim hoje à tarde..."
+                  placeholder="Ex: Preciso de um barbeiro em são paulo para amanhã às 11h..."
                   className="w-full rounded-2xl bg-white/5 border border-white/10 px-14 py-5 text-white placeholder-gray-500 focus:border-cyan-800/80 dark:focus:border-primary/50 focus:bg-white/10 focus:outline-none focus:ring-1 focus:ring-cyan-800/80 dark:focus:ring-primary/50 transition-all shadow-2xl"
                 />
-                <button className="absolute right-3 top-3 bottom-3 rounded-xl bg-primary px-8 text-black font-bold hover:bg-cyan-400 transition-colors flex items-center gap-2 shadow-[0_0_15px_rgba(0,255,255,0.3)]">
-                  Buscar
-                  <span className="text-lg leading-none">→</span>
+                <button 
+                  type="submit"
+                  disabled={isAiLoading}
+                  className="absolute right-3 top-3 bottom-3 rounded-xl bg-primary px-8 text-black font-bold hover:bg-cyan-400 disabled:opacity-50 transition-colors flex items-center gap-2 shadow-[0_0_15px_rgba(0,255,255,0.3)]"
+                >
+                  {isAiLoading ? "Analisando..." : "Buscar"}
+                  {!isAiLoading && <span className="text-lg leading-none">→</span>}
                 </button>
-              </div>
+              </form>
+
+              {/* Status da Busca por IA */}
+              {aiExtracted && (
+                <div className="flex flex-wrap justify-center gap-2 mb-6 animate-in fade-in slide-in-from-top-2 duration-300">
+                   {aiExtracted.service && (
+                     <span className="px-3 py-1 bg-primary/20 text-primary border border-primary/30 rounded-full text-xs font-bold">
+                        Serviço: {aiExtracted.service}
+                     </span>
+                   )}
+                   {aiExtracted.location && (
+                     <span className="px-3 py-1 bg-cyan-900/30 text-cyan-400 border border-cyan-800/50 rounded-full text-xs font-bold">
+                        Local: {aiExtracted.location}
+                     </span>
+                   )}
+                   {aiExtracted.date && (
+                     <span className="px-3 py-1 bg-purple-900/30 text-purple-400 border border-purple-800/50 rounded-full text-xs font-bold">
+                        Data: {new Date(aiExtracted.date).toLocaleDateString('pt-BR')}
+                     </span>
+                   )}
+                   {aiExtracted.time && (
+                     <span className="px-3 py-1 bg-amber-900/30 text-amber-500 border border-amber-800/50 rounded-full text-xs font-bold">
+                        Às {aiExtracted.time}
+                     </span>
+                   )}
+                </div>
+              )}
 
               {/* Categories Big Pills */}
               <div className="flex flex-row overflow-x-auto justify-start xl:justify-center items-start gap-4 w-full pt-2 pb-6 scrollbar-hide px-4 md:px-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:none]">
