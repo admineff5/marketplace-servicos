@@ -30,7 +30,8 @@ import {
     FileText,
     Globe,
     HelpCircle,
-    MessageSquareCode
+    MessageSquareCode,
+    Crown
 } from "lucide-react";
 
 const SIDEBAR_LINKS = [
@@ -43,8 +44,8 @@ const SIDEBAR_LINKS = [
     { name: "Profissionais", href: "/dashboard/profissionais", icon: UserSquare2 },
     { name: "Serviços", href: "/dashboard/servicos", icon: Scissors },
     { name: "Produtos", href: "/dashboard/produtos", icon: Package },
-    { name: "FAQ Assistente", href: "/dashboard/faq", icon: HelpCircle },
-    { name: "Conversas IA", href: "/dashboard/mensagens", icon: MessageSquareCode },
+    { name: "FAQ Assistente", href: "/dashboard/faq", icon: HelpCircle, premium: true },
+    { name: "Conversas IA", href: "/dashboard/mensagens", icon: MessageSquareCode, premium: true },
     { name: "Relatórios", href: "/dashboard/relatorios", icon: FileText },
     { name: "Perfil da Loja", href: "/dashboard/config", icon: Building },
 ];
@@ -157,8 +158,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 className={`flex items-center gap-3 py-2.5 rounded-xl text-sm font-medium transition-colors group ${isCollapsed ? 'md:justify-center md:px-0 px-3' : 'px-3'} ${isActive ? 'bg-gray-100 dark:bg-primary/10 text-gray-900 dark:text-primary shadow-sm' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 hover:bg-gray-50 dark:hover:text-white dark:hover:bg-gray-800'}`}
                                 title={isCollapsed ? link.name : undefined}
                             >
-                                <link.icon className={`w-5 h-5 transition-opacity shrink-0 ${isActive ? 'opacity-100' : 'opacity-70 group-hover:opacity-100'}`} />
-                                <span className={`${isCollapsed ? 'md:hidden' : ''}`}>{link.name}</span>
+                                <div className="relative flex items-center justify-center shrink-0">
+                                    <link.icon className={`w-5 h-5 transition-opacity ${isActive ? 'opacity-100' : 'opacity-70 group-hover:opacity-100'}`} />
+                                    {link.premium && (
+                                        <Crown className="w-2.5 h-2.5 absolute -top-1 -right-2 text-[#f59e0b] drop-shadow-sm" fill="currentColor" />
+                                    )}
+                                </div>
+                                <span className={`${isCollapsed ? 'md:hidden' : ''} flex items-center gap-2`}>
+                                    {link.name}
+                                </span>
                             </Link>
                         )
                     })}
