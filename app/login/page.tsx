@@ -100,8 +100,8 @@ export default function Login() {
 
             {/* Right Side: Login Form */}
             <div className="flex-1 flex flex-col justify-center py-12 px-6 sm:px-12 lg:flex-none lg:w-[40%] relative bg-white dark:bg-[#0a0a0a]">
-                {/* Smooth Gradient Divider */}
-                <div className="hidden lg:block absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-black to-transparent -translate-x-full pointer-events-none z-20"></div>
+                {/* Smooth Gradient Divider Premium */}
+                <div className="hidden lg:block absolute inset-y-0 left-0 w-64 bg-gradient-to-r from-black via-black/40 to-transparent -translate-x-full pointer-events-none z-20"></div>
                 
                 <div className="absolute top-8 right-8 z-20">
                     <ThemeToggle />
