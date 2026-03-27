@@ -209,6 +209,9 @@ export default function Home() {
 
   // Filter Logic
   const filteredCompanies = companies.filter((company: any) => {
+    // Enquanto a IA estiver "pensando", limpamos os filtros para evitar confusão com resultados antigos
+    if (isAiLoading) return false;
+
     // SE TEMOS DADOS DA IA, O FILTRO É SEMÂNTICO (Rigoroso e Inteligente)
     if (aiExtracted && searchQuery.trim().length >= 3) {
         const matchesName = !aiExtracted.name || company.name.toLowerCase().includes(aiExtracted.name.toLowerCase());
@@ -264,7 +267,7 @@ export default function Home() {
                 }
             } catch (err) {
                 console.error("Erro ao filtrar horário:", err);
-                matchesTime = true; // Fallback seguro
+                matchesTime = false; // Se der erro no parser de horário, melhor não mostrar (mais rigoroso)
             }
         }
 
@@ -288,8 +291,14 @@ export default function Home() {
       // Mesmo na busca relaxada, filtramos quem não abre no dia solicitado
       let opensOnRequestedDay = true;
       if (aiExtracted.date) {
-          const aiDayOfWeek = new Date(aiExtracted.date + "T10:00:00").getDay();
-          opensOnRequestedDay = c.staff.some((p: any) => isDayAllowed(p.hours, aiDayOfWeek));
+          try {
+              const dateParts = aiExtracted.date.split("-");
+              const extractedDateObj = new Date(Number(dateParts[0]), Number(dateParts[1]) - 1, Number(dateParts[2]), 12, 0, 0);
+              const aiDayOfWeek = extractedDateObj.getDay();
+              opensOnRequestedDay = c.staff.some((p: any) => isDayAllowed(p.hours, aiDayOfWeek));
+          } catch (e) {
+              opensOnRequestedDay = true;
+          }
       }
 
       const matchesService = !aiExtracted.service || 
