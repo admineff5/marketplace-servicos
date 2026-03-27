@@ -43,7 +43,65 @@ const CATEGORIES = [
 
 // Note: Original MOCK_COMPANIES moved to a dynamic fetch from /api/companies
 
-// Enhanced companies logic moved inside useEffect fetch
+// --- Funções Utilitárias de Horário (Definidas fora para evitar problemas de hoisting) ---
+const isDayAllowed = (hoursRange: string | null, dayOfWeek: number) => {
+  if (!hoursRange || !hoursRange.includes(" | ")) return dayOfWeek !== 0; // Default: Fechado Domingo
+  const savedDays = hoursRange.split(" | ")[0];
+
+  if (savedDays === "Segunda a Sexta") return dayOfWeek >= 1 && dayOfWeek <= 5;
+  if (savedDays === "Segunda a Sábado") return dayOfWeek >= 1 && dayOfWeek <= 6;
+  if (savedDays === "Terça a Sábado") return dayOfWeek >= 2 && dayOfWeek <= 6;
+  if (savedDays === "Sábado e Domingo") return dayOfWeek === 6 || dayOfWeek === 0;
+  
+  return dayOfWeek !== 0;
+};
+
+const generateTimeSlots = (hoursRange: string | null, date: string | null, staffId: string | null, companyBlocks: any[] = [], companyAppointments: any[] = []) => {
+  if (!hoursRange || !date) return [];
+  
+  try {
+    const actualHours = hoursRange.includes(" | ") ? hoursRange.split(" | ")[1] : hoursRange;
+    if (!actualHours.includes("-")) return ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"];
+
+    const [start, end] = actualHours.split("-").map(t => t.trim());
+    const [startHour, startMin] = start.split(":").map(Number);
+    const [endHour, endMin] = end.split(":").map(Number);
+    
+    const slots = [];
+    let currentHour = startHour;
+    let currentMin = startMin;
+    
+    while (currentHour < endHour || (currentHour === endHour && currentMin < endMin)) {
+      const timeStr = `${currentHour.toString().padStart(2, '0')}:${currentMin.toString().padStart(2, '0')}`;
+      
+      const isTimeBlocked = companyBlocks?.some(b => 
+        b.date && date && b.date.startsWith(date) && 
+        (b.employeeId === null || b.employeeId === staffId) &&
+        !b.isAllDay &&
+        timeStr >= (b.openTime || "") && timeStr <= (b.closeTime || "")
+      );
+
+      const isAlreadyBooked = companyAppointments?.some(apt => {
+        const aptDate = apt.date.split("T")[0]; // "YYYY-MM-DD"
+        const aptTime = new Date(apt.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        return aptDate === date && apt.employeeId === staffId && aptTime === timeStr;
+      });
+
+      if (!isTimeBlocked && !isAlreadyBooked) {
+        slots.push(timeStr);
+      }
+      
+      currentMin += 30; // 30 min slots
+      if (currentMin >= 60) {
+        currentHour += 1;
+        currentMin -= 60;
+      }
+    }
+    return slots;
+  } catch (e) {
+    return ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"];
+  }
+};
 
 export default function Home() {
   const [companies, setCompanies] = useState<any[]>([]);
@@ -325,68 +383,7 @@ export default function Home() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const isDayAllowed = (hoursRange: string | null, dayOfWeek: number) => {
-    if (!hoursRange || !hoursRange.includes(" | ")) return dayOfWeek !== 0; // Default: Fechado Domingo
-    const savedDays = hoursRange.split(" | ")[0];
 
-    if (savedDays === "Segunda a Sexta") return dayOfWeek >= 1 && dayOfWeek <= 5;
-    if (savedDays === "Segunda a Sábado") return dayOfWeek >= 1 && dayOfWeek <= 6;
-    if (savedDays === "Terça a Sábado") return dayOfWeek >= 2 && dayOfWeek <= 6;
-    if (savedDays === "Sábado e Domingo") return dayOfWeek === 6 || dayOfWeek === 0;
-    
-    return dayOfWeek !== 0;
-  };
-
-  const generateTimeSlots = (hoursRange: string | null, date: string | null, staffId: string | null, companyBlocks: any[] = [], companyAppointments: any[] = []) => {
-    if (!hoursRange || !date) return [];
-    
-    try {
-      // Extrair apenas o intervalo de HORÁRIO da String
-      const actualHours = hoursRange.includes(" | ") ? hoursRange.split(" | ")[1] : hoursRange;
-      if (!actualHours.includes("-")) return ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"];
-
-      const [start, end] = actualHours.split("-").map(t => t.trim());
-      const [startHour, startMin] = start.split(":").map(Number);
-      const [endHour, endMin] = end.split(":").map(Number);
-      
-      const slots = [];
-      let currentHour = startHour;
-      let currentMin = startMin;
-      
-      while (currentHour < endHour || (currentHour === endHour && currentMin < endMin)) {
-        const timeStr = `${currentHour.toString().padStart(2, '0')}:${currentMin.toString().padStart(2, '0')}`;
-        
-        // Verificar se este slot específico está bloqueado por um "Fechamento Parcial"
-        const isTimeBlocked = companyBlocks?.some(b => 
-          b.date && date && b.date.startsWith(date) && 
-          (b.employeeId === null || b.employeeId === staffId) &&
-          !b.isAllDay &&
-          timeStr >= (b.openTime || "") && timeStr <= (b.closeTime || "")
-        );
-
-        // --- NOVO BLOQUEIO DE HORÁRIOS JÁ AGENDADOS ---
-        const isAlreadyBooked = companyAppointments?.some(apt => {
-          const aptDate = apt.date.split("T")[0]; // "YYYY-MM-DD"
-          const aptTime = new Date(apt.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-          
-          return aptDate === date && apt.employeeId === staffId && aptTime === timeStr;
-        });
-
-        if (!isTimeBlocked && !isAlreadyBooked) {
-          slots.push(timeStr);
-        }
-        
-        currentMin += 30; // 30 min slots
-        if (currentMin >= 60) {
-          currentHour += 1;
-          currentMin -= 60;
-        }
-      }
-      return slots;
-    } catch (e) {
-      return ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"];
-    }
-  };
 
   const handleOpenCompany = (company: any) => {
     setSelectedCompany(company);
@@ -760,7 +757,7 @@ export default function Home() {
               </div>
 
               <span className="text-sm font-semibold text-gray-500 border border-gray-200 dark:border-gray-800 rounded-full px-3 py-1 bg-white dark:bg-gray-900">
-                {isLoadingCompanies ? "Carregando..." : `${filteredCompanies.length} resultados`}
+                {isLoadingCompanies ? "Carregando..." : `${displayCompanies.length} resultados`}
               </span>
             </div>
           </div>
