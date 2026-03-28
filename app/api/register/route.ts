@@ -44,7 +44,7 @@ export async function POST(request: Request) {
                 // 🧠 O cliente já tem uma conta de rascunho criada pelo Whatsapp!
                 // Nós atualizamos ela com os dados reais do site para não duplicar!
                 const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
-                const user = await prisma.user.update({
+                const user = await (prisma.user as any).update({
                     where: { id: existingPhone.id },
                     data: {
                         name,
@@ -78,7 +78,7 @@ export async function POST(request: Request) {
         const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
         const actualRole = cleanCPF.length === 14 ? "BUSINESS" : "CLIENT";
 
-        const user = await prisma.user.create({
+        const user = await (prisma.user as any).create({
             data: {
                 name,
                 email,
@@ -103,8 +103,8 @@ export async function POST(request: Request) {
         }
 
         // Disparar WhatsApp de verificação
-        if (user.verificationToken && user.phone) {
-            await sendVerificationWhatsApp(user.phone, user.verificationToken);
+        if ((user as any).verificationToken && user.phone) {
+            await sendVerificationWhatsApp(user.phone, (user as any).verificationToken);
         }
 
         return NextResponse.json({ 

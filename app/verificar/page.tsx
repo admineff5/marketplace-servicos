@@ -128,10 +128,10 @@ function VerifyContent() {
                     />
                 </Link>
                 <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white mb-2">
-                    Confirme seu E-mail
+                    Confirme seu WhatsApp
                 </h2>
                 <p className="text-center text-gray-600 dark:text-gray-400 text-sm mb-8 px-4">
-                    Digite o código de 6 dígitos que enviamos para <br/>
+                    Digite o código de 6 dígitos que enviamos para o seu WhatsApp vinculado ao <br/>
                     <strong className="text-gray-900 dark:text-gray-200">{email}</strong>
                 </p>
             </div>
@@ -182,7 +182,7 @@ function VerifyContent() {
                             <button 
                                 type="button" 
                                 className="font-bold text-cyan-600 hover:text-cyan-500 dark:text-primary dark:hover:text-primary/80 transition-colors"
-                onClick={() => alert('Em uma versão futura, enviaremos o código novamente por e-mail e WhatsApp.')}
+                onClick={() => alert('Em uma versão futura, enviaremos o código novamente por WhatsApp.')}
                             >
                                 Reenviar
                             </button>
