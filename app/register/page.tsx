@@ -57,7 +57,7 @@ export default function Register() {
 
             // 📩 Mágica: Agora joga o usuário DIRETO na tela dos 6 dígitos do OTP!
             if (data.success) {
-                router.push(`/verificar?email=${encodeURIComponent(formData.email)}`);
+                router.push(`/verificar?email=${encodeURIComponent(formData.email)}&phone=${encodeURIComponent(formData.phone)}`);
                 return;
             }
 

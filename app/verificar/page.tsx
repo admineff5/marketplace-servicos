@@ -11,21 +11,23 @@ function VerifyContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const emailFromUrl = searchParams.get("email");
+    const phoneFromUrl = searchParams.get("phone");
 
     const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
     const [code, setCode] = useState(["", "", "", "", "", ""]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
     const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
 
     useEffect(() => {
-        if (emailFromUrl) {
-            setEmail(emailFromUrl);
-        } else {
-            // Tenta pegar o e-mail se foi guardado antes
-            router.push("/login?error=Seu+e-mail+nao+foi+encontrado.+Tente+login.");
+        if (emailFromUrl) setEmail(emailFromUrl);
+        if (phoneFromUrl) setPhone(phoneFromUrl);
+        
+        if (!emailFromUrl && !phoneFromUrl) {
+            router.push("/login?error=Dados+nao+encontrados.+Tente+login.");
         }
-    }, [emailFromUrl, router]);
+    }, [emailFromUrl, phoneFromUrl, router]);
 
     const handleChange = (index: number, value: string) => {
         // Aceita apenas números
@@ -131,8 +133,8 @@ function VerifyContent() {
                     Confirme seu WhatsApp
                 </h2>
                 <p className="text-center text-gray-600 dark:text-gray-400 text-sm mb-8 px-4">
-                    Digite o código de 6 dígitos que enviamos para o seu WhatsApp vinculado ao <br/>
-                    <strong className="text-gray-900 dark:text-gray-200">{email}</strong>
+                    Digite o código de 6 dígitos que enviamos para o seu WhatsApp vinculado ao número: <br/>
+                    <strong className="text-gray-900 dark:text-gray-200">{phone || email}</strong>
                 </p>
             </div>
 
