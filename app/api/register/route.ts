@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 import { cookies } from "next/headers";
 import { SignJWT } from "jose";
 import bcrypt from "bcrypt";
-import { sendVerificationEmail } from "@/lib/mail";
+import { sendVerificationWhatsApp } from "@/lib/whatsapp";
 
 export async function POST(request: Request) {
     try {
@@ -56,13 +56,13 @@ export async function POST(request: Request) {
                     }
                 });
 
-                // Disparar e-mail de verificação
-                await sendVerificationEmail(email, verificationToken);
+                // Disparar WhatsApp de verificação
+                await sendVerificationWhatsApp(normalizedPhone, verificationToken);
 
                 return NextResponse.json({ 
                     success: true, 
-                    message: "Cadastro atualizado. Por favor, verifique seu e-mail para validar a conta.",
-                    emailSent: true 
+                    message: "Cadastro atualizado. Por favor, verifique seu WhatsApp para validar a conta.",
+                    whatsappSent: true 
                 });
             } else {
                 return NextResponse.json({ error: "Celular / WhatsApp já cadastrado no sistema" }, { status: 400 });
@@ -102,15 +102,15 @@ export async function POST(request: Request) {
             console.log(`[SYSTEM] Empresa auto-criada para novo usuário BUSINESS: ${user.id}`);
         }
 
-        // Disparar e-mail de verificação
-        if (user.verificationToken) {
-            await sendVerificationEmail(user.email, user.verificationToken);
+        // Disparar WhatsApp de verificação
+        if (user.verificationToken && user.phone) {
+            await sendVerificationWhatsApp(user.phone, user.verificationToken);
         }
 
         return NextResponse.json({ 
             success: true, 
-            message: "Cadastro realizado com sucesso! Por favor, verifique seu e-mail para ativar a conta.",
-            emailSent: true 
+            message: "Cadastro realizado com sucesso! Por favor, verifique seu WhatsApp para ativar a conta.",
+            whatsappSent: true 
         });
     } catch (error) {
         console.error("Register API Error:", error);

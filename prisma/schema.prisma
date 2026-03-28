@@ -292,3 +292,20 @@ model Notification {
 
   @@index([companyId])
 }
+
+// ==========================================
+// 🚀 FILA DE MENSAGENS DE SAÍDA (SISTEMA)
+// ==========================================
+
+model WhatsappQueue {
+  id        String   @id @default(uuid())
+  phone     String
+  content   String   @db.Text
+  status    String   @default("PENDING") // PENDING, SENT, ERROR
+  attempts  Int      @default(0)
+  error     String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+}

@@ -521,5 +521,57 @@ async function startNotificationPolling() {
     }, 7000);
 }
 
+async function processWhatsappQueue() {
+    console.log("[Queue] 🚀 Iniciando processamento de fila de mensagens...");
+    setInterval(async () => {
+        try {
+            const pending = await prisma.whatsappQueue.findMany({
+                where: { 
+                    status: 'PENDING',
+                    attempts: { lt: 3 }
+                },
+                take: 10
+            });
+
+            if (pending.length === 0) return;
+
+            // Tenta usar a sessão do admin ou a primeira disponível se for sistema
+            const adminSession = Array.from(sessions.values()).find(s => s.status === 'CONNECTED');
+            
+            if (!adminSession) {
+                // console.log("[Queue] ⚠️ Nenhuma sessão conectada para processar fila.");
+                return;
+            }
+
+            for (const msg of pending) {
+                try {
+                    console.log(`[Queue] 📤 Enviando para ${msg.phone}: ${msg.content.substring(0, 30)}...`);
+                    
+                    const jid = `${msg.phone.replace(/\D/g, '')}@s.whatsapp.net`;
+                    await adminSession.sock.sendMessage(jid, { text: msg.content });
+
+                    await prisma.whatsappQueue.update({
+                        where: { id: msg.id },
+                        data: { status: 'SENT', updatedAt: new Date() }
+                    });
+                } catch (err) {
+                    await prisma.whatsappQueue.update({
+                        where: { id: msg.id },
+                        data: { 
+                            status: 'ERROR', 
+                            attempts: msg.attempts + 1,
+                            error: err.message,
+                            updatedAt: new Date() 
+                        }
+                    });
+                }
+            }
+        } catch (error) {
+            console.error("[Queue] Erro ao processar fila:", error);
+        }
+    }, 5000);
+}
+
 monitorSessions();
 startNotificationPolling();
+processWhatsappQueue();
