@@ -14,7 +14,7 @@
 ---
 
 ## 🟡 Ongoing / Blocked
-- **Verificação via WA**: Backend pronto, mas frontend precisava de ajustes nos textos. (FIXADO)
+- **Verificação via WA**: Bloqueada por falta de sessão ativa (Catch-22). Ativação manual via script necessária para o primeiro acesso.
 - **Database Sync**: O comando `npx prisma db push` ainda é REQUISITO CRÍTICO no servidor Oracle.
 - **GSD Full Setup**: Finalizando a migração de documentos de controle.
 

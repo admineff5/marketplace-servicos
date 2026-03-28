@@ -539,7 +539,12 @@ async function processWhatsappQueue() {
             const adminSession = Array.from(sessions.values()).find(s => s.status === 'CONNECTED');
             
             if (!adminSession) {
-                console.log("[Queue] ⚠️ Nenhuma sessão conectada para processar fila.");
+                console.log(`[Queue] ⚠️ Sem sessão conectada. Código para ${item.phone}: ${item.content}`);
+                // Marcar como erro para não ficar tentando em loop infinito sem sessão, mas logar o código
+                await prisma.whatsappQueue.update({
+                    where: { id: item.id },
+                    data: { status: "ERROR", error: "Nenhuma sessão conectada" }
+                });
                 return;
             }
 
