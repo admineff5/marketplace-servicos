@@ -14,8 +14,8 @@
 ---
 
 ## 🟡 Ongoing / Blocked
-- **Database Sync**: O comando `npx prisma db push` precisa ser executado no servidor Oracle. 
-- **Verificação via WA**: Depende do sync acima para começar a disparar códigos.
+- **Verificação via WA**: Backend pronto, mas frontend precisava de ajustes nos textos. (FIXADO)
+- **Database Sync**: O comando `npx prisma db push` ainda é REQUISITO CRÍTICO no servidor Oracle.
 - **GSD Full Setup**: Finalizando a migração de documentos de controle.
 
 ---
@@ -28,4 +28,4 @@
 ---
 
 ## ⚡ Current Task (GSD Mode)
-**Tarefa**: Sincronizar os documentos de arquitetura e entregar o sistema pronto para o usuário.
+**Tarefa**: Sincronizar os documentos de arquitetura e garantir o deploy no servidor Oracle Cloud para ativar o sistema.

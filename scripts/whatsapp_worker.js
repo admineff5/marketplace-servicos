@@ -539,7 +539,7 @@ async function processWhatsappQueue() {
             const adminSession = Array.from(sessions.values()).find(s => s.status === 'CONNECTED');
             
             if (!adminSession) {
-                // console.log("[Queue] ⚠️ Nenhuma sessão conectada para processar fila.");
+                console.log("[Queue] ⚠️ Nenhuma sessão conectada para processar fila.");
                 return;
             }
 
